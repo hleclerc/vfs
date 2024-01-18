@@ -1,0 +1,33 @@
+#pragma once
+
+#include "Array.h"
+
+namespace Vfs {
+
+#define DTP template<class Item,class Tags>
+#define UTP Array<Item,Tags>
+
+DTP TT UTP::Array( const std::initializer_list<std::initializer_list<std::initializer_list<T>>> &values ) : Array(
+        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), Tags(), values ), Tags::memory(), values ) {
+}
+
+DTP TT UTP::Array( const std::initializer_list<std::initializer_list<T>> &values ) : Array(
+        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), Tags(), values ), Tags::memory(), values ) {
+}
+
+DTP TT UTP::Array( const std::initializer_list<T> &values ) : Array(
+        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), Tags(), values ), Tags::memory(), values ) {
+}
+
+DTP TA UTP::Array( A &&...args ) requires Has_array_type_for_ctor_args<Item,Tags,A...> : Array(
+        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), args... ), Tags::memory(), FORWARD( args )... ) {
+}
+
+DTP Int UTP::size() const {
+    return VFS_CALL_METHOD( size, Int, *this );
+}
+
+#undef DTP
+#undef UTP
+
+}
