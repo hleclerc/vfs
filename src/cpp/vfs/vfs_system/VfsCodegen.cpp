@@ -1,5 +1,6 @@
 #include "../support/push_back_unique.h"
 #include "../support/string/read_file.h"
+#include "../support/check_dir.h"
 #include "VfsSymbolCache.h"
 #include "VfsCodegen.h"
 #include <fstream>
@@ -142,7 +143,10 @@ void VfsCodegen::_write_inline_inc( std::ostream &os, const Str &str ) {
 
         Opt<Str> cc = read_file( fn );
         if ( ! cc ) {
+            check_dir( vfs_symbol_source_directory );
             std::ofstream fout( fn );
+            if ( ! fout )
+                ERROR( va_string( "Impossible to create file $0", fn ) );
             fout << cn;
 
             os << "#include \"" << bn << "\"\n";

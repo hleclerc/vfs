@@ -34,7 +34,6 @@ private:
     Str             cpp_for                ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn );
 
     void            check_build_config_file();
-    void            check_dir              ( Path path );
     void            load_lib               ( const std::filesystem::path &so_filename );
     int             run                    ( const Vec<Str> &cmd );
 

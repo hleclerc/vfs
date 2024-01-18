@@ -29,6 +29,7 @@ constexpr auto call_by_name( CtString<"equ">, auto &&a, auto &&b ) { return FORW
 constexpr auto call_by_name( CtString<"neq">, auto &&a, auto &&b ) { return FORWARD( a ) != FORWARD( b ); }
 
 constexpr auto call_by_name( CtString<"neg">, auto &&a ) { return - FORWARD( a ); }
+constexpr auto call_by_name( CtString<"abs">, auto &&a ) { using namespace std; return abs( FORWARD( a ) ); }
 
 // functions
 constexpr auto call_by_name( CtString<"min">, auto &&a, auto &&b ) { return min( FORWARD( a ), FORWARD( b ) ); }

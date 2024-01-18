@@ -5,6 +5,7 @@
 
 #include "../support/push_back_unique.h"
 #include "../support/used_sources.h"
+#include "../support/check_dir.h"
 #include "../support/OnInit.h"
 
 #include "VfsSymbolCache.h"
@@ -215,17 +216,6 @@ void VfsSymbolCache::check_build_config_file() {
     }
 }
 
-void VfsSymbolCache::check_dir( Path path ) {
-    if ( ! std::filesystem::exists( path ) ) {
-        std::error_code ec;
-        std::filesystem::create_directories( path, ec );
-        if ( ec )
-            ERROR( va_string( "Impossible to create vfs cache directory '$0': $1", path.string(), ec.message() ) );
-    }
-
-    if ( ! std::filesystem::is_directory( path ) )
-        ERROR( va_string( "'$0' is not a directory (but one wanted to use it as a vfs cache directory)", path.string() ) );
-}
 
 void VfsSymbolCache::load_lib( const std::filesystem::path &so_filename ) {
     void *dl = dlopen( so_filename.c_str(), RTLD_NOW | RTLD_GLOBAL );
