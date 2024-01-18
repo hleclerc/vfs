@@ -2,6 +2,7 @@
 
 #include "call_by_name.h"
 #include "tensor_order.h"
+#include "ERROR.h"
 
 namespace Vfs {
 
@@ -85,6 +86,11 @@ constexpr bool is_scalar( CtType<T> t ) {
     return is_always_zero( DECAYED_CT_OF( tensor_order( t ) ) );
 }
 
+auto found_no_way( auto &&a, const char *msg = "found no way to ..." ) {
+    ERROR( msg );
+    return a;
+}
+
 constexpr auto add( auto &&a, auto &&b ) {
     // 0 + ..., ... + 0
     if constexpr( is_always_zero( DECAYED_CT_OF( a ) ) ) {
@@ -108,7 +114,7 @@ constexpr auto add( auto &&a, auto &&b ) {
     } else
 
     DEFAULT_BIN_OPERATOR_CODE( add )
-    static_assert( 0, "found not way to call ..." );
+    return found_no_way( a, "found not way to call ..." );
 }
 
 constexpr auto sub( auto &&a, auto &&b ) {
@@ -123,7 +129,7 @@ constexpr auto sub( auto &&a, auto &&b ) {
     } else
 
     DEFAULT_BIN_OPERATOR_CODE( sub )
-    static_assert( 0, "found not way to call ..." );
+    return found_no_way( a, "found not way to call ..." );
 }
 
 constexpr auto mul( auto &&a, auto &&b ) {
@@ -138,7 +144,7 @@ constexpr auto mul( auto &&a, auto &&b ) {
     } else
 
     DEFAULT_BIN_OPERATOR_CODE( mul )
-    static_assert( 0, "found not way to call ..." );
+    return found_no_way( a, "found not way to call ..." );
 }
 
 constexpr auto div( auto &&a, auto &&b ) {
@@ -148,7 +154,7 @@ constexpr auto div( auto &&a, auto &&b ) {
     } else
 
     DEFAULT_BIN_OPERATOR_CODE( div )
-    static_assert( 0, "found not way to call ..." );
+    return found_no_way( a, "found not way to call ..." );
 }
 
 constexpr auto mod( auto &&a, auto &&b ) {
@@ -158,20 +164,20 @@ constexpr auto mod( auto &&a, auto &&b ) {
     } else
 
     DEFAULT_BIN_OPERATOR_CODE( mod )
-    static_assert( 0, "found not way to call ..." );
+    return found_no_way( a, "found not way to call ..." );
 }
 
-constexpr auto inf( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( inf ) static_assert( 0, "found not way to call inf" ); }
-constexpr auto sup( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( sup ) static_assert( 0, "found not way to call sup" ); }
-constexpr auto leq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( leq ) static_assert( 0, "found not way to call leq" ); }
-constexpr auto geq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( geq ) static_assert( 0, "found not way to call geq" ); }
-constexpr auto equ( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( equ ) static_assert( 0, "found not way to call equ" ); }
-constexpr auto neq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( neq ) static_assert( 0, "found not way to call neq" ); }
+constexpr auto inf( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( inf ) found_no_way( false, "found not way to call inf" ); }
+constexpr auto sup( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( sup ) found_no_way( false, "found not way to call sup" ); }
+constexpr auto leq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( leq ) found_no_way( false, "found not way to call leq" ); }
+constexpr auto geq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( geq ) found_no_way( false, "found not way to call geq" ); }
+constexpr auto equ( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( equ ) found_no_way( false, "found not way to call equ" ); }
+constexpr auto neq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( neq ) found_no_way( false, "found not way to call neq" ); }
 
 constexpr auto min( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( min ) return a <= b ? FORWARD( a ) : FORWARD( b ); }
 constexpr auto max( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( max ) return a >= b ? FORWARD( a ) : FORWARD( b ); }
 
-auto neg( auto &&a ) { DEFAULT_UNA_OPERATOR_CODE( neg ) static_assert( 0, "found not way to call ..." ); }
+auto neg( auto &&a ) { DEFAULT_UNA_OPERATOR_CODE( neg ) found_no_way( a, "found not way to call ..." ); }
 
 /// scalar product
 auto sp( auto &&a, auto &&b ) {

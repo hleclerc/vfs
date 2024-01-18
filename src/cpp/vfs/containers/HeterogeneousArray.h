@@ -57,9 +57,9 @@ DTP auto ct_value( const UTP &array ) {
             } );
             return res;
         } else
-            static_assert( 0, "..." );
+            found_no_way( 0, "..." );
     } else
-        static_assert( 0, "..." );
+        found_no_way( 0, "..." );
 }
 
 #undef DTP

@@ -29,7 +29,7 @@ auto make_ArrayImpl_from_binary_operations( auto op_name, auto &&a, auto &&b ) {
     } else
 
     // fail
-    static_assert( 0, "TODO" );
+    return found_no_way( 0, "TODO" );
 }
 
 } // namespace Vfs

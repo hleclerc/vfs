@@ -22,7 +22,7 @@ auto ct_value( const auto &v ) {
     else if constexpr( StrLike<T> )
         return RtString{ FORWARD( v ) };
     else
-        static_assert( 0, "don't know how to make ct value" );
+        return found_no_way( 0, "don't know how to make ct value" );
 }
 
 } // namespace Vfs

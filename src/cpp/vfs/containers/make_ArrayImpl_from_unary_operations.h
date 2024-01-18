@@ -12,7 +12,7 @@ auto make_ArrayImpl_from_unary_operations( auto op_name, auto &&a ) {
         using Res = GET_DT_VALUE( VecImplType_for( item_type, a.size() ) );
         return Res( FromOperationOnItemsOf(), op_name, CtIntList<1>(), FORWARD( a ) );
     } else
-        static_assert( 0, "TODO" );
+        return found_no_way( 0, "TODO" );
 }
 
 } // namespace Vfs

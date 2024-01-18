@@ -65,8 +65,7 @@ TT Str type_name( CtType<T> ) {
         }
         return res;
     } else {
-        static_assert( 0, "found no way to get type_name" );
-        return "";
+        return found_no_way( "", "found no way to get type_name" );
     }
 }
 

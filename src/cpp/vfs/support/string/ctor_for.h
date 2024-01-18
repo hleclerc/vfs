@@ -28,7 +28,7 @@ Str ctor_for( const auto &vec ) {
         }
         return res + " }";
     } else
-        static_assert( 0 );
+        found_no_way( "" );
 }
 
 }
