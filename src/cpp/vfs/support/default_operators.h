@@ -3,6 +3,7 @@
 #include "call_by_name.h"
 #include "tensor_order.h"
 #include "ERROR.h"
+#include <cmath>
 
 namespace Vfs {
 
@@ -196,6 +197,11 @@ auto norm_2_p2( auto &&a ) {
     return res;
 }
 
+auto norm_2( auto &&a ) {
+    using namespace std;
+    return sqrt( norm_2_p2( FORWARD( a ) ) );
+}
+
 /// seq max
 auto max( auto &&a ) requires ( tensor_order( DECAYED_CT_OF( a ) ).always_equal( 1 ) ) {
     using std::max;
@@ -218,6 +224,15 @@ std::size_t argmin( auto &&a ) requires ( tensor_order( DECAYED_CT_OF( a ) ).alw
     auto res = 0;
     for( std::size_t i = 1; i < a.size(); ++i )
         if ( a[ i ] < a[ res ] )
+            res = i;
+    return res;
+}
+
+/// seq argmin
+std::size_t argmax( auto &&a ) requires ( tensor_order( DECAYED_CT_OF( a ) ).always_equal( 1 ) ) {
+    auto res = 0;
+    for( std::size_t i = 1; i < a.size(); ++i )
+        if ( a[ res ] < a[ i ] )
             res = i;
     return res;
 }
@@ -246,9 +261,11 @@ struct WithDefaultOperators {
 
     ADD_UNA_OP( operator- , neg )
 
-#undef ADD_BIN_OP
-#undef ADD_UNA_OP
+    friend auto &operator+=( auto &a, auto &&b ) { a = a + FORWARD( b ); return a; }
+    friend auto &operator/=( auto &a, auto &&b ) { a = a / FORWARD( b ); return a; }
 
+    #undef ADD_BIN_OP
+    #undef ADD_UNA_OP
 };
 
 } // namespace Vfs
