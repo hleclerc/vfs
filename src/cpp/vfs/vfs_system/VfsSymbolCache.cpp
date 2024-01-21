@@ -48,12 +48,12 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
 
     // find file with the right line or make it
     std::hash<Str> hash;
-    check_dir( vfs_symbol_source_directory / "lso" );
     check_build_config_file();
+    check_dir( vfs_symbol_source_directory );
     for( PI64 h = hash( cpp_content ); ; ++h ) {
-        // if there's already a file in the cache directory
-        Path cpp_filename = vfs_symbol_source_directory / ( name + "_" + std::to_string( h ) + ".cpp" );
-        Path lso_filename = vfs_symbol_source_directory / "lso" / ( name + "_" + std::to_string( h ) );
+        // find a place to write the .cpp file (the same name may be used for another content)
+        Str base_name = name + "_" + std::to_string( h );
+        Path cpp_filename = vfs_symbol_source_directory / ( base_name + ".cpp" );
         Opt<Str> cur_content = read_file( cpp_filename.string() );
         if ( ! cur_content || *cur_content == cpp_content ) {
             if ( ! cur_content ) {
@@ -61,10 +61,11 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
                 fout << cpp_content;
             }
 
-            // build "-v10",
+            //
+            Str output_info_name = std::tmpnam( nullptr );
             Vec<Str> args{ "vfs_build", "lib", cpp_filename,
-                "--write-output-filename-to=" + lso_filename.string(),
-                "--sources-to-avoid=" + join( used_sources, "," )
+                "--write-output-info-to=" + output_info_name,
+                "--do-not-link-deps"
             };
             for( const Str &flag : global_cpp_flags )
                 push_back_unique( args, flag );
@@ -72,8 +73,11 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
             run( args );
 
             // load
-            Str lso = *ASSERTED( read_file( lso_filename.string() ) );
-            load_lib( lso );
+            Str output_info = *ASSERTED( read_file( output_info_name ) );
+            P( output_info );
+            TODO;
+
+            load_lib( output_info );
 
             // look again in loaded_symbols
             Key key{ name, return_type, arg_types, ct_casts, cn };

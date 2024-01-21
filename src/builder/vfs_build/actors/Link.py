@@ -51,9 +51,10 @@ class Link( Actor ):
 
         self.add_source_dep( include )
 
-        cpp = str( Path( include ).with_suffix( ".cpp" ) )
-        if self.check_file( cpp ):
-            self.add_source( cpp )
+        if not self.options[ "do-not-link-deps" ]:
+            cpp = str( Path( include ).with_suffix( ".cpp" ) )
+            if self.check_file( cpp ):
+                self.add_source( cpp )
 
     def write_used_sources( self ) -> bool:
         if self.has_used_sources:
@@ -91,7 +92,8 @@ class Link( Actor ):
 
         # get self.output_filename, write it if necessary
         self.output_filename = self.make_output_filename( sub_dirs = [ 'obj' ], ext = ext, stem = Path( self.seen_sources[ 0 ] ).stem )
-        if wo := self.options[ "write-output-filename-to" ]:
+        if wo := self.options[ "write-output-info-to" ]:
+            toto()
             with open( wo.value, "w" ) as fout:
                 fout.write( self.output_filename )
 

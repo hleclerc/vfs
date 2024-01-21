@@ -8,5 +8,4 @@ TEST_CASE( "Scalar", "" ) {
     // Scalar a( CtInt<10>{} );
     // Scalar b( a );
     // P( b );
-
 }
