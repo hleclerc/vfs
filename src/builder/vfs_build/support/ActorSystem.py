@@ -51,7 +51,13 @@ class ActorSystem:
             self.exception_queue.put( exception )
 
     def _start_actor( self, actor, args, kwargs, cb, parent_actor ):
-        # check if already done. Else, get `dependancy_file` to save the output
+        # data for the new actor
+        actor.options = Options( desactivated_options = actor.desactivated_options, parent = ( parent_actor and parent_actor.options ) or self.options )
+        actor.parent = parent_actor
+        actor.actor_system = self
+        actor.end_cb = cb
+
+        # check if already done
         if actor.is_idempotent():
             short_name = actor.short_name( *args, **kwargs )
             parameter_repr = repr( { "type": type( actor ).__name__, "args": args, "kwargs": kwargs } )
@@ -62,13 +68,7 @@ class ActorSystem:
             actor._dependancy_file = dependancy_file
             actor._parameter_repr = parameter_repr
 
-        # data for the new actor
-        actor.options = Options( desactivated_options = actor.desactivated_options, parent = ( parent_actor and parent_actor.options ) or self.options )
-        actor.parent = parent_actor
-        actor.actor_system = self
-        actor.end_cb = cb
-
-        # call on_start
+        # else, call on_start
         actor.on_start( *args, **kwargs )
 
     def _from_cache( self, short_name, parameter_repr, actor ):
@@ -92,6 +92,13 @@ class ActorSystem:
                                 if self.options.verbosity() >= 3:
                                     actor.info( f"update of { short_name } because { n } '{ p[ 0 ] }' has been modified" )
                                 return False, dependancy_file, None, None
+
+
+                    # a way to get output dep file in an ext prg
+                    if fname := actor.options[ "write-output-info-to" ]:
+                        if actor.parent is None:
+                            with open( fname.value, 'w' ) as fout:
+                                fout.write( dependancy_file )
 
                     # => we can use the output(s)
                     return True, dependancy_file, js[ "output_args" ], js[ "output_kwargs" ]
@@ -119,6 +126,13 @@ class ActorSystem:
                     "output_kwargs": kwargs,
                     "output_args": args,
                 }, fout, indent=4 )
+
+            # a way to get output dep file in an ext prg
+            if fname := actor.options[ "write-output-info-to" ]:
+                if actor.parent is None:
+                    with open( fname.value, 'w' ) as fout:
+                        fout.write( actor._dependancy_file )
+
 
     def wait( self ):
         try:

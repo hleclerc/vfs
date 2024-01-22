@@ -1,13 +1,14 @@
 #include "../support/string/va_string.h"
 #include "../support/string/read_file.h"
 #include "../support/string/ctor_for.h"
-#include "../support/string/split.h"
 #include "../support/string/join.h"
 
 #include "../support/push_back_unique.h"
 #include "../support/used_sources.h"
 #include "../support/check_dir.h"
 #include "../support/OnInit.h"
+
+#include "../rapidjson/document.h"
 
 #include "VfsSymbolCache.h"
 
@@ -71,7 +72,7 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
                 Str output_info_name = std::tmpnam( nullptr );
                 Vec<Str> args{ "vfs_build", "lib", cpp_to_compile,
                     "--write-output-info-to=" + output_info_name,
-                    "--do-not-link-deps", "-v10"
+                    "--do-not-link-deps" //, "-v10"
                 };
                 for( const Str &flag : global_cpp_flags )
                     push_back_unique( args, flag );
@@ -81,22 +82,17 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
                 // read output info
                 Str output_info = *ASSERTED( read_file( output_info_name ) );
                 std::filesystem::remove( output_info_name );
-                Str out_name;
-                for( const Str &line : split( output_info, "\n" ) ) {
-                    if ( line.starts_with( "out_name:" ) ) {
-                        out_name = line.substr( 9 );
-                        continue;
-                    }
+                output_info = *ASSERTED( read_file( output_info ) );
 
-                    if ( line.starts_with( "cpp_file:" ) ) {
-                        Str cpp_file = line.substr( 9 );
-                        if ( used_sources.insert( cpp_file ).second )
-                            missing_cpp_files.push_back( cpp_file );
-                        continue;
-                    }
+                rapidjson::Document json;
+                json.Parse( output_info.c_str() );
+                auto output_kwargs = json[ "output_kwargs" ].GetObject();
 
-                    if ( ! line.empty() )
-                        ERROR( va_string( "not a known directive in $0", line ) );
+                Str out_name = output_kwargs[ "out_name" ].GetString();
+                for( const auto &cpp : json[ "output_kwargs" ][ "cpp_deps" ].GetArray() ) {
+                    Str cpp_file = cpp.GetString();
+                    if ( used_sources.insert( cpp_file ).second )
+                        missing_cpp_files.push_back( cpp_file );
                 }
 
                 // load lib

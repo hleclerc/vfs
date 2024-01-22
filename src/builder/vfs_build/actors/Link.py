@@ -90,13 +90,8 @@ class Link( Actor ):
         else:
             self.error( f"`{ self.link_type }` is not a known link type" )
 
-        # get self.output_filename, write it if necessary
+        # get self.output_filename
         self.output_filename = self.make_output_filename( sub_dirs = [ 'obj' ], ext = ext, stem = Path( self.seen_sources[ 0 ] ).stem )
-        if wo := self.options[ "write-output-info-to" ]:
-            with open( wo.value, "w" ) as fout:
-                self.write_out_info( fout, "out_name", self.output_filename )
-                for i in range( 1, len( self.seen_sources ) ):
-                    self.write_out_info( fout, "cpp_file", self.seen_sources[ i ] )
 
         # cmd
         if self.options.verbosity():
@@ -117,7 +112,10 @@ class Link( Actor ):
         fout.write( info_type + ":" + info_data + "\n" )
 
     def on_link( self ):
-        self.on_end( self.output_filename )
+        self.on_end(
+            out_name = self.output_filename,
+            cpp_deps = self.seen_sources[ 1: ],
+        )
 
     def options_to_remove( self ):
         return [ 

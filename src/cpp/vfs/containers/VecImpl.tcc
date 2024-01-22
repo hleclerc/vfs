@@ -47,13 +47,17 @@ DTP TT UTP::VecImpl( const std::initializer_list<T> &lst ) {
 }
 
 DTP UTP::VecImpl( const HasSizeAndAccess auto &l ) {
+    using namespace std;
     if constexpr( requires { l[ 0 ]; } ) {
-        for( PI index = 0; index < size(); ++index )
+        for( PI index = 0; index < min( size(), l.size() ); ++index )
             new ( data( index ) ) Item( l[ index ] );
     } else {
         PI index = 0;
-        for( const auto &v : l )
+        for( const auto &v : l ) {
+            if ( index >= size )
+                break;
             new ( data( index++ ) ) Item( v );
+        }
     }
 
     for( PI index = l.size(); index < size(); ++index )

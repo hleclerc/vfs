@@ -1,3 +1,1 @@
-Installation
-============
-
+On voudrait trouver le moyen de récupérer le nom du fichier .db d'un acteur
