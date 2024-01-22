@@ -1,6 +1,7 @@
 #include "../support/string/va_string.h"
 #include "../support/string/read_file.h"
 #include "../support/string/ctor_for.h"
+#include "../support/string/split.h"
 #include "../support/string/join.h"
 
 #include "../support/push_back_unique.h"
@@ -61,23 +62,47 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
                 fout << cpp_content;
             }
 
-            //
-            Str output_info_name = std::tmpnam( nullptr );
-            Vec<Str> args{ "vfs_build", "lib", cpp_filename,
-                "--write-output-info-to=" + output_info_name,
-                "--do-not-link-deps"
-            };
-            for( const Str &flag : global_cpp_flags )
-                push_back_unique( args, flag );
+            Vec<Str> missing_cpp_files{ cpp_filename.string() };
+            while( ! missing_cpp_files.empty() ) {
+                Str cpp_to_compile = missing_cpp_files.back();
+                missing_cpp_files.pop_back();
 
-            run( args );
+                // launch vfs_build with output_info in a tmp file
+                Str output_info_name = std::tmpnam( nullptr );
+                Vec<Str> args{ "vfs_build", "lib", cpp_to_compile,
+                    "--write-output-info-to=" + output_info_name,
+                    "--do-not-link-deps", "-v10"
+                };
+                for( const Str &flag : global_cpp_flags )
+                    push_back_unique( args, flag );
 
-            // load
-            Str output_info = *ASSERTED( read_file( output_info_name ) );
-            P( output_info );
-            TODO;
+                run( args );
 
-            load_lib( output_info );
+                // read output info
+                Str output_info = *ASSERTED( read_file( output_info_name ) );
+                std::filesystem::remove( output_info_name );
+                Str out_name;
+                for( const Str &line : split( output_info, "\n" ) ) {
+                    if ( line.starts_with( "out_name:" ) ) {
+                        out_name = line.substr( 9 );
+                        continue;
+                    }
+
+                    if ( line.starts_with( "cpp_file:" ) ) {
+                        Str cpp_file = line.substr( 9 );
+                        if ( used_sources.insert( cpp_file ).second )
+                            missing_cpp_files.push_back( cpp_file );
+                        continue;
+                    }
+
+                    if ( ! line.empty() )
+                        ERROR( va_string( "not a known directive in $0", line ) );
+                }
+
+                // load lib
+                load_lib( out_name );
+            }
+
 
             // look again in loaded_symbols
             Key key{ name, return_type, arg_types, ct_casts, cn };

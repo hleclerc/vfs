@@ -31,9 +31,10 @@ class Link( Actor ):
             return 
         self.seen_sources.append( source )
 
-        # launch compilation
-        self.nb_sources_to_compile += 1
-        self.launch( self.on_compile, Compiler( self.options_to_remove() ), source )
+        # launch compilation (--do-not-link-deps => we compile and link only the first .cpp file)
+        if not self.options[ "do-not-link-deps" ] or len( self.seen_sources ) == 1:
+            self.nb_sources_to_compile += 1
+            self.launch( self.on_compile, Compiler( self.options_to_remove() ), source )
 
     def on_compile( self, obj: str, deps: list[ str ] ):
         self.nb_sources_to_compile -= 1
@@ -51,10 +52,9 @@ class Link( Actor ):
 
         self.add_source_dep( include )
 
-        if not self.options[ "do-not-link-deps" ]:
-            cpp = str( Path( include ).with_suffix( ".cpp" ) )
-            if self.check_file( cpp ):
-                self.add_source( cpp )
+        cpp = str( Path( include ).with_suffix( ".cpp" ) )
+        if self.check_file( cpp ):
+            self.add_source( cpp )
 
     def write_used_sources( self ) -> bool:
         if self.has_used_sources:
@@ -77,7 +77,7 @@ class Link( Actor ):
             return
 
         # need to write the used sources ?
-        if self.options[ "write-used-sources" ] and self.write_used_sources():
+        if self.options[ "write-used-sources" ] and not self.options[ "do-not-link-deps" ] and self.write_used_sources():
             return
 
         # extension
@@ -93,9 +93,10 @@ class Link( Actor ):
         # get self.output_filename, write it if necessary
         self.output_filename = self.make_output_filename( sub_dirs = [ 'obj' ], ext = ext, stem = Path( self.seen_sources[ 0 ] ).stem )
         if wo := self.options[ "write-output-info-to" ]:
-            toto()
             with open( wo.value, "w" ) as fout:
-                fout.write( self.output_filename )
+                self.write_out_info( fout, "out_name", self.output_filename )
+                for i in range( 1, len( self.seen_sources ) ):
+                    self.write_out_info( fout, "cpp_file", self.seen_sources[ i ] )
 
         # cmd
         if self.options.verbosity():
@@ -110,7 +111,11 @@ class Link( Actor ):
             self.objects,
             self.options
         ) )
-        
+
+    def write_out_info( self, fout, info_type, info_data ):
+        assert( info_data.find( "\n" ) < 0 )
+        fout.write( info_type + ":" + info_data + "\n" )
+
     def on_link( self ):
         self.on_end( self.output_filename )
 
