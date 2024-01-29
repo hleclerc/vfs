@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../support/default_operators.h"
+#include "../support/size_and_lexical_comparison.h"
 #include "../support/TypeConfig.h"
 #include "Memory/Memory_Cpu.h"
 
@@ -16,16 +16,16 @@ class alignas( std::max( PI( alignment ), alignof( Item ) ) ) Seq : public WithD
 public:
     static auto         with_item_type( auto item_type ) { return CtType< Seq<typename GET_DT_VALUE(item_type),static_size> >{}; }
 
-    /**/                Seq       ( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, auto &&...operands );
-    /**/                Seq       ( FromItemValues, auto &&...values );
-    /**/                Seq       ( FromItemValue, auto &&...ctor_args );
-    /**/                Seq       ( FromIterator, auto iter );
-    TT                  Seq       ( const std::initializer_list<T> &lst );
-    /**/                Seq       ( const HasSizeAndAccess auto &l );
-    /**/                Seq       ( const Seq &that );
-    /**/                Seq       ( Seq && );
-    /**/                Seq       ();
-    /**/               ~Seq       ();
+    /**/                Seq           ( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, auto &&...operands );
+    /**/                Seq           ( FromItemValues, auto &&...values );
+    /**/                Seq           ( FromItemValue, auto &&...ctor_args );
+    /**/                Seq           ( FromIterator, auto iter );
+    TT                  Seq           ( const std::initializer_list<T> &lst );
+    /**/                Seq           ( const HasSizeAndAccess auto &l );
+    /**/                Seq           ( const Seq &that );
+    /**/                Seq           ( Seq && );
+    /**/                Seq           ();
+    /**/               ~Seq           ();
 
     Seq&                operator=     ( const Seq & );
     Seq&                operator=     ( Seq && );
@@ -129,10 +129,18 @@ DTP constexpr auto item_type( CtType<UTP> ) { return CtType<Item>(); }
 Ti auto SeqType_for( auto item_type, CtInt<i> ) { return CtType<Seq<typename GET_DT_VALUE( item_type ),i>>(); }
 auto SeqType_for( auto item_type, PI ) { return CtType<Seq<typename GET_DT_VALUE( item_type )>>(); }
 
+END_VFS_NAMESPACE
+
+namespace std {
+DTP struct less<VFS_NAMESPACE::UTP> { // : public binary_function<VFS_NAMESPACE::UTP, VFS_NAMESPACE::UTP, bool>
+    constexpr bool operator()( const VFS_NAMESPACE::UTP &a, const VFS_NAMESPACE::UTP &b ) const {
+        return size_and_lexical_comparison( a, b );
+    }
+};
+} // namespace std
+
 #undef DTP
 #undef UTP
-
-END_VFS_NAMESPACE
 
 #include "Seq.tcc" // IWYU pragma: export
 

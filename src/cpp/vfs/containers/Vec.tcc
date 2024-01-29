@@ -278,8 +278,9 @@ DTP PI UTP::size() const {
 }
 
 DTP Item UTP::pop_back_val() {
-    Item res = std::move( back() );
-    data_[ size_-- ].~Item();
+    PI pos = --size_;
+    Item res = std::move( data_[ pos ] );
+    data_[ pos ].~Item();
     return res;
 }
 
@@ -346,8 +347,8 @@ DTP void UTP::copy_data_to( void *data ) const {
 }
 
 DTP Item *UTP::allocate( PI nb_items ) {
-    constexpr PI al = std::max( PI( alignment ), alignof( Item ) );
-    //return nb_items ? reinterpret_cast<Item *>( std::malloc( sizeof( Item ) * nb_items ) ) : nullptr;
+    // 8ul because std::aligned_alloc seems to return bad results if al if < 8...
+    constexpr PI al = std::max( 8ul, std::max( PI( alignment ), alignof( Item ) ) );
     return nb_items ? reinterpret_cast<Item *>( std::aligned_alloc( al, sizeof( Item ) * nb_items ) ) : nullptr;
 }
 
