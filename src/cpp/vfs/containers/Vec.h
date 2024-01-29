@@ -116,9 +116,9 @@ public:
 #define DTP template<class Item,int static_size,int local_size,int alignment,bool allow_heap>
 #define UTP Vec<Item,static_size,local_size,alignment,allow_heap>
 
-DTP auto get_compilation_flags( auto &cn, CtType<UTP> ) { cn.add_inc_file( "vfs/containers/Seq.h" ); }
+DTP auto get_compilation_flags( auto &cn, CtType<UTP> ) { cn.add_inc_file( "vfs/containers/Vec.h" ); }
 DTP void for_each_template_arg( CtType<UTP>, auto &&f ) { f( CtType<Item>() ); f( CtInt<static_size>() ); f( CtInt<local_size>() ); f( CtInt<alignment>() ); f( CtInt<allow_heap>() ); }
-DTP auto template_type_name( CtType<UTP> ) { return "Seq"; }
+DTP auto template_type_name( CtType<UTP> ) { return "Vec"; }
 DTP auto block_types_of( CtType<UTP> ) { return CtTypeList<Vec<UTP,1>>(); }
 DTP auto ct_sizes_of( CtType<UTP> ) { return CtIntList<static_size>(); }
 DTP auto memory_of( const UTP &a ) { return Memory_Cpu(); }
@@ -126,8 +126,8 @@ DTP auto memory_of( const UTP &a ) { return Memory_Cpu(); }
 DTP constexpr auto tensor_order( CtType<UTP> ) { return CtInt<1>(); }
 DTP constexpr auto item_type( CtType<UTP> ) { return CtType<Item>(); }
 
-Ti auto SeqType_for( auto item_type, CtInt<i> ) { return CtType<Vec<typename GET_DT_VALUE( item_type ),i>>(); }
-auto SeqType_for( auto item_type, PI ) { return CtType<Vec<typename GET_DT_VALUE( item_type )>>(); }
+Ti auto VecType_for( auto item_type, CtInt<i> ) { return CtType<Vec<typename GET_DT_VALUE( item_type ),i>>(); }
+auto VecType_for( auto item_type, PI ) { return CtType<Vec<typename GET_DT_VALUE( item_type )>>(); }
 
 END_VFS_NAMESPACE
 

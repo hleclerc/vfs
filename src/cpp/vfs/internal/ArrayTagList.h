@@ -35,11 +35,11 @@ public:
     static auto           template_type_name   () { return "VFS_NAMESPACE::ArrayTagList"; }
 
     static auto           array_type_for       ( auto obj_type, auto item_type, auto &&size ) {
-        // template<class Item,class Memory,int static_size,int alignment,int local_size,bool allow_heap>
+        // template<class Item,int static_size=-1,int local_size=0,int alignment=0,bool allow_heap=true>
         if constexpr ( want_ct_size_in_dim( CtInt<0>() ) ) {
-            return Type( "Vec", "inc_file:vfs/support/containers/GenericVector.h", item_type, CtType<Memory_Cpu>(), size, CtInt<0>(), CtInt<0>(), CtInt<0>() );
+            return Type( "Vec", "inc_file:vfs/containers/Vec.h", item_type, size       , CtInt<0>(), CtInt<0>(), CtInt<0>() );
         } else {
-            return Type( "Vec", "inc_file:vfs/support/containers/GenericVector.h", item_type, CtType<Memory_Cpu>(), CtInt<-1>(), CtInt<0>(), CtInt<0>(), CtInt<1>() );
+            return Type( "Vec", "inc_file:vfs/containers/Vec.h", item_type, CtInt<-1>(), CtInt<0>(), CtInt<0>(), CtInt<1>() );
         }
     }
 
