@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../support/size_and_lexical_comparison.h"
 #include "../support/CompilationFlags.h"
 #include "../support/OnInit.h" // IWYU pragma: export
 #include "VfsSurdefStage.h"
@@ -15,33 +16,32 @@ BEG_VFS_NAMESPACE
 class VfsSymbolCache {
 public:
     using           Path                   = std::filesystem::path;
-    using           Key                    = Tuple<Str, Str, Seq<Str>, Seq<Seq<Str>>, CompilationFlags>;
-    struct          KeyCmp                 { bool operator()( const Key &a, const Key &b ) const; };
-    using           LoadedSymbols          = std::map<Key,void *,KeyCmp>;
+    using           Key                    = Tuple<Str, Str, Vec<Str>, Vec<Vec<Str>>, CompilationFlags>;
+    using           LoadedSymbols          = std::map<Key,void *,SizeAndLexicalComparison>;
     using           SurdefFunc             = std::function<VfsSurdefStage( VfsCodegen &cg )>;
 
     /**/            VfsSymbolCache         ();
     
-    void            register_func          ( const Str &name, const Str &return_type, const Seq<Str> &arg_types, const Seq<Seq<Str>> &ct_casts, const CompilationFlags &cn, void *symbol );
-    SurdefFunc&     add_surdef             ( const Str &file, int line, const std::regex &name, const Seq<Str> &arg_names = {} );
-    void*           find_func              ( const Str &name, const Str &return_type, const Seq<Str> &arg_types, const Seq<Seq<Str>> &ct_casts, const CompilationFlags &cn );
+    void            register_func          ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn, void *symbol );
+    SurdefFunc&     add_surdef             ( const Str &file, int line, const std::regex &name, const Vec<Str> &arg_names = {} );
+    void*           find_func              ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn );
     
-    static Seq<Str> global_cpp_flags;
+    static Vec<Str> global_cpp_flags;
 
 private:
-    struct          Surdef                 { Str file; int line; std::regex name; Seq<Str> arg_names; SurdefFunc f; };
+    struct          Surdef                 { Str file; int line; std::regex name; Vec<Str> arg_names; SurdefFunc f; };
 
     Str             make_tmp_file          ( PI64 base );
-    void*           load_lib_for           ( const Str &name, const Str &return_type, const Seq<Str> &arg_types, const Seq<Seq<Str>> &ct_casts, const CompilationFlags &cn );
-    Str             cpp_for                ( const Str &name, const Str &return_type, const Seq<Str> &arg_types, const Seq<Seq<Str>> &ct_casts, const CompilationFlags &cn );
+    void*           load_lib_for           ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn );
+    Str             cpp_for                ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn );
 
     void            check_build_config_file();
     void            load_lib               ( const std::filesystem::path &so_filename );
-    int             run                    ( const Seq<Str> &cmd );
+    int             run                    ( const Vec<Str> &cmd );
 
     LoadedSymbols   loaded_symbols;
-    Seq<Surdef>     surdefs;
-    Seq<void*>      libs;
+    Vec<Surdef>     surdefs;
+    Vec<void*>      libs;
 };
 
 extern std::filesystem::path vfs_symbol_source_directory;

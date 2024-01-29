@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vfs/containers/VecImpl.h>
+#include <vfs/containers/Vec.h>
 #include "NdArrayWrapper.h"
 
 BEG_VFS_NAMESPACE

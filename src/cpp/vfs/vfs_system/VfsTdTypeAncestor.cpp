@@ -2,7 +2,7 @@
 
 BEG_VFS_NAMESPACE
 
-static Seq<VfsTdTypeAncestor *> all_the_types( FromSize(), 1024 );
+static Vec<VfsTdTypeAncestor *> all_the_types( FromSize(), 1024 );
 static VfsTdTypeAncestor *last_new_type = nullptr;
 static PI total_nb_types = 0;
 

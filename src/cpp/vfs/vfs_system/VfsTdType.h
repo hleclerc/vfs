@@ -13,7 +13,7 @@ template<class Object,class Content>
 class VfsTdType : public VfsTdTypeAncestor {
 public:
     virtual PI32           get_instantiated_type_index() override;
-    virtual void           get_compilation_flags_rec  ( CompilationFlags &res, Seq<Str> &seen ) const override;
+    virtual void           get_compilation_flags_rec  ( CompilationFlags &res, Vec<Str> &seen ) const override;
     virtual DisplayItem*   display                    ( Displayer &ds ) const override;
     virtual Str            name                       () const override;
 
@@ -30,7 +30,7 @@ DTP PI32 UTP::get_instantiated_type_index() {
     return instantiated_type_index;
 }
 
-DTP void UTP::get_compilation_flags_rec( CompilationFlags &res, Seq<Str> &seen ) const {
+DTP void UTP::get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen ) const {
     VFS_NAMESPACE::get_compilation_flags_rec( res, seen, CtType<Content>() );
 }
 

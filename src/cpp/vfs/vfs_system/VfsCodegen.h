@@ -27,16 +27,16 @@ public:
     
     void           add_prel_block     ( const std::function<void( VfsCodegen &cg )> &f );
 
-    void           get_link_flags_in  ( Seq<Str> &link_flags );
-    void           get_cpp_flags_in   ( Seq<Str> &cpp_flags );
+    void           get_link_flags_in  ( Vec<Str> &link_flags );
+    void           get_cpp_flags_in   ( Vec<Str> &cpp_flags );
     void           write_cpp_to       ( std::ostream &os );
 
     // helpers
     VfsSurdefStage invalid            ();
-    VfsSurdefStage valid              ( Seq<double> pertinence = { 0.0 } );
+    VfsSurdefStage valid              ( Vec<double> pertinence = { 0.0 } );
     
-    Seq<Str>       forwarded_args_from( PI start );
-    Seq<Str>       forwarded_args     ();
+    Vec<Str>       forwarded_args_from( PI start );
+    Vec<Str>       forwarded_args     ();
     Str            forwarded_arg      ( PI num );
     Str            real_type          ( PI num );
 
@@ -52,27 +52,27 @@ public:
     void           _add_line        ( const Str &str );
 
     void           _write_inline_inc( std::ostream &os, const Str &str );
-    void           _write_lines     ( std::ostream &os, const Seq<Str> &lines, int nsp = 0 );
+    void           _write_lines     ( std::ostream &os, const Vec<Str> &lines, int nsp = 0 );
 
-    Seq<Str>       extra_cpp_flags; ///<
-    Seq<Str>       prelimaries;
-    Seq<Str>       init_lines;      ///< ON_INIT ...
-    Seq<Str>       inc_paths;
-    Seq<Str>       inc_files;
-    Seq<Str>       lib_flags;
-    Seq<Str>       lib_paths;
-    Seq<Str>       lib_names;
-    Seq<Str>       lines;
+    Vec<Str>       extra_cpp_flags; ///<
+    Vec<Str>       prelimaries;
+    Vec<Str>       init_lines;      ///< ON_INIT ...
+    Vec<Str>       inc_paths;
+    Vec<Str>       inc_files;
+    Vec<Str>       lib_flags;
+    Vec<Str>       lib_paths;
+    Vec<Str>       lib_names;
+    Vec<Str>       lines;
 
     VfsCodegen*    parent;
 
     Str            function_name;
     Str            return_type;
-    Seq<Str>       arg_types;
-    Seq<Str>       arg_names;
-    Seq<Str>       arg_casts;
-    Seq<Str>       props;
-    Seq<Str>       parms;
+    Vec<Str>       arg_types;
+    Vec<Str>       arg_names;
+    Vec<Str>       arg_casts;
+    Vec<Str>       props;
+    Vec<Str>       parms;
 };
 
 END_VFS_NAMESPACE

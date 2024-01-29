@@ -17,8 +17,8 @@ struct HeterogeneousArray {
     static CtInt<1> nb_dims              () { return {}; }
     PI              size                 () const { return type_numbers.size(); }
     
-    Seq<PI>         type_numbers;
-    Seq<void *>     pointers;
+    Vec<PI>         type_numbers;
+    Vec<void *>     pointers;
 };
 
 #define DTP template<class CtTypeListOfItems>
@@ -41,7 +41,7 @@ DTP void UTP::for_each_item( auto &&func ) {
 }
 
 DTP DisplayItem *UTP::display( Displayer &ds ) const {
-    Seq<DisplayItem *> items;
+    Vec<DisplayItem *> items;
     for_each_item( [&]( const auto &item ) {
         items.push_back( VFS_NAMESPACE::display( ds, item ) );
     } );

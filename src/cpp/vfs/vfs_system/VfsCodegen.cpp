@@ -47,14 +47,14 @@ void VfsCodegen::write_cpp_to( std::ostream &os ) {
     }
 }
 
-void VfsCodegen::get_link_flags_in( Seq<Str> &res ) {
+void VfsCodegen::get_link_flags_in( Vec<Str> &res ) {
     for( const auto &p : lib_paths )
         push_back_unique( res, "-L" + p );
     for( const auto &p : lib_names )
         push_back_unique( res, "-l" + p );
 }
 
-void VfsCodegen::get_cpp_flags_in( Seq<Str> &res ) {
+void VfsCodegen::get_cpp_flags_in( Vec<Str> &res ) {
     for( const auto &p : extra_cpp_flags )
         push_back_unique( res, p );
     for( const auto &p : inc_paths )
@@ -65,18 +65,18 @@ VfsSurdefStage VfsCodegen::invalid() {
     return { .result = VfsSurdefStage::Result::invalid };
 }
 
-VfsSurdefStage VfsCodegen::valid( Seq<double> pertinence ) {
+VfsSurdefStage VfsCodegen::valid( Vec<double> pertinence ) {
     return { .pertinence = pertinence, .result = VfsSurdefStage::Result::valid };
 }
 
-Seq<Str> VfsCodegen::forwarded_args_from( PI start ) {
-    Seq<Str> res;
+Vec<Str> VfsCodegen::forwarded_args_from( PI start ) {
+    Vec<Str> res;
     for( PI i = start; i < arg_names.size(); ++i )
         res.push_back( forwarded_arg( i ) );
     return res;
 }
 
-Seq<Str> VfsCodegen::forwarded_args() {
+Vec<Str> VfsCodegen::forwarded_args() {
     return forwarded_args_from( 0 );
 }
 
@@ -160,7 +160,7 @@ void VfsCodegen::_write_inline_inc( std::ostream &os, const Str &str ) {
     }
 }
 
-void VfsCodegen::_write_lines( std::ostream &os, const Seq<Str> &lines, int nsp ) {
+void VfsCodegen::_write_lines( std::ostream &os, const Vec<Str> &lines, int nsp ) {
     if ( ! lines.empty() )
         os << "\n";
     for( const auto &line : lines ) {

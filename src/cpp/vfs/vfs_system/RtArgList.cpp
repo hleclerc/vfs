@@ -3,7 +3,7 @@
 
 BEG_VFS_NAMESPACE
     
-    void RtArgList::add( void *arg, bool owned, const Str &type_name, const Str &ct_key, const Seq<Str> *lcasts ) {
+    void RtArgList::add( void *arg, bool owned, const Str &type_name, const Str &ct_key, const Vec<Str> *lcasts ) {
     // type names
     type_names.push_back( type_name );
 
@@ -43,7 +43,7 @@ void RtArgList::get_compilation_flags(CompilationFlags &cn) {
     cn.add_inc_file( "vfs/vfs_system/RtArgList.h" );
 }
 
-void vfs_object_get_compilation_flags(CompilationFlags &cf, Seq<Str> &seen, const RtArgList &ral) {
+void vfs_object_get_compilation_flags(CompilationFlags &cf, Vec<Str> &seen, const RtArgList &ral) {
     cf << ral.cf;
 }
 
@@ -51,7 +51,7 @@ const Str &vfs_object_ct_key(const RtArgList &ral) {
     return ral.keys;
 }
 
-const Seq<Str> &vfs_object_ct_cast(const RtArgList &ral) {
+const Vec<Str> &vfs_object_ct_cast(const RtArgList &ral) {
     return ral.casts;
 }
 

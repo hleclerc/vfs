@@ -2,8 +2,8 @@
 
 BEG_VFS_NAMESPACE
     
-        Seq<Str> split( StrView str, const Str &sep ) {
-            Seq<Str> res;
+        Vec<Str> split( StrView str, const Str &sep ) {
+            Vec<Str> res;
 
     while ( true ) {
         auto p = str.find( sep );

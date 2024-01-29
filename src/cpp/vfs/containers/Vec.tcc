@@ -1,15 +1,15 @@
 #pragma once
 
 #include "select_with_n_indices.h"
-#include "Seq.h"
+#include "Vec.h"
 
 BEG_VFS_NAMESPACE
 
 /// static vector ---------------------------------------------------------------------
 #define DTP template<class Item,int static_size,int local_size,int alignment,bool allow_heap>
-#define UTP Seq<Item,static_size,local_size,alignment,allow_heap>
+#define UTP Vec<Item,static_size,local_size,alignment,allow_heap>
 
-DTP UTP::Seq( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, auto &&...operands ) {
+DTP UTP::Vec( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, auto &&...operands ) {
     for( PI index = 0; index < PI( size() ); ++index ) {
         nb_indices_to_take.apply( [&]( auto... nb_indices_to_take ) {
             new ( data( index ) ) Item( call_by_name( op_name, select_with_n_indices( operands, nb_indices_to_take, index )... ) );
@@ -17,7 +17,7 @@ DTP UTP::Seq( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, aut
     }
 }
 
-DTP UTP::Seq( FromItemValues, auto &&...values ) {
+DTP UTP::Vec( FromItemValues, auto &&...values ) {
     PI index = 0;
 
     static_assert( sizeof...( values ) <= static_size );
@@ -27,17 +27,17 @@ DTP UTP::Seq( FromItemValues, auto &&...values ) {
         new ( data( index++ ) ) Item;
 }
 
-DTP UTP::Seq( FromItemValue, auto &&...ctor_args ) {
+DTP UTP::Vec( FromItemValue, auto &&...ctor_args ) {
     for( PI index = 0; index < size(); ++index )
         new ( data( index ) ) Item( ctor_args... );
 }
 
-DTP UTP::Seq( FromIterator, auto iter ) {
+DTP UTP::Vec( FromIterator, auto iter ) {
     for( PI index = 0; index < size(); ++index )
         new ( data( index ) ) Item( *( iter++ ) );
 }
 
-DTP TT UTP::Seq( const std::initializer_list<T> &lst ) {
+DTP TT UTP::Vec( const std::initializer_list<T> &lst ) {
     auto iter = lst.begin();
     for( PI index = 0; index < min( lst.size(), size() ); ++index )
         new ( data( index ) ) Item( *(iter++) );
@@ -46,7 +46,7 @@ DTP TT UTP::Seq( const std::initializer_list<T> &lst ) {
         new ( data( index ) ) Item;
 }
 
-DTP UTP::Seq( const HasSizeAndAccess auto &l ) {
+DTP UTP::Vec( const HasSizeAndAccess auto &l ) {
     using namespace std;
     if constexpr( requires { l[ 0 ]; } ) {
         for( PI index = 0; index < min( size(), l.size() ); ++index )
@@ -64,33 +64,33 @@ DTP UTP::Seq( const HasSizeAndAccess auto &l ) {
         new ( data( index ) ) Item;
 }
 
-DTP UTP::Seq( const Seq &that ) {
+DTP UTP::Vec( const Vec &that ) {
     for( PI index = 0; index < size(); ++index )
         new ( data( index ) ) Item( that[ index ] );
 }
 
-DTP UTP::Seq( Seq &&that ) {
+DTP UTP::Vec( Vec &&that ) {
     for( PI index = 0; index < size(); ++index )
         new ( data( index ) ) Item( std::move( that[ index ] ) );
 }
 
-DTP UTP::Seq() {
+DTP UTP::Vec() {
     for( PI index = 0; index < size(); ++index )
         new ( data( index ) ) Item;
 }
 
-DTP UTP::~Seq() {
+DTP UTP::~Vec() {
     for( PI i = static_size; i--; )
         data( i )->~Item();
 }
 
-DTP UTP &UTP::operator=( const Seq &that ) {
+DTP UTP &UTP::operator=( const Vec &that ) {
     for( PI i = 0; i < size(); ++i )
         operator[]( i ) = that[ i ];
     return *this;
 }
 
-DTP UTP &UTP::operator=( Seq &&that ) {
+DTP UTP &UTP::operator=( Vec &&that ) {
     for( PI i = 0; i < size(); ++i )
         operator[]( i ) = std::move( that[ i ] );
     return *this;
@@ -133,47 +133,47 @@ DTP Item *UTP::data() {
 
 /// dynamic vector ---------------------------------------------------------------------
 #define DTP template<class Item,int alignment>
-#define UTP Seq<Item,-1,0,alignment,true>
+#define UTP Vec<Item,-1,0,alignment,true>
 
-DTP UTP::Seq( FromSizeAndInitFunctionOnIndex, PI size, auto &&func ) : Seq( FromReservationSize(), size, size ) {
+DTP UTP::Vec( FromSizeAndInitFunctionOnIndex, PI size, auto &&func ) : Vec( FromReservationSize(), size, size ) {
     for( PI index = 0; index < size; ++index )
         func( data_ + index, index );
 }
 
-DTP UTP::Seq( FromSizeAndItemValue, PI size, auto &&...ctor_args ) : Seq( FromReservationSize(), size, size ) {
+DTP UTP::Vec( FromSizeAndItemValue, PI size, auto &&...ctor_args ) : Vec( FromReservationSize(), size, size ) {
     for( PI index = 0; index < size; ++index )
         new ( data_ + index ) Item( FORWARD( ctor_args )... );
 }
 
-DTP UTP::Seq( FromSize, PI size ) : Seq( FromReservationSize(), size, size ) {
+DTP UTP::Vec( FromSize, PI size ) : Vec( FromReservationSize(), size, size ) {
     for( PI index = 0; index < size; ++index )
         new ( data_ + index ) Item;
 }
 
-DTP UTP::Seq( FromOperationOnItemsOf, auto &&a, auto &&operation ) : Seq( FromReservationSize(), a.size(), a.size() ) {
+DTP UTP::Vec( FromOperationOnItemsOf, auto &&a, auto &&operation ) : Vec( FromReservationSize(), a.size(), a.size() ) {
     constexpr bool move = std::is_rvalue_reference_v<decltype(a)>;
     for( PI index = 0; index < a.size(); ++index )
         new ( data_ + index ) Item( operation( move ? std::move( a[ index ] ) : a[ index ] ) );
 }
 
-DTP UTP::Seq( FromReservationSize, PI capa, PI raw_size ) {
+DTP UTP::Vec( FromReservationSize, PI capa, PI raw_size ) {
     data_ = allocate( capa );
     size_ = raw_size;
     capa_ = capa;
 }
 
-DTP UTP::Seq( FromItemValues, auto &&...values ) : Seq( FromReservationSize(), sizeof...( values ), sizeof...( values ) ) {
+DTP UTP::Vec( FromItemValues, auto &&...values ) : Vec( FromReservationSize(), sizeof...( values ), sizeof...( values ) ) {
     PI index = 0;
     ( new ( data_ + index++ ) Item( FORWARD( values ) ), ... );
 }
 
-DTP UTP::Seq( const std::initializer_list<Item> &l ) : Seq( FromReservationSize(), l.size(), l.size() ) {
+DTP UTP::Vec( const std::initializer_list<Item> &l ) : Vec( FromReservationSize(), l.size(), l.size() ) {
     PI index = 0;
     for( const Item &v : l )
         new ( data_ + index++ ) Item( v );
 }
 
-DTP UTP::Seq( const HasSizeAndAccess auto &l ) : Seq( FromReservationSize(), l.size(), l.size() ) {
+DTP UTP::Vec( const HasSizeAndAccess auto &l ) : Vec( FromReservationSize(), l.size(), l.size() ) {
     if constexpr( requires { l[ 0 ]; } ) {
         for( PI index = 0; index < l.size(); ++index )
             new ( data_ + index ) Item( l[ index ] );
@@ -184,21 +184,21 @@ DTP UTP::Seq( const HasSizeAndAccess auto &l ) : Seq( FromReservationSize(), l.s
     }
 }
 
-DTP UTP::Seq( const Seq &that ) : Seq( FromReservationSize(), that.size(), that.size() ) {
+DTP UTP::Vec( const Vec &that ) : Vec( FromReservationSize(), that.size(), that.size() ) {
     for( PI index = 0; index < that.size(); ++index )
         new ( data_ + index ) Item( that[ index ] );
 }
 
-DTP UTP::Seq( Seq &&that ) {
+DTP UTP::Vec( Vec &&that ) {
     data_ = std::exchange( that.data_, nullptr );
     size_ = std::exchange( that.size_, 0 );
     capa_ = std::exchange( that.capa_, 0 );
 }
 
-DTP UTP::Seq() : Seq( FromReservationSize(), 0, 0 ) {
+DTP UTP::Vec() : Vec( FromReservationSize(), 0, 0 ) {
 }
 
-DTP UTP::~Seq () {
+DTP UTP::~Vec() {
     if ( capa_ ) {
         for( PI i = size(); i--; )
             data( i )->~Item();
@@ -206,7 +206,7 @@ DTP UTP::~Seq () {
     }
 }
 
-DTP UTP &UTP::operator=( const Seq &that ) {
+DTP UTP &UTP::operator=( const Vec &that ) {
     // need more room ?
     if ( capa_ < that.size() ) {
         if ( capa_ ) {
@@ -237,7 +237,7 @@ DTP UTP &UTP::operator=( const Seq &that ) {
     return *this;
 }
 
-DTP UTP &UTP::operator=( Seq &&that ) {
+DTP UTP &UTP::operator=( Vec &&that ) {
     if ( capa_ ) {
         for( PI i = size(); i--; )
             data( i )->~Item();

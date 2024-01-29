@@ -17,7 +17,7 @@ inline const auto &vfs_object_ct_key( const RtInt &obj ) {
     return obj.value;
 }
 
-inline Seq<Str> vfs_object_ct_cast( const RtInt &obj ) {
+inline Vec<Str> vfs_object_ct_cast( const RtInt &obj ) {
     return { "auto {ARG} = CtInt<" + std::to_string( obj.value ) + ">();" };
 }
 

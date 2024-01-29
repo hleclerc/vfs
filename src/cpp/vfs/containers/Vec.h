@@ -12,23 +12,23 @@ BEG_VFS_NAMESPACE
 ///
 /// This specialization is for static vectors
 template<class Item,int static_size=-1,int local_size=0,int alignment=0,bool allow_heap=true>
-class alignas( std::max( PI( alignment ), alignof( Item ) ) ) Seq : public WithDefaultOperators {
+class alignas( std::max( PI( alignment ), alignof( Item ) ) ) Vec : public WithDefaultOperators {
 public:
-    static auto         with_item_type( auto item_type ) { return CtType< Seq<typename GET_DT_VALUE(item_type),static_size> >{}; }
+    static auto         with_item_type( auto item_type ) { return CtType< Vec<typename GET_DT_VALUE(item_type),static_size> >{}; }
 
-    /**/                Seq           ( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, auto &&...operands );
-    /**/                Seq           ( FromItemValues, auto &&...values );
-    /**/                Seq           ( FromItemValue, auto &&...ctor_args );
-    /**/                Seq           ( FromIterator, auto iter );
-    TT                  Seq           ( const std::initializer_list<T> &lst );
-    /**/                Seq           ( const HasSizeAndAccess auto &l );
-    /**/                Seq           ( const Seq &that );
-    /**/                Seq           ( Seq && );
-    /**/                Seq           ();
-    /**/               ~Seq           ();
+    /**/                Vec           ( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, auto &&...operands );
+    /**/                Vec           ( FromItemValues, auto &&...values );
+    /**/                Vec           ( FromItemValue, auto &&...ctor_args );
+    /**/                Vec           ( FromIterator, auto iter );
+    TT                  Vec           ( const std::initializer_list<T> &lst );
+    /**/                Vec           ( const HasSizeAndAccess auto &l );
+    /**/                Vec           ( const Vec &that );
+    /**/                Vec           ( Vec && );
+    /**/                Vec           ();
+    /**/               ~Vec           ();
 
-    Seq&                operator=     ( const Seq & );
-    Seq&                operator=     ( Seq && );
+    Vec&                operator=     ( const Vec & );
+    Vec&                operator=     ( Vec && );
 
     const Item&         operator[]    ( PI index ) const;
     Item&               operator[]    ( PI index );
@@ -55,27 +55,27 @@ public:
 
 // dynamic size, items fully on the heap
 template<class Item,int alignment>
-class Seq<Item,-1,0,alignment,true> : public WithDefaultOperators {
+class Vec<Item,-1,0,alignment,true> : public WithDefaultOperators {
 public:
-    /**/                Seq         ( FromSizeAndInitFunctionOnIndex, PI size, auto &&func );
-    /**/                Seq         ( FromOperationOnItemsOf, auto &&a, auto &&operation );
-    /**/                Seq         ( FromSizeAndItemValue, PI size, auto &&...ctor_args );
-    /**/                Seq         ( FromReservationSize, PI capa, PI raw_size = 0 );
-    /**/                Seq         ( FromItemValues, auto &&...values );
-    /**/                Seq         ( FromSize, PI size );
-    /**/                Seq         ( const std::initializer_list<Item> &l );
-    /**/                Seq         ( const HasSizeAndAccess auto &l );
-    /**/                Seq         ( const Seq & );
-    /**/                Seq         ( Seq && );
-    /**/                Seq         ();
-    /**/               ~Seq         ();
+    /**/                Vec         ( FromSizeAndInitFunctionOnIndex, PI size, auto &&func );
+    /**/                Vec         ( FromOperationOnItemsOf, auto &&a, auto &&operation );
+    /**/                Vec         ( FromSizeAndItemValue, PI size, auto &&...ctor_args );
+    /**/                Vec         ( FromReservationSize, PI capa, PI raw_size = 0 );
+    /**/                Vec         ( FromItemValues, auto &&...values );
+    /**/                Vec         ( FromSize, PI size );
+    /**/                Vec         ( const std::initializer_list<Item> &l );
+    /**/                Vec         ( const HasSizeAndAccess auto &l );
+    /**/                Vec         ( const Vec & );
+    /**/                Vec         ( Vec && );
+    /**/                Vec         ();
+    /**/               ~Vec         ();
 
-    static Seq          range       ( Item end );
+    static Vec          range       ( Item end );
 
-    Seq&                operator=   ( const Seq &that );
-    Seq&                operator=   ( Seq &&that );
+    Vec&                operator=   ( const Vec &that );
+    Vec&                operator=   ( Vec &&that );
 
-    Seq&                operator<<  ( auto &&value ) { push_back( FORWARD( value) ); return *this; }
+    Vec&                operator<<  ( auto &&value ) { push_back( FORWARD( value) ); return *this; }
 
     const Item&         operator[]  ( PI index ) const;
     Item&               operator[]  ( PI index );
@@ -114,20 +114,20 @@ public:
 
 // --------------------------------------------------------------------------------------------------------------------------------------------
 #define DTP template<class Item,int static_size,int local_size,int alignment,bool allow_heap>
-#define UTP Seq<Item,static_size,local_size,alignment,allow_heap>
+#define UTP Vec<Item,static_size,local_size,alignment,allow_heap>
 
 DTP auto get_compilation_flags( auto &cn, CtType<UTP> ) { cn.add_inc_file( "vfs/containers/Seq.h" ); }
 DTP void for_each_template_arg( CtType<UTP>, auto &&f ) { f( CtType<Item>() ); f( CtInt<static_size>() ); f( CtInt<local_size>() ); f( CtInt<alignment>() ); f( CtInt<allow_heap>() ); }
 DTP auto template_type_name( CtType<UTP> ) { return "Seq"; }
-DTP auto block_types_of( CtType<UTP> ) { return CtTypeList<Seq<UTP,1>>(); }
+DTP auto block_types_of( CtType<UTP> ) { return CtTypeList<Vec<UTP,1>>(); }
 DTP auto ct_sizes_of( CtType<UTP> ) { return CtIntList<static_size>(); }
 DTP auto memory_of( const UTP &a ) { return Memory_Cpu(); }
 
 DTP constexpr auto tensor_order( CtType<UTP> ) { return CtInt<1>(); }
 DTP constexpr auto item_type( CtType<UTP> ) { return CtType<Item>(); }
 
-Ti auto SeqType_for( auto item_type, CtInt<i> ) { return CtType<Seq<typename GET_DT_VALUE( item_type ),i>>(); }
-auto SeqType_for( auto item_type, PI ) { return CtType<Seq<typename GET_DT_VALUE( item_type )>>(); }
+Ti auto SeqType_for( auto item_type, CtInt<i> ) { return CtType<Vec<typename GET_DT_VALUE( item_type ),i>>(); }
+auto SeqType_for( auto item_type, PI ) { return CtType<Vec<typename GET_DT_VALUE( item_type )>>(); }
 
 END_VFS_NAMESPACE
 
@@ -142,7 +142,7 @@ DTP struct less<VFS_NAMESPACE::UTP> { // : public binary_function<VFS_NAMESPACE:
 #undef DTP
 #undef UTP
 
-#include "Seq.tcc" // IWYU pragma: export
+#include "Vec.tcc" // IWYU pragma: export
 
 #include "make_ArrayImpl_from_unary_operations.h" // IWYU pragma: export
 #include "make_ArrayImpl_from_binary_operations.h" // IWYU pragma: export

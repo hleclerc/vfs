@@ -4,8 +4,8 @@
 
 BEG_VFS_NAMESPACE
 
-Seq<Str> RtStringList::cast_to_string( StrView str ) {
-    Seq<Str> res;
+Vec<Str> RtStringList::cast_to_string( StrView str ) {
+    Vec<Str> res;
     PI i = str.find( "CtStringList<" ) + 13;
     for( ; i < str.size(); ++i ) {
         if ( str[ i ] == '{' || str[ i ] == '}' || str[ i ] == ' ' || str[ i ] == ',' )
@@ -28,13 +28,13 @@ Seq<Str> RtStringList::cast_to_string( StrView str ) {
     return res;
 }
 
-Seq<Str> vfs_object_ct_cast( const RtStringList &obj ) {
+Vec<Str> vfs_object_ct_cast( const RtStringList &obj ) {
     Str res = "auto {ARG} = CtStringList<";
     res += join_map( obj.value, ctor_for<Str> );
     return { res + ">();" };
 }
 
-const Seq<Str> &vfs_object_ct_key( const RtStringList &obj ) {
+const Vec<Str> &vfs_object_ct_key( const RtStringList &obj ) {
     return obj.value;
 }
 

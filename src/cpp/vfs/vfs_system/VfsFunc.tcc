@@ -26,13 +26,13 @@ DTP Return UTP::operator()( Args ...args ) {
 
 DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
     // includes with declared types
-    Seq<Str> seen;
+    Vec<Str> seen;
     CompilationFlags cn;
     get_compilation_flags_rec( cn, seen, CtType<Return>() );
     ( get_compilation_flags_rec( cn, seen, CtType<A>() ), ... );
 
     // ct casts + nb_args + compilation needs for each arg
-    Seq<Seq<Str>> ct_casts;
+    Vec<Vec<Str>> ct_casts;
     ct_casts.reserve( sizeof...( A ) );
     auto get_ct_cast_for = [&]( const auto &arg ) {
         // includes
@@ -43,7 +43,7 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
         if constexpr( requires { vfs_object_ct_cast( arg ); } )
             ct_casts.push_back( vfs_object_ct_cast( arg ) );
         else
-            ct_casts.push_back( Seq<Str>{ "" } );
+            ct_casts.push_back( Vec<Str>{ "" } );
     };
     ( get_ct_cast_for( args ), ... );
 

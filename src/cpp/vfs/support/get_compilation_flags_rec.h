@@ -6,7 +6,7 @@
 BEG_VFS_NAMESPACE
 
 ///
-TT void get_compilation_flags_rec( CompilationFlags &res, Seq<Str> &seen, CtType<T> ) {
+TT void get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen, CtType<T> ) {
     // avoid infinite recursion
     auto name = type_name<T>();
     if ( std::find( seen.begin(), seen.end(), name ) != seen.end() )
@@ -27,10 +27,10 @@ TT void get_compilation_flags_rec( CompilationFlags &res, Seq<Str> &seen, CtType
 }
 
 // refs
-TT void get_compilation_flags_rec( CompilationFlags &res, Seq<Str> &seen, CtType<const T *> ) { get_compilation_flags_rec( res, seen, CtType<T>() ); }
-TT void get_compilation_flags_rec( CompilationFlags &res, Seq<Str> &seen, CtType<const T &> ) { get_compilation_flags_rec( res, seen, CtType<T>() ); }
-TT void get_compilation_flags_rec( CompilationFlags &res, Seq<Str> &seen, CtType<T &&> ) { get_compilation_flags_rec( res, seen, CtType<T>() ); }
-TT void get_compilation_flags_rec( CompilationFlags &res, Seq<Str> &seen, CtType<T &> ) { get_compilation_flags_rec( res, seen, CtType<T>() ); }
-TT void get_compilation_flags_rec( CompilationFlags &res, Seq<Str> &seen, CtType<T *> ) { get_compilation_flags_rec( res, seen, CtType<T>() ); }
+TT void get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen, CtType<const T *> ) { get_compilation_flags_rec( res, seen, CtType<T>() ); }
+TT void get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen, CtType<const T &> ) { get_compilation_flags_rec( res, seen, CtType<T>() ); }
+TT void get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen, CtType<T &&> ) { get_compilation_flags_rec( res, seen, CtType<T>() ); }
+TT void get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen, CtType<T &> ) { get_compilation_flags_rec( res, seen, CtType<T>() ); }
+TT void get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen, CtType<T *> ) { get_compilation_flags_rec( res, seen, CtType<T>() ); }
 
 END_VFS_NAMESPACE

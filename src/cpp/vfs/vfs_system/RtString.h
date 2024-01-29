@@ -2,7 +2,7 @@
 
 #include "../support/string/ctor_of_string_to_string.h"
 #include "../support/string/ctor_for.h"
-#include "../containers/Seq.h"
+#include "../containers/Vec.h"
 
 BEG_VFS_NAMESPACE
 
@@ -19,7 +19,7 @@ inline const auto &vfs_object_ct_key( const RtString &obj ) {
     return obj.value;
 }
 
-inline Seq<Str> vfs_object_ct_cast( const RtString &obj ) {
+inline Vec<Str> vfs_object_ct_cast( const RtString &obj ) {
     return { "auto {ARG} = CtString<" + ctor_for( obj.value ) + ">();" };
 }
 

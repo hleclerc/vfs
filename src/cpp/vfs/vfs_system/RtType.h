@@ -15,7 +15,7 @@ public:
     Cn          cn;      ///<
 };
 
-void vfs_object_get_compilation_flags( CompilationFlags &cn, Seq<Str> &seen, const RtType &obj ) {
+void vfs_object_get_compilation_flags( CompilationFlags &cn, Vec<Str> &seen, const RtType &obj ) {
     cn << obj.cn;
 }
 

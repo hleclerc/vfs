@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../containers/Seq.h"
+#include "../containers/Vec.h"
 
 BEG_VFS_NAMESPACE
 
@@ -8,7 +8,7 @@ BEG_VFS_NAMESPACE
 struct VfsSurdefStage {
     enum class  Result { invalid, needs_a_second_pass, valid };
 
-    Seq<double> pertinence;
+    Vec<double> pertinence;
     Result      result;
 };
 

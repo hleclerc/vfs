@@ -8,7 +8,7 @@ class VfsCodegen;
 ///
 class CompilationFlags {
 public:
-    /***/        CompilationFlags( const Seq<Str> &flags = {} );
+    /***/        CompilationFlags( const Vec<Str> &flags = {} );
 
     auto         operator<<      ( const CompilationFlags &that ) -> CompilationFlags &;
     bool         operator<       ( const CompilationFlags &that ) const;
@@ -26,7 +26,7 @@ public:
 
     void         sort            ();
 
-    Seq<Str>     flags;          ///< like "inc_file:..."
+    Vec<Str>     flags;          ///< like "inc_file:..."
 };
 
 RtStringList ct_value( const CompilationFlags &cn );

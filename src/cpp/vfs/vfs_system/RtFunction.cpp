@@ -4,7 +4,7 @@
 
 BEG_VFS_NAMESPACE
     
-    void vfs_object_get_compilation_flags( CompilationFlags &cn, Seq<Str> &seen, const RtFunction &obj ) {
+    void vfs_object_get_compilation_flags( CompilationFlags &cn, Vec<Str> &seen, const RtFunction &obj ) {
     cn << obj.cf;
 
     // make the function code,
@@ -33,7 +33,7 @@ const Str &vfs_object_ct_key( const RtFunction &obj ) {
     return obj.name;
 }
 
-Seq<Str> vfs_object_ct_cast( const RtFunction &obj ) {
+Vec<Str> vfs_object_ct_cast( const RtFunction &obj ) {
     return { "auto {ARG} = Function_" + symbol_for( obj.name ) + "();" };
 }
 
