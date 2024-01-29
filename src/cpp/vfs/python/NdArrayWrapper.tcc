@@ -50,7 +50,7 @@ DTP auto UTP::operator[]( PI index ) requires ( nb_dims() > 1 ) {
 }
 
 DTP DisplayItem *UTP::display( Displayer &ds ) const {
-    Vec<DisplayItem *> v;
+    std::vector<DisplayItem *> v;
     v.reserve( size( 0 ) );
     for( PI i = 0; i < size( 0 ); ++i )
         v.push_back( VFS_NAMESPACE::display( ds, operator[]( i ) ) );

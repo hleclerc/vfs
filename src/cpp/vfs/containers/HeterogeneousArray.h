@@ -41,7 +41,7 @@ DTP void UTP::for_each_item( auto &&func ) {
 }
 
 DTP DisplayItem *UTP::display( Displayer &ds ) const {
-    Vec<DisplayItem *> items;
+    std::vector<DisplayItem *> items;
     for_each_item( [&]( const auto &item ) {
         items.push_back( VFS_NAMESPACE::display( ds, item ) );
     } );
@@ -57,9 +57,9 @@ DTP auto ct_value( const UTP &array ) {
             } );
             return res;
         } else
-            found_no_way( 0, "..." );
+            STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( 0, "..." );
     } else
-        found_no_way( 0, "..." );
+        STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( 0, "..." );
 }
 
 #undef DTP

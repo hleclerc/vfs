@@ -16,10 +16,10 @@ BEG_VFS_NAMESPACE
     if ( lcasts ) {
         for( PI i = 0; i < lcasts->size(); ++i ) {
             if ( owned ) {
-                Str cast = std::regex_replace( lcasts->at( i ), std::regex( "\\{ARG_DECL\\}" ), "std::move( *reinterpret_cast<" + type_name + " *>( {ARG_DECL}.pointers[ " + n + " ] ) )" );
+                Str cast = std::regex_replace( lcasts->operator[]( i ), std::regex( "\\{ARG_DECL\\}" ), "std::move( *reinterpret_cast<" + type_name + " *>( {ARG_DECL}.pointers[ " + n + " ] ) )" );
                 casts.push_back( cast + " RaiiDelete __raii_del_{ARG}( reinterpret_cast<" + type_name + " *>( {ARG_DECL}.pointers[ " + n + " ] ) );" );
             } else {
-                Str cast = std::regex_replace( lcasts->at( i ), std::regex( "\\{ARG_DECL\\}" ), "*reinterpret_cast<" + type_name + " *>( {ARG_DECL}.pointers[ " + n + " ] )" );
+                Str cast = std::regex_replace( lcasts->operator[]( i ), std::regex( "\\{ARG_DECL\\}" ), "*reinterpret_cast<" + type_name + " *>( {ARG_DECL}.pointers[ " + n + " ] )" );
                 casts.push_back( cast );
             }
         }
