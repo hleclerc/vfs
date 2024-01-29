@@ -3,7 +3,7 @@
 #include "TypeConfig.h"
 #include <functional>
 
-namespace Vfs  {
+BEG_VFS_NAMESPACE
 
 /**
   f( num_item, num_thread );
@@ -25,4 +25,4 @@ private:
 
 extern ThreadPool thread_pool;
 
-} // namespace Vfs
+END_VFS_NAMESPACE

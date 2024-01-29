@@ -1,6 +1,6 @@
 #include "display.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 DisplayItem *display( Displayer &ds, const std::string& str ) { return ds.string( str ); }
 DisplayItem *display( Displayer &ds, std::string_view   str ) { return ds.string( str ); }
@@ -22,4 +22,4 @@ DisplayItem *display( Displayer &ds, float              val ) { return ds.number
 DisplayItem *display( Displayer &ds, const void*        val ) { return ds.number( std::size_t( val ) ); }
 DisplayItem *display( Displayer &ds, void*              val ) { return ds.number( std::size_t( val ) ); }
 
-}
+END_VFS_NAMESPACE

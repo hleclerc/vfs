@@ -3,7 +3,7 @@
 #include "Scalar.h"
 #include "Array.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 using Vector = Array<Scalar,ArrayTagList<ArrayTag::ForceNbDimsTo<1>>>;
 

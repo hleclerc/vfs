@@ -1,7 +1,7 @@
 #include "DisplayItem_Object.h"
 #include "DisplayContext.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 std::vector<int> DisplayItem_Object::column_sizes( DisplayContext &dc ) {
     std::vector<int> res;
@@ -68,4 +68,4 @@ bool DisplayItem_Object::use_cr( DisplayContext &dc ) const {
     return false;
 }
 
-}
+END_VFS_NAMESPACE

@@ -8,7 +8,7 @@
 #include "vfs_to_python_function_map.h"
 #include <vfs/Type.h>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 static PyObject *__str__( PythonVfsAnyWrapper *self ) {
     Str str = to_string( self->obj );
@@ -68,4 +68,4 @@ PyTypeObject pytype_PythonVfsAnyWrapper = {
     .tp_finalize  = (destructor)__finalize__,
 };
 
-} // namespace Vfs
+END_VFS_NAMESPACE

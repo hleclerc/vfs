@@ -2,7 +2,7 @@
 
 #include "Array.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 #define DTP template<class Item,class Tags>
 #define UTP Array<Item,Tags>

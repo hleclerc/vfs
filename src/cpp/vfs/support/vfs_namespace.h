@@ -1,0 +1,6 @@
+#pragma once
+
+#define USING_VFS_NAMESPACE
+#define BEG_VFS_NAMESPACE
+#define END_VFS_NAMESPACE
+#define VFS_NAMESPACE

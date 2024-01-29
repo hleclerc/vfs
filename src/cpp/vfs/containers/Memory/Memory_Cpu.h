@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../../support/CompilationFlags.h"
+#include "../../support/vfs_namespace.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 struct Memory_Cpu {
-    static auto get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( "vfs/containers/Memory/Memory_Cpu.h" ); }
+    static auto get_compilation_flags( auto &cn ) { cn.add_inc_file( "vfs/containers/Memory/Memory_Cpu.h" ); }
     static auto type_name            () { return "Memory_Cpu"; }
 };
 
-} // namespace
+END_VFS_NAMESPACE

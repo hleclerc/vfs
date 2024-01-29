@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../support/TypeConfig.h"
+#include "../containers/Seq.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 struct VfsSurdefStage {
     enum class  Result { invalid, needs_a_second_pass, valid };
 
-    Vec<double> pertinence;
+    Seq<double> pertinence;
     Result      result;
 };
 
-}
+END_VFS_NAMESPACE

@@ -1,7 +1,7 @@
 #include "read_arg_name.h"
 #include "strip.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 std::string_view read_arg_name( std::string_view &arg_names ) {
     int nb_open_par = 0;
@@ -46,4 +46,4 @@ std::string_view read_arg_name( std::string_view &arg_names ) {
     return res;
 }
 
-}
+END_VFS_NAMESPACE

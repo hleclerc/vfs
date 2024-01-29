@@ -5,7 +5,7 @@
 #include "tensor_order.h"
 #include "item_type.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 template<CtStringValue op,class T_A>
@@ -46,4 +46,4 @@ constexpr auto type_promote( CtString<op> o, CtType<T_A> a, CtType<T_B> b ) {
     return type_promote_scalar( o, a, b );
 }
 
-}
+END_VFS_NAMESPACE

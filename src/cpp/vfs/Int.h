@@ -2,7 +2,7 @@
 
 #include "Type.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 class Int { VFS_TD_ATTRIBUTES( Int, "vfs" );
 public:

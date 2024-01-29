@@ -3,6 +3,7 @@
 #include "../support/string/ctor_for.h"
 #include "../support/string/join.h"
 
+#include "../support/lexical_comparison.h"
 #include "../support/push_back_unique.h"
 #include "../support/used_sources.h"
 #include "../support/check_dir.h"
@@ -15,28 +16,28 @@
 #include <dlfcn.h>
 #include <fstream>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 std::filesystem::path vfs_symbol_source_directory = ".vfs_symbol_cache";
 VfsSymbolCache vfs_symbol_cache;
 
-Vec<Str> VfsSymbolCache::global_cpp_flags;
+Seq<Str> VfsSymbolCache::global_cpp_flags;
 
 VfsSymbolCache::VfsSymbolCache() {
 }
 
-void VfsSymbolCache::register_func( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn, void *symbol ) {
+void VfsSymbolCache::register_func( const Str &name, const Str &return_type, const Seq<Str> &arg_types, const Seq<Seq<Str>> &ct_casts, const CompilationFlags &cn, void *symbol ) {
     Key key{ name, return_type, arg_types, ct_casts, cn };
     loaded_symbols[ key ] = symbol;
 }
 
-VfsSymbolCache::SurdefFunc &VfsSymbolCache::add_surdef( const Str &file, int line, const std::regex &name, const Vec<Str> &arg_names ) {
+VfsSymbolCache::SurdefFunc &VfsSymbolCache::add_surdef( const Str &file, int line, const std::regex &name, const Seq<Str> &arg_names ) {
     PI size = surdefs.size();
     surdefs.push_back( Surdef{ file, line, name, arg_names } );
     return surdefs[ size ].f;
 }
 
-void *VfsSymbolCache::find_func( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn ) {
+void *VfsSymbolCache::find_func( const Str &name, const Str &return_type, const Seq<Str> &arg_types, const Seq<Seq<Str>> &ct_casts, const CompilationFlags &cn ) {
     Key key{ name, return_type, arg_types, ct_casts, cn };
     auto iter = loaded_symbols.find( key );
     if ( iter == loaded_symbols.end() )
@@ -44,7 +45,22 @@ void *VfsSymbolCache::find_func( const Str &name, const Str &return_type, const 
     return iter->second;
 }
 
-void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn ) {
+Str VfsSymbolCache::make_tmp_file( PI64 base ) {
+    check_dir( vfs_symbol_source_directory / "tmp" );
+    for( ; ++base; ) {
+        std::filesystem::path file = vfs_symbol_source_directory / "tmp" / std::to_string( base );
+        if ( ! std::filesystem::exists( file ) ) {
+            std::ofstream fout( file );
+            if ( ! fout )
+                ERROR( va_string( "impossible to create file $0", file.string() ) );
+            fout.close();
+            return file.string();
+        }
+    }
+    return {};
+}
+
+void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, const Seq<Str> &arg_types, const Seq<Seq<Str>> &ct_casts, const CompilationFlags &cn ) {
     // get surdef, make the corresponding cpp
     Str cpp_content = cpp_for( name, return_type, arg_types, ct_casts, cn );
 
@@ -62,15 +78,14 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
                 std::ofstream fout( cpp_filename );
                 fout << cpp_content;
             }
-
-            Vec<Str> missing_cpp_files{ cpp_filename.string() };
+            
+            Seq<Str> missing_cpp_files{ cpp_filename.string() };
             while( ! missing_cpp_files.empty() ) {
-                Str cpp_to_compile = missing_cpp_files.back();
-                missing_cpp_files.pop_back();
+                Str cpp_to_compile = missing_cpp_files.pop_back_val();
 
                 // launch vfs_build with output_info in a tmp file
-                Str output_info_name = std::tmpnam( nullptr );
-                Vec<Str> args{ "vfs_build", "lib", cpp_to_compile,
+                Str output_info_name = make_tmp_file( h );
+                Seq<Str> args{ "vfs_build", "lib", cpp_to_compile,
                     "--write-output-info-to=" + output_info_name,
                     "--do-not-link-deps" //, "-v10"
                 };
@@ -110,7 +125,7 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
     }
 }
 
-Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn ) {
+Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, const Seq<Str> &arg_types, const Seq<Seq<Str>> &ct_casts, const CompilationFlags &cn ) {
     //
     struct SurdefTrial { Str file; int line; VfsCodegen cg; VfsSurdefStage vss; };
     auto try_surdef = [&]( const Surdef &surdef ) -> SurdefTrial {
@@ -118,7 +133,7 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
         cg.add_cpp_flag( "-g3");
         cg.add_cpp_flag( "-I" VFS_SOURCE_DIR );
         cg.add_inc_file( "vfs/vfs_system/VfsSymbolCache.h" );
-        cg.add_preliminary( "using namespace Vfs;" );
+        cg.add_preliminary( "USING_VFS_NAMESPACE" );
         cg.function_name = function_name;
         cg.return_type = return_type;
         cg.arg_types = arg_types;
@@ -126,8 +141,8 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
         cn.add_flags_to( cg );
 
         // arg_names
-        Vec<Str> func_arg_names;
-        Vec<Str> func_arg_decls;
+        Seq<Str> func_arg_names;
+        Seq<Str> func_arg_decls;
         for( PI i = 0, n = 0; i < arg_types.size(); n += ct_casts[ i++ ].size() ) {
             Str func_arg_name;
             if ( ct_casts[ i ].size() == 1 ) {
@@ -174,8 +189,8 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
     };
 
     // find surdef
-    Vec<SurdefTrial> surdef_trials;
-    Vec<double> best_pertinence;
+    Seq<SurdefTrial> surdef_trials;
+    Seq<double> best_pertinence;
     for( const Surdef &surdef : surdefs ) {
         if ( ! std::regex_search( function_name, surdef.name ) )
             continue;
@@ -192,7 +207,7 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
         if ( surdef_trial.vss.result == VfsSurdefStage::Result::invalid )
             continue;
 
-        if ( best_pertinence > surdef_trial.vss.pertinence )
+        if ( lexical_comparison( surdef_trial.vss.pertinence, best_pertinence ) )
             continue;
 
         if ( std::ranges::lexicographical_compare( best_pertinence, surdef_trial.vss.pertinence ) ) {
@@ -221,7 +236,7 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
     return ss.str();
 }
 
-int VfsSymbolCache::run( const Vec<Str> &cmd_vec ) {
+int VfsSymbolCache::run( const Seq<Str> &cmd_vec ) {
     // P( cmd );
     Str cmd = join( cmd_vec, " " );
     if ( int res = system( cmd.c_str() ) ) {
@@ -254,4 +269,11 @@ void VfsSymbolCache::load_lib( const std::filesystem::path &so_filename ) {
     OnInit::update();
 }
 
+
+bool VfsSymbolCache::KeyCmp::operator()( const Key &a, const Key &b ) const {
+    if ( std::get<0>( a ) != std::get<0>( b ) )
+        return std::get<0>( a ) < std::get<0>( b );
+    return false;
 }
+
+END_VFS_NAMESPACE

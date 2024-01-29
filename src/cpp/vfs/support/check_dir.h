@@ -4,7 +4,7 @@
 #include <filesystem>
 #include "ERROR.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 inline void check_dir( const std::filesystem::path &path ) {
     if ( ! std::filesystem::exists( path ) ) {
@@ -18,4 +18,4 @@ inline void check_dir( const std::filesystem::path &path ) {
         ERROR( va_string( "'$0' is not a directory (but one wanted to use it as a vfs cache directory)", path.string() ) );
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

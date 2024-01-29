@@ -1,6 +1,6 @@
 #include "py_string_to_std_string.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 Str py_string_to_std_string( const PyObject *py_str, bool utf8_only ) {
     if ( PyBytes_Check( py_str ) )
@@ -34,4 +34,4 @@ Str py_string_to_std_string( const PyObject *py_str, bool utf8_only ) {
     #endif
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

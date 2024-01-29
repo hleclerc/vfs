@@ -4,7 +4,7 @@
 #include <iostream>
 #include <mutex>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 template<class OS,class... ArgValues>
 void __print_with_mutex( OS &os, const DisplayParameters &dp, std::string_view arg_names, ArgValues &&...arg_values ) {
@@ -27,11 +27,11 @@ void __print_with_mutex( OS &os, const DisplayParameters &dp, std::string_view a
 #ifndef P
     // PRINT in cout
     #define P( ... ) \
-        Vfs::__print_with_mutex( std::cout, Vfs::DisplayParameters::for_debug_info(), #__VA_ARGS__, __VA_ARGS__ )
+        VFS_NAMESPACE::__print_with_mutex( std::cout, VFS_NAMESPACE::DisplayParameters::for_debug_info(), #__VA_ARGS__, __VA_ARGS__ )
 
     // PRINT in cerr
     #define PE( ... ) \
-        Vfs::__print_with_mutex( std::cerr, Vfs::DisplayParameters::for_debug_info(), #__VA_ARGS__, __VA_ARGS__ )
+        VFS_NAMESPACE::__print_with_mutex( std::cerr, VFS_NAMESPACE::DisplayParameters::for_debug_info(), #__VA_ARGS__, __VA_ARGS__ )
 
     // PRINT in cout with options
     #define PO( VALUE, PARAMS ) \
@@ -53,4 +53,4 @@ void __print_with_mutex( OS &os, const DisplayParameters &dp, std::string_view a
     #define PC do { static int cpt = 0; PE( cpt++ ); } while ( false )
 #endif
 
-}
+END_VFS_NAMESPACE

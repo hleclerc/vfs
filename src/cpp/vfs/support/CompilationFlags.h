@@ -2,13 +2,13 @@
 
 #include "../vfs_system/RtStringList.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 class VfsCodegen;
 
 ///
 class CompilationFlags {
 public:
-    /***/        CompilationFlags( const Vec<Str> &flags = {} );
+    /***/        CompilationFlags( const Seq<Str> &flags = {} );
 
     auto         operator<<      ( const CompilationFlags &that ) -> CompilationFlags &;
     bool         operator<       ( const CompilationFlags &that ) const;
@@ -26,7 +26,7 @@ public:
 
     void         sort            ();
 
-    Vec<Str>     flags;          ///< like "inc_file:..."
+    Seq<Str>     flags;          ///< like "inc_file:..."
 };
 
 RtStringList ct_value( const CompilationFlags &cn );
@@ -35,4 +35,4 @@ Str          ctor_for( const CompilationFlags &cn );
 // by default, call T::get_compilation_flags( res )
 TT auto get_compilation_flags( CompilationFlags &res, CtType<T> ) -> decltype( T::get_compilation_flags( res ) ) { return T::get_compilation_flags( res ); }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

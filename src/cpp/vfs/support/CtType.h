@@ -1,9 +1,10 @@
 #pragma once
 
 // #include "IsSpecializationOf.h" // IWYU pragma: export
+#include "vfs_namespace.h"
 #include <type_traits>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /// A structure to store a compile time known type
 template<class Value>
@@ -21,6 +22,6 @@ template<class U>
 concept IsA_CtType = std::is_same_v<std::decay_t<U>,CtType<typename std::decay_t<U>::value>>;
 
 /// make an instance of CtType<type of v> if v is known.
-auto type_of( const auto &v ) { return Vfs::CtType<std::decay_t<decltype( v )>>(); }
+auto type_of( const auto &v ) { return VFS_NAMESPACE::CtType<std::decay_t<decltype( v )>>(); }
 
-}
+END_VFS_NAMESPACE

@@ -2,10 +2,10 @@
 #include "../support/string/join.h"
 #include "RtStringList.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
-Vec<Str> RtStringList::cast_to_string( StrView str ) {
-    Vec<Str> res;
+Seq<Str> RtStringList::cast_to_string( StrView str ) {
+    Seq<Str> res;
     PI i = str.find( "CtStringList<" ) + 13;
     for( ; i < str.size(); ++i ) {
         if ( str[ i ] == '{' || str[ i ] == '}' || str[ i ] == ' ' || str[ i ] == ',' )
@@ -21,23 +21,23 @@ Vec<Str> RtStringList::cast_to_string( StrView str ) {
                 if ( str[ i ] == '"' )
                     break;
             }
-            res.push_back( { str.begin() + b, str.begin() + i } );
+            res.push_back( Str{ str.begin() + b, str.begin() + i } );
         }
     }
 
     return res;
 }
 
-Vec<Str> vfs_object_ct_cast( const RtStringList &obj ) {
+Seq<Str> vfs_object_ct_cast( const RtStringList &obj ) {
     Str res = "auto {ARG} = CtStringList<";
     res += join_map( obj.value, ctor_for<Str> );
     return { res + ">();" };
 }
 
-const Vec<Str> &vfs_object_ct_key( const RtStringList &obj ) {
+const Seq<Str> &vfs_object_ct_key( const RtStringList &obj ) {
     return obj.value;
 }
 
 
 
-} // namespace Vfs
+END_VFS_NAMESPACE

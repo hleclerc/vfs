@@ -2,7 +2,7 @@
 
 #include "TypeConfig.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 template<class... A>
@@ -35,4 +35,4 @@ struct CtTypeList<> {
     static constexpr int     size            () { return 0; }
 };
 
-}
+END_VFS_NAMESPACE

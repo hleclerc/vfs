@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 template<template <typename...> class Template, typename T>
 struct IsSpecializationOf{

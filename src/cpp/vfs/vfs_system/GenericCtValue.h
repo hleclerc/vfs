@@ -2,7 +2,7 @@
 
 #include "../support/TypeConfig.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 class GenericCtValue {
@@ -20,8 +20,8 @@ const auto &vfs_object_ct_key( const GenericCtValue &obj ) {
     return obj.cast;
 }
 
-Vec<Str> vfs_object_ct_cast( const GenericCtValue &obj ) {
+Seq<Str> vfs_object_ct_cast( const GenericCtValue &obj ) {
     return { "auto {ARG} = " + obj.cast + ";" };
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

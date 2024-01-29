@@ -5,7 +5,7 @@
 #include "wsq.hpp"
 #include <thread>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 //// nsmake lib_name pthread
 ThreadPool thread_pool;
@@ -74,4 +74,4 @@ void ThreadPool::execute( PI nb_jobs, const std::function<void( PI nb_threads, c
     } );
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

@@ -6,7 +6,7 @@
 #include "VecImpl.h"
 //#include "ArrayLike.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /// Set of array blocks that form an array of potentially different types, alignments, ...
 template<

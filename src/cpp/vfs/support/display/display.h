@@ -3,7 +3,7 @@
 #include "../string/read_arg_name.h"
 #include "Displayer.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 DisplayItem *display( Displayer &ds, std::string_view   str );
 DisplayItem *display( Displayer &ds, const std::string& str );
@@ -94,4 +94,4 @@ DisplayItem *_ds_object( Displayer &ds, std::string_view name, std::string_view 
 #define DS_OBJECT( NAME, ... ) \
     _ds_object( ds, #NAME, #__VA_ARGS__, __VA_ARGS__ )
 
-}
+END_VFS_NAMESPACE

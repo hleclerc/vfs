@@ -2,7 +2,7 @@
 #include "DisplayContext.h"
 #include "../RaiiSave.h"
  
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 std::vector<int> DisplayItem_Array::column_sizes( DisplayContext &dc ) {
     std::vector<int> res;
@@ -100,4 +100,4 @@ bool DisplayItem_Array::use_cr( DisplayContext &dc ) const {
     return false;
 }
 
-}
+END_VFS_NAMESPACE

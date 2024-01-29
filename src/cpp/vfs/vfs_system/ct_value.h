@@ -5,7 +5,7 @@
 
 #include "../Any.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 // common surdefs
 TS auto ct_value( CtString<S> v ) { return v; }
@@ -22,7 +22,7 @@ auto ct_value( const auto &v ) {
     else if constexpr( StrLike<T> )
         return RtString{ FORWARD( v ) };
     else
-        return found_no_way( 0, "don't know how to make ct value" );
+        STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( 0, "don't know how to make ct value" );
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

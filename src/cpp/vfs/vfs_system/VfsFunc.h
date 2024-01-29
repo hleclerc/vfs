@@ -5,7 +5,7 @@
 #include "VfsFuncArray.h"
 // #include "VfsFuncId.h" // IWYU pragma: export
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /// generic definition
 template<CtStringValue name,class Return,class... Args>
@@ -58,6 +58,6 @@ auto vfs_call( Args&&... args );
             return self.FUNC( std::forward<Args>( args )... ); \
     } )( SELF, __VA_ARGS__ );
 
-} // namespace Vfs
+END_VFS_NAMESPACE
 
 #include "VfsFunc.tcc" // IWYU pragma: export

@@ -2,7 +2,7 @@
 #include "DisplayItem.h"
 #include <sstream>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 DisplayItem::~DisplayItem() {
 }
@@ -53,4 +53,4 @@ std::vector<int> DisplayItem::max_columns( const std::vector<std::vector<int>> c
     return res;
 }
 
-}
+END_VFS_NAMESPACE

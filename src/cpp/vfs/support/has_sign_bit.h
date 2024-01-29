@@ -2,7 +2,7 @@
 
 #include "TypeConfig.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 constexpr inline auto has_sign_bit( CtType<PI64> ) { return CtInt<0>(); }
 constexpr inline auto has_sign_bit( CtType<PI32> ) { return CtInt<0>(); }
@@ -19,4 +19,4 @@ constexpr inline auto has_sign_bit( CtType<Bool> ) { return CtInt<0>(); }
 constexpr inline auto has_sign_bit( CtType<FP64> ) { return CtInt<1>(); }
 constexpr inline auto has_sign_bit( CtType<FP32> ) { return CtInt<1>(); }
 
-}
+END_VFS_NAMESPACE

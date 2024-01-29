@@ -1,9 +1,8 @@
 #pragma once
 
 #include "to_string.h"
-#include <iostream>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /// Ex: "... $(0) $(KEY) ...", "84", "KEY:", "smurf" => "... 84 smurf ...". $0 or $KEY work also
 std::string va_string_repl_vec( const std::initializer_list<std::string> &values );
@@ -12,4 +11,4 @@ std::string va_string_repl_vec( const std::initializer_list<std::string> &values
 template<class... A>
 std::string va_string( const A &...args ) { return va_string_repl_vec( { to_string( args )... } ); }
 
-}
+END_VFS_NAMESPACE

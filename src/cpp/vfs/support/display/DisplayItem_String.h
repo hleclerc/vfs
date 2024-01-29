@@ -4,7 +4,7 @@
 #include <string_view>
 #include <string>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /**
 */
@@ -16,4 +16,4 @@ public:
     std::string  str;
 };
 
-}
+END_VFS_NAMESPACE

@@ -7,7 +7,7 @@
 #include "py_string_to_std_string.h"
 #include "PythonVfsAnyWrapper.h"
 
-using namespace Vfs;
+USING_VFS_NAMESPACE
 
 // Module --------------------------------------------------------------------------------------------------------------------------------------------
 PyObject *function( PyObject *self, PyObject *args, PyObject *kwargs ) {

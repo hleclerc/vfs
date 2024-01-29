@@ -2,7 +2,7 @@
 
 #include "../support/CompilationFlags.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 struct EmptyArrayImpl {
     static void     get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( "vfs/containers/EmptyArrayImpl.h" ); }
@@ -15,4 +15,4 @@ struct EmptyArrayImpl {
 
 inline auto ct_value( EmptyArrayImpl v ) { return v; }
 
-}
+END_VFS_NAMESPACE

@@ -6,7 +6,7 @@
 // #include "CtValue.h"
 #include "VfsFuncArray.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 // generic case --------------------------------------------------------------
 #define DTP template<class... KeyTypes,class Callable>
@@ -145,4 +145,4 @@ DTP Callable** UTP::operator()( auto &&...keys ) {
 // #undef DTP
 // #undef UTP
 
-}
+END_VFS_NAMESPACE

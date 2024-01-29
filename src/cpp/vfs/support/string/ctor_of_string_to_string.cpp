@@ -1,6 +1,6 @@
 #include "ctor_of_string_to_string.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 Str ctor_of_string_to_string( StrView s ) {
     ASSERT( s.size() && s[ 0 ] == '"' );
@@ -19,4 +19,4 @@ Str ctor_of_string_to_string( StrView s ) {
     return res;
 }
 
-}
+END_VFS_NAMESPACE

@@ -2,11 +2,11 @@
 
 #include "CtString.h" // IWYU pragma: export
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 template<CtStringValue... values>
 struct CtStringList {
 };
 
-}
+END_VFS_NAMESPACE

@@ -3,7 +3,7 @@
 #include "../display/Displayer.h"
 #include <sstream>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 template<class T>
 std::string to_string( T &&val, const DisplayParameters &dp = {} ) {
@@ -14,4 +14,4 @@ std::string to_string( T &&val, const DisplayParameters &dp = {} ) {
     return ss.str();
 }
 
-}
+END_VFS_NAMESPACE

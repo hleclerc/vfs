@@ -1,7 +1,7 @@
 #include "used_sources.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 std::set<std::string> used_sources;
 
-} // namespace Vfs
+END_VFS_NAMESPACE

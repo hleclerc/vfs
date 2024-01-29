@@ -2,7 +2,7 @@
 
 #include "Memory/Memory_Cpu.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 template<class ItemPtr,
@@ -27,4 +27,4 @@ auto block_type_after_operation( auto op_name, auto block_type ) { return block_
 #undef DTP
 #undef UTP
 
-} // namespace Vfs
+END_VFS_NAMESPACE

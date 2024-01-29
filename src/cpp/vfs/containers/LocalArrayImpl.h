@@ -2,7 +2,7 @@
 
 #include "../../support/CompilationFlags.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /// Set of array blocks that form an array of potentially different types, alignments, ...
 template<class Memory,class... Blocks>

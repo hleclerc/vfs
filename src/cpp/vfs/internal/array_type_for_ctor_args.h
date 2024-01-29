@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../support/containers/EmptyArrayImpl.h"
+#include "../containers/EmptyArrayImpl.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 // real type of array if constructed from...
 auto array_type_for_ctor_args( auto item_type, auto atl, const HasSizeAndAccess auto &v ) {

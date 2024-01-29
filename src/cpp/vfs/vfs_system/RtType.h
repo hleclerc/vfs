@@ -2,7 +2,7 @@
 
 #include "../support/CompilationFlags.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 class RtType {
@@ -15,7 +15,7 @@ public:
     Cn          cn;      ///<
 };
 
-void vfs_object_get_compilation_flags( CompilationFlags &cn, Vec<Str> &seen, const RtType &obj ) {
+void vfs_object_get_compilation_flags( CompilationFlags &cn, Seq<Str> &seen, const RtType &obj ) {
     cn << obj.cn;
 }
 
@@ -23,8 +23,8 @@ const auto &vfs_object_ct_key( const RtType &obj ) {
     return obj.name;
 }
 
-Vec<Str> vfs_object_ct_cast( const RtType &obj ) {
+Seq<Str> vfs_object_ct_cast( const RtType &obj ) {
     return { "auto {ARG} = CtType<" + obj.name + ">();" };
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

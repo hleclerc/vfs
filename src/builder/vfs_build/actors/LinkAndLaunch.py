@@ -7,7 +7,12 @@ class LinkAndLaunch( Actor ):
         self.launch( self.on_link, Link(), 'exe', sources )
 
     def on_link( self, **kwargs ):
-        self.launch( self.on_end, Command(), kwargs[ "out_name" ], check_return_code = False )
+        args = []
+        if self.options[ "valgrind" ]:
+            args.append( "valgrind" )
+        args.append( kwargs[ "out_name" ] )
+
+        self.launch( self.on_end, Command(), args, check_return_code = False )
 
     def is_idempotent( self ):
         return False

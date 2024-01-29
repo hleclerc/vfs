@@ -3,7 +3,7 @@
 #include <vfs/Any.h>
 #include <Python.h>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /// python type for PythonVfsFunctionWrapper
 extern PyTypeObject pytype_PythonVfsAnyWrapper;
@@ -14,4 +14,4 @@ struct PythonVfsAnyWrapper {
     Any obj;
 };
 
-} // namespace Vfs
+END_VFS_NAMESPACE

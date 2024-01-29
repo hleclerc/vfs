@@ -1,8 +1,9 @@
 #pragma once
 
+#include "vfs_namespace.h"
 #include <algorithm>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 template<class Vec,class Val>
 auto &push_back_unique( Vec &vec, Val &&val ) {
@@ -13,4 +14,4 @@ auto &push_back_unique( Vec &vec, Val &&val ) {
     return vec.back();
 }
 
-}
+END_VFS_NAMESPACE

@@ -2,7 +2,7 @@
 
 #include "vfs_system/ct_value.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 class Type { VFS_TD_ATTRIBUTES( Type, "vfs" );
@@ -23,4 +23,4 @@ Type::Type( auto &&name, auto &&compilation_flags, auto &&...template_parameters
     VFS_CALL_DINK( construct_Type, void, _vfs_type_and_data, ct_value( name ), ct_value( compilation_flags ), ct_value( template_parameters )... );
 }
 
-}
+END_VFS_NAMESPACE

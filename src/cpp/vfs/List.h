@@ -2,7 +2,7 @@
 
 #include "Array.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 TT using List = Array<T,ArrayTagList<ArrayTag::ForceNbDimsTo<1>>>;
 

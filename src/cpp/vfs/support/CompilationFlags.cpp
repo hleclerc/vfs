@@ -1,15 +1,16 @@
+#include "../support/size_and_lexical_comparison.h"
 #include "../support/push_back_unique.h"
 #include "../support/string/ctor_for.h"
 #include "../vfs_system/VfsCodegen.h"
 #include "CompilationFlags.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 static bool cmp_by_flag_type( const Str &flag_a, const Str &flag_b ) {
     return flag_a.size() >= 8 && flag_b.size() >= 8 ? flag_a.substr( 0, 8 ) < flag_b.substr( 0, 8 ) : flag_a < flag_b;
 }
 
-CompilationFlags::CompilationFlags( const Vec<Str> &flags ) : flags( flags ) {
+CompilationFlags::CompilationFlags( const Seq<Str> &flags ) : flags( flags ) {
 }
 
 CompilationFlags &CompilationFlags::operator<<( const CompilationFlags &that ) {
@@ -20,7 +21,7 @@ CompilationFlags &CompilationFlags::operator<<( const CompilationFlags &that ) {
 }
 
 bool CompilationFlags::operator<( const CompilationFlags &that ) const {
-    return flags < that.flags;
+    return size_and_lexical_comparison( flags, that.flags );
 }
 
 void CompilationFlags::add_flags_to( VfsCodegen &cg ) const {
@@ -62,4 +63,4 @@ RtStringList ct_value( const CompilationFlags &cn ) {
 }
 
 
-} // namespace Vfs
+END_VFS_NAMESPACE

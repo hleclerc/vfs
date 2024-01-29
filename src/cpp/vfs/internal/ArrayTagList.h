@@ -1,14 +1,14 @@
 #pragma once
 
-#include "../support/containers/Memory/Memory_Cpu.h"
+#include "../containers/Memory/Memory_Cpu.h"
 #include "../Type.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 namespace ArrayTag {
-    #define DECL_TAG_T( NAME ) TT struct NAME { static auto template_type_name() { return "Vfs::ArrayTag::" #NAME; } static void for_each_template_arg( auto &&f ) { f( CtType<T>() ); } }
-    #define DECL_TAG_i( NAME ) Ti struct NAME { static auto template_type_name() { return "Vfs::ArrayTag::" #NAME; } static void for_each_template_arg( auto &&f ) { f( CtInt<i>() ); } }
-    #define DECL_TAG__( NAME ) struct NAME { static auto type_name() { return "Vfs::ArrayTag::" #NAME; } }
+    #define DECL_TAG_T( NAME ) TT struct NAME { static auto template_type_name() { return "VFS_NAMESPACE::ArrayTag::" #NAME; } static void for_each_template_arg( auto &&f ) { f( CtType<T>() ); } }
+    #define DECL_TAG_i( NAME ) Ti struct NAME { static auto template_type_name() { return "VFS_NAMESPACE::ArrayTag::" #NAME; } static void for_each_template_arg( auto &&f ) { f( CtInt<i>() ); } }
+    #define DECL_TAG__( NAME ) struct NAME { static auto type_name() { return "VFS_NAMESPACE::ArrayTag::" #NAME; } }
     DECL_TAG__( WantCtSizeInAllDims );
     DECL_TAG_i( ForceNbDimsTo );
     #undef DECL_TAG_T

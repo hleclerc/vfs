@@ -2,7 +2,7 @@
 
 #include "../support/CompilationFlags.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 template<class CtTypeListOfItems>
 struct HeterogeneousArray {
@@ -16,9 +16,9 @@ struct HeterogeneousArray {
     DisplayItem*    display              ( Displayer &ds ) const;
     static CtInt<1> nb_dims              () { return {}; }
     PI              size                 () const { return type_numbers.size(); }
-
-    Vec<PI>         type_numbers;
-    Vec<void *>     pointers;
+    
+    Seq<PI>         type_numbers;
+    Seq<void *>     pointers;
 };
 
 #define DTP template<class CtTypeListOfItems>
@@ -41,9 +41,9 @@ DTP void UTP::for_each_item( auto &&func ) {
 }
 
 DTP DisplayItem *UTP::display( Displayer &ds ) const {
-    Vec<DisplayItem *> items;
+    Seq<DisplayItem *> items;
     for_each_item( [&]( const auto &item ) {
-        items.push_back( Vfs::display( ds, item ) );
+        items.push_back( VFS_NAMESPACE::display( ds, item ) );
     } );
     return ds.array( std::move( items ) );
 }
@@ -65,4 +65,4 @@ DTP auto ct_value( const UTP &array ) {
 #undef DTP
 #undef UTP
 
-}
+END_VFS_NAMESPACE

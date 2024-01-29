@@ -2,7 +2,7 @@
 
 #include "../support/TypeConfig.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 auto types_of_ct_keys_of_vfs_objects( auto result, auto remaining_types ) {
     if constexpr( remaining_types.size() == 0 )
@@ -13,4 +13,4 @@ auto types_of_ct_keys_of_vfs_objects( auto result, auto remaining_types ) {
         return types_of_ct_keys_of_vfs_objects( result, remaining_types.tail() );
 }
 
-}
+END_VFS_NAMESPACE

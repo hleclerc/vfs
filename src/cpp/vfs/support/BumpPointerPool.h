@@ -1,9 +1,10 @@
 #pragma once
 
+#include "vfs_namespace.h"
 #include <cstdint>
 #include <utility>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /**
   Simple object pool
@@ -46,6 +47,6 @@ private:
     Item*       last_item;     ///<
 };
 
-}
+END_VFS_NAMESPACE
 
 #include "BumpPointerPool.tcc" // IWYU pragma: export

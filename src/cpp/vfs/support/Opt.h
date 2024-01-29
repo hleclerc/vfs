@@ -3,7 +3,7 @@
 #include <utility>
 #include <tuple>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /**
  * TODO: uninitialized content
@@ -48,4 +48,4 @@ struct Opt {
 // template<class T> Opt<T> operator*( const Opt<T> &a, const T &b ) { if ( a ) return *a * b; return {}; }
 // template<class T> Opt<T> operator/( const Opt<T> &a, const T &b ) { if ( a ) return *a / b; return {}; }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

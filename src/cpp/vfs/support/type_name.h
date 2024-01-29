@@ -3,7 +3,7 @@
 #include "for_each_template_arg.h"
 #include "template_type_name.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 // qualifiers
 TTi inline auto type_name( CtType<const T(&)[i]> ) { return type_name( CtType<const T *>() ); } // send the size ??
@@ -64,9 +64,8 @@ TT Str type_name( CtType<T> ) {
             res += ">";
         }
         return res;
-    } else {
-        return found_no_way( "", "found no way to get type_name" );
-    }
+    } else
+        STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( "", "found no way to get type_name" );
 }
 
 //
@@ -75,4 +74,4 @@ TT Str type_name( CtType<T> ) {
 // shortcut type_name<T>()
 TT Str type_name() { return type_name( CtType<T>() ); }
 
-}
+END_VFS_NAMESPACE

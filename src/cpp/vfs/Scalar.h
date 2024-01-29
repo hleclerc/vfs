@@ -2,7 +2,7 @@
 
 #include "Type.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 class Scalar { VFS_TD_ATTRIBUTES( Scalar, "vfs" );
 public:
@@ -19,5 +19,4 @@ constexpr inline auto has_sign_bit    ( CtType<Scalar> ) { return CtInt<1>(); }
 // scalar_type_for (when creating "virtual" objects from "real" values)
 auto scalar_type_for( CtInt<1>, auto, auto, auto ) { return CtType<Scalar>(); }
 
-}
- 
+END_VFS_NAMESPACE

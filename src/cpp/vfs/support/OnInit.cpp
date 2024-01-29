@@ -1,6 +1,6 @@
 #include "OnInit.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 OnInit *last_OnInit = nullptr;
 
@@ -16,4 +16,4 @@ void OnInit::update() {
         last_OnInit->func();
 }
 
-}
+END_VFS_NAMESPACE

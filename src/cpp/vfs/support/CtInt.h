@@ -3,7 +3,7 @@
 #include "default_operators.h"
 #include <cstdint>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 template<int i>
@@ -45,4 +45,4 @@ auto constexpr tensor_order( auto ) { return CtInt<0>(); }
 // template<int i,int j> inline auto operator*( CtInt<i>, CtInt<j> ) { return CtInt<i*j>(); }
 // template<int i,int j> inline auto max( CtInt<i>, CtInt<j> ) { return CtInt<std::max(i,j)>(); }
 
-}
+END_VFS_NAMESPACE

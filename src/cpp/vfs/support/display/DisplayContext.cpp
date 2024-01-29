@@ -1,6 +1,6 @@
 #include "DisplayContext.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 void DisplayContext::write_column_suffix( int num_column ) {
     if ( columns_curr && columns_max )
@@ -32,4 +32,4 @@ std::ostream &DisplayContext::operator*() {
     return *os;
 }
 
-}
+END_VFS_NAMESPACE

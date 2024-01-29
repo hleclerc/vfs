@@ -1,7 +1,7 @@
 #include "DisplayItem_String.h"
 #include "DisplayContext.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 DisplayItem_String::DisplayItem_String( std::string_view str ) : str( str ) {
 }
@@ -14,4 +14,4 @@ void DisplayItem_String::write_with( DisplayContext &dc ) {
         *dc << '"';
 }
 
-}
+END_VFS_NAMESPACE

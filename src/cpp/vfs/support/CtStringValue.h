@@ -1,9 +1,10 @@
 #pragma once
 
+#include "vfs_namespace.h"
 #include <algorithm>
 #include <string>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 template<std::size_t N>
 struct CtStringValue {
@@ -14,4 +15,4 @@ struct CtStringValue {
     char        value[N];
 };
 
-}
+END_VFS_NAMESPACE

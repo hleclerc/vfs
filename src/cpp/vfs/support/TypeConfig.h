@@ -7,7 +7,7 @@
 #include <vector>
 #include <span>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 // number types
 using       PI64                       = std::conditional< sizeof( unsigned long ) == 8, unsigned long, unsigned long long >::type;
@@ -37,7 +37,6 @@ TA using    Tuple                      = std::tuple<A...>;
 TUV using   Pair                       = std::pair<U,V>;
 TT using    Span                       = std::span<T>;
 using       Str                        = std::string;
-TT using    Vec                        = std::vector<T>;
 
 // // args for ctor selection
 // #define DECL_VOID_STRUCT_TTT( NAME, ... ) template<class T> struct NAME { static auto base_type_name() { return #NAME; } static void for_each_template_arg( auto &&f ) { f( S<T>() ); } }
@@ -65,6 +64,7 @@ DECL_VOID_STRUCT_STD( FromItemValues                 ); ///< will make copies
 DECL_VOID_STRUCT_STD( FromItemValue                  );
 DECL_VOID_STRUCT_STD( FromIterator                   ); ///<
 DECL_VOID_STRUCT_STD( FromValue                      );
+DECL_VOID_STRUCT_STD( FromSize                       );
 
 // // common concepts
 // TT concept IsNotA_Unitialized = std::is_same_v<T,Uninitialized> == false;
@@ -80,7 +80,7 @@ TT concept StrLike            = std::is_convertible_v<T,std::string_view>;
 
 #undef DECL_VOID_STRUCT_STD
 
-}
+END_VFS_NAMESPACE
 
 // common includes
 #include "ASSERT.h" // IWYU pragma: export

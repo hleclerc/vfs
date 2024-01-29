@@ -3,7 +3,7 @@
 #include "DisplayItem.h"
 #include <vector>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /**
 */
@@ -20,4 +20,4 @@ public:
     Items        items;
 };
 
-}
+END_VFS_NAMESPACE

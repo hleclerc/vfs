@@ -4,7 +4,7 @@
 #include "DisplayItem_Number.h"
 #include <string_view>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /// a class to create DisplayItem
 class Displayer {
@@ -22,4 +22,4 @@ private:
     BumpPointerPool pool;
 };
 
-}
+END_VFS_NAMESPACE

@@ -3,7 +3,7 @@
 #include "vfs_system/RtFunction.h"
 #include "vfs_system/VfsTd.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 class Function { VFS_TD_ATTRIBUTES( Function, "vfs" );
 public:

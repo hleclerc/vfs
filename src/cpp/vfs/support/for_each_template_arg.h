@@ -4,7 +4,7 @@
 #include "TypeConfig.h"
 #include <functional>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /// common types
 TTA void for_each_template_arg( CtType<std::function<T(A...)>>, auto &&f ) { f( CtType<T>() ); ( f( CtType<A>() ), ... ); }
@@ -19,8 +19,6 @@ DECL_BASE_TYPE_INFO_T_( CtType                );
 DECL_BASE_TYPE_INFO_A_( Tuple                 );
 DECL_BASE_TYPE_INFO_UV( Pair                  );
 DECL_BASE_TYPE_INFO_T_( Span                  );
-DECL_BASE_TYPE_INFO_T_( Vec                   );
-// DECL_BASE_TYPE_INFO_i_( N                  );
 
 #undef DECL_BASE_TYPE_INFO_UV
 #undef DECL_BASE_TYPE_INFO_A_
@@ -32,4 +30,4 @@ TUV auto for_each_template_arg( CtType<U>, V &&f ) -> decltype( U::for_each_temp
 // shortcut
 TUV auto for_each_template_arg( V &&f ) { return for_each_template_arg( CtType<U>(), std::forward<V>( f ) ); }
 
-}
+END_VFS_NAMESPACE

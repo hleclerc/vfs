@@ -2,7 +2,7 @@
 
 #include "TypeConfig.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 constexpr inline auto nb_bits_mantissa( CtType<PI64> ) { return CtInt<64>(); }
 constexpr inline auto nb_bits_mantissa( CtType<PI32> ) { return CtInt<32>(); }
@@ -21,4 +21,4 @@ constexpr inline auto nb_bits_mantissa( CtType<Bool> ) { return CtInt<1 >(); }
 constexpr inline auto nb_bits_mantissa( CtType<FP64> ) { return CtInt<52>(); }
 constexpr inline auto nb_bits_mantissa( CtType<FP32> ) { return CtInt<25>(); }
 
-}
+END_VFS_NAMESPACE

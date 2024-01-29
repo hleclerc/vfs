@@ -3,7 +3,7 @@
 #include <vfs/containers/VecImpl.h>
 #include "NdArrayWrapper.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 #define DTP template<class Item,class CtSizes,int dim_offset>
 #define UTP NdArrayWrapper<Item,CtSizes,dim_offset>
@@ -53,7 +53,7 @@ DTP DisplayItem *UTP::display( Displayer &ds ) const {
     Vec<DisplayItem *> v;
     v.reserve( size( 0 ) );
     for( PI i = 0; i < size( 0 ); ++i )
-        v.push_back( Vfs::display( ds, operator[]( i ) ) );
+        v.push_back( VFS_NAMESPACE::display( ds, operator[]( i ) ) );
     return ds.array( v );
 }
 
@@ -88,4 +88,4 @@ DTP Item *UTP::data( PI offset_in_bytes ) {
 #undef DTP
 #undef UTP
 
-} // namespace Vfs
+END_VFS_NAMESPACE

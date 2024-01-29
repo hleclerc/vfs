@@ -2,7 +2,7 @@
 
 #include "../TypeConfig.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 inline Str ctor_for( SI32 c ) { return std::to_string( c ); }
 
@@ -28,7 +28,7 @@ Str ctor_for( const auto &vec ) {
         }
         return res + " }";
     } else
-        found_no_way( "" );
+        STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "" );
 }
 
-}
+END_VFS_NAMESPACE

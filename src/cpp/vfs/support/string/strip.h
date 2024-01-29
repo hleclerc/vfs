@@ -1,9 +1,10 @@
 #pragma once
 
+#include "../vfs_namespace.h"
 #include <string_view>
 #include <string>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 inline std::string_view strip( std::string_view res ) {
     while ( res.size() && res.back() == ' ' )
@@ -20,4 +21,4 @@ inline void strip_inplace( std::string &res ) {
         res = res.substr( 1 ); // TODO: optimize
 }
 
-}
+END_VFS_NAMESPACE

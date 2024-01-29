@@ -1,6 +1,6 @@
 #include "VfsSymbolCache.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ON_INIT {
     // generic forwarders -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -49,4 +49,4 @@ ON_INIT {
     };
 }
 
-} // namespace
+END_VFS_NAMESPACE

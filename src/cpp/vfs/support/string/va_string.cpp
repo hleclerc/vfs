@@ -2,7 +2,7 @@
 #include "va_string.h"
 #include <vector>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
   
 static bool is_a_letter( char c ) { return ( c >= 'A' && c <= 'Z' ) || ( c >= 'a' && c <= 'z' ) || c == '_'; };
 static bool is_a_number( char c ) { return c >= '0' && c <= '9'; };
@@ -75,4 +75,4 @@ std::string va_string_repl_vec( const std::initializer_list<std::string> &values
     return res;
 }
 
-}
+END_VFS_NAMESPACE

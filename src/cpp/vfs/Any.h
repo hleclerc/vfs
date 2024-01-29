@@ -2,7 +2,7 @@
 
 #include "vfs_system/VfsTd.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 class Any { VFS_TD_ATTRIBUTES( Any, "vfs" );
 public:
@@ -10,4 +10,4 @@ public:
     Any() : Any( Void() ) {}
 };
 
-}
+END_VFS_NAMESPACE

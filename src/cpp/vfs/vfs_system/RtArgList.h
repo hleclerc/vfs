@@ -5,7 +5,7 @@
 #include "../support/CompilationFlags.h"
 #include "../support/type_name.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 class RtArgList {
@@ -20,7 +20,7 @@ public:
 
     void add( auto *arg, bool owned ) {
         // compilation flags
-        Vec<Str> seen;
+        Seq<Str> seen;
         get_compilation_flags_rec( cf, seen, DECAYED_CT_OF( *arg ) );
         if constexpr ( requires { vfs_object_get_compilation_flags( cf, seen, *arg ); } )
             vfs_object_get_compilation_flags( cf, seen, *arg );
@@ -32,27 +32,27 @@ public:
 
         //
         if constexpr ( requires { vfs_object_ct_cast( *arg ); } ) {
-            Vec<Str> lcasts = vfs_object_ct_cast( *arg );
-            add( arg, owned, Vfs::type_name( DECAYED_CT_OF( *arg ) ), ct_key, &lcasts );
+            Seq<Str> lcasts = vfs_object_ct_cast( *arg );
+            add( arg, owned, VFS_NAMESPACE::type_name( DECAYED_CT_OF( *arg ) ), ct_key, &lcasts );
         } else {
-            add( arg, owned, Vfs::type_name( DECAYED_CT_OF( *arg ) ), ct_key, nullptr );
+            add( arg, owned, VFS_NAMESPACE::type_name( DECAYED_CT_OF( *arg ) ), ct_key, nullptr );
         }
     }
-
-    void add( void *arg, bool owned, const Str &type_name, const Str &ct_key, const Vec<Str> *lcasts );
+    
+    void add( void *arg, bool owned, const Str &type_name, const Str &ct_key, const Seq<Str> *lcasts );
 
     static void get_compilation_flags( CompilationFlags &cn );
     static auto type_name() { return "RtArgList"; }
-
-    Vec<Str>         type_names;
-    Vec<void *>      pointers;
-    Vec<Str>         casts;
+    
+    Seq<Str>         type_names;
+    Seq<void *>      pointers;
+    Seq<Str>         casts;
     Str              keys;
     CompilationFlags cf;
 };
 
-void vfs_object_get_compilation_flags( CompilationFlags &cf, Vec<Str> &seen, const RtArgList &ral );
-const Vec<Str> &vfs_object_ct_cast( const RtArgList &ral );
+void vfs_object_get_compilation_flags( CompilationFlags &cf, Seq<Str> &seen, const RtArgList &ral );
+const Seq<Str> &vfs_object_ct_cast( const RtArgList &ral );
 const Str &vfs_object_ct_key( const RtArgList &ral );
 
-} // namespace Vfs
+END_VFS_NAMESPACE

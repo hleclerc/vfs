@@ -66,7 +66,7 @@ class Link( Actor ):
         src_content += "\n"
         src_content += "ON_INIT {\n"
         for source in self.seen_sources:
-            src_content += f'    Vfs::used_sources.insert( "{ source }" );\n'
+            src_content += f'    VFS_NAMESPACE::used_sources.insert( "{ source }" );\n'
         src_content += "}\n"
 
         self.launch( self.add_source, WriteFile( self.options_to_remove() ), content = src_content, ext = "cpp", stem = "used_sources" )

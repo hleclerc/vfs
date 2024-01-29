@@ -5,7 +5,7 @@
 #include <numpy/ndarrayobject.h>
 #include <Python.h>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 // NPY_BOOL=0,
 // NPY_BYTE, NPY_UBYTE,
@@ -54,4 +54,4 @@ PyObject *vfs_to_python( auto &&obj )
 }
 
 
-} // namespace Vfs
+END_VFS_NAMESPACE

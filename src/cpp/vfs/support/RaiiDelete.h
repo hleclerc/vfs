@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 template<class T>
 struct RaiiDelete {
@@ -15,4 +15,4 @@ RaiiDelete<T> raii_delete( T *val ) {
     return val;
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

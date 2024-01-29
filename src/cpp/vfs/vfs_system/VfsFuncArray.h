@@ -3,7 +3,7 @@
 #include "../support/TypeConfig.h"
 #include <map>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 template<class KeyList,class Callable>
@@ -93,7 +93,7 @@ public:
 //     Callable*     init;
 // };
 
-}
+END_VFS_NAMESPACE
 
 #include "VfsFuncArray.tcc" // IWYU pragma: export
 

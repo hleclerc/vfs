@@ -1,9 +1,9 @@
 #include "split.h"
 
-namespace Vfs {
-
-Vec<Str> split( StrView str, const Str &sep ) {
-    Vec<Str> res;
+BEG_VFS_NAMESPACE
+    
+        Seq<Str> split( StrView str, const Str &sep ) {
+            Seq<Str> res;
 
     while ( true ) {
         auto p = str.find( sep );

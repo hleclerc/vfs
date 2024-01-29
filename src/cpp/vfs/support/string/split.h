@@ -2,12 +2,12 @@
 
 #include "../TypeConfig.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
+    
+        Seq<Str> split( StrView str, const Str &sep = " " );
 
-Vec<Str> split( StrView str, const Str &sep = " " );
-
-TT Vec<Str> split( StrView str, const Str &sep, const T &func ) {
-    Vec<Str> res;
+TT Seq<Str> split( StrView str, const Str &sep, const T &func ) {
+    Seq<Str> res;
 
     while ( true ) {
         auto p = str.find( sep );

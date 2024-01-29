@@ -4,7 +4,7 @@
 #include <ostream>
 #include <vector>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 class DisplayContext;
 
 /**
@@ -30,4 +30,4 @@ public:
     static auto  type_name   () { return "DisplayItem"; }
 };
 
-}
+END_VFS_NAMESPACE

@@ -2,7 +2,7 @@
 
 #include "../TypeConfig.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 inline StrView decay( StrView type ) {
     while ( type.ends_with( '&' ) || type.ends_with( ' ' ) )
@@ -14,4 +14,4 @@ inline StrView decay( StrView type ) {
     return type;
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

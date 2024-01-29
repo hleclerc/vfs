@@ -9,7 +9,7 @@
 #include "get_vfs_func_inst.h"
 #include "VfsFunc.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 #define DTP template<CtStringValue name,class Return,class... Args>
 #define UTP VfsFunc<name,Return,Args...>
@@ -26,13 +26,13 @@ DTP Return UTP::operator()( Args ...args ) {
 
 DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
     // includes with declared types
-    Vec<Str> seen;
+    Seq<Str> seen;
     CompilationFlags cn;
     get_compilation_flags_rec( cn, seen, CtType<Return>() );
     ( get_compilation_flags_rec( cn, seen, CtType<A>() ), ... );
 
     // ct casts + nb_args + compilation needs for each arg
-    Vec<Vec<Str>> ct_casts;
+    Seq<Seq<Str>> ct_casts;
     ct_casts.reserve( sizeof...( A ) );
     auto get_ct_cast_for = [&]( const auto &arg ) {
         // includes
@@ -41,9 +41,9 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
 
         // casts
         if constexpr( requires { vfs_object_ct_cast( arg ); } )
-            ct_casts.emplace_back( vfs_object_ct_cast( arg ) );
+            ct_casts.push_back( vfs_object_ct_cast( arg ) );
         else
-            ct_casts.push_back( { "" } );
+            ct_casts.push_back( Seq<Str>{ "" } );
     };
     ( get_ct_cast_for( args ), ... );
 
@@ -100,4 +100,4 @@ auto vfs_call( Args&&... args ) {
 #undef DTP
 #undef UTP
 
-}
+END_VFS_NAMESPACE

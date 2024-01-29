@@ -4,7 +4,7 @@
 #include <ostream>
 #include <vector>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 struct DisplayContext {
@@ -28,4 +28,4 @@ struct DisplayContext {
     std::ostream*  os                 = nullptr;
 };
 
-}
+END_VFS_NAMESPACE

@@ -2,8 +2,8 @@
 
 #include "Memory/Memory_Cpu.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 Memory_Cpu memory_of( const auto &a ) { return {}; }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

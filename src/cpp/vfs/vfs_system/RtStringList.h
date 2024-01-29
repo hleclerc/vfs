@@ -1,20 +1,20 @@
 #pragma once
 
-#include "../support/TypeConfig.h"
+#include "../containers/Seq.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 class RtStringList {
 public:
-    static auto cast_to_string( StrView str ) -> Vec<Str>;
+    static auto cast_to_string( StrView str ) -> Seq<Str>;
 
     static auto type_name     () { return "RtStringList"; }
 
-    Vec<Str>    value;        ///<
+    Seq<Str>    value;        ///<
 };
 
-Vec<Str>        vfs_object_ct_cast( const RtStringList &obj );
-const Vec<Str> &vfs_object_ct_key ( const RtStringList &obj );
+Seq<Str>        vfs_object_ct_cast( const RtStringList &obj );
+const Seq<Str> &vfs_object_ct_key ( const RtStringList &obj );
 
-} // namespace Vfs
+END_VFS_NAMESPACE

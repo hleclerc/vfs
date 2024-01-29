@@ -2,7 +2,7 @@
 
 #include "VfsTd.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 #define DTP template<class Object_,int size_,int alig_>
 #define UTP VfsTd<Object_,size_,alig_>
@@ -66,4 +66,4 @@ DTP TT T &UTP::cast() {
 #undef DTP
 #undef UTP
 
-}
+END_VFS_NAMESPACE

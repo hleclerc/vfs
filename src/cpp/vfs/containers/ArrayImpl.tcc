@@ -2,11 +2,11 @@
 
 #include "ArrayImpl.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 
 
-} // namespace Vfs
+END_VFS_NAMESPACE
 
 // /// homogeneous dynamic vector ---------------------------------------------------------------------
 // #define DTP template<class Item,int alig>

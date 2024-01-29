@@ -8,7 +8,7 @@
 #define CHECK_REPR( A, B ) \
     CHECK( to_string( A, { .use_delimiters = true } ) == to_string( B, { .use_delimiters = true } ) )
 
-using namespace Vfs;
+//using namespace Vfs;
 
 //#define CHECK_REPR_F( A, B, F ) \
 //    CHECK( to_string( A, { .filter = F, .rec = 1 } ) == to_string( B, { .filter = F, .rec = 1 } ) )

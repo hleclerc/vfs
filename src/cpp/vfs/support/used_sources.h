@@ -1,10 +1,11 @@
 #pragma once
 
+#include "vfs_namespace.h"
 #include <string>
 #include <set>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 extern std::set<std::string> used_sources;
 
-} // namespace Vfs
+END_VFS_NAMESPACE

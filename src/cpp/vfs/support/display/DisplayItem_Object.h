@@ -3,7 +3,7 @@
 #include "DisplayItem.h"
 #include <vector>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /**
 */
@@ -21,4 +21,4 @@ public:
     std::vector<Attribute> attributes; ///<
 };
 
-}
+END_VFS_NAMESPACE

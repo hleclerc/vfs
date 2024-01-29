@@ -3,7 +3,7 @@
 
 #include "vfs_to_python_function_map.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 std::map<Str,Str> vfs_to_python_function_map;
 
@@ -40,4 +40,4 @@ ON_INIT {
     };
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

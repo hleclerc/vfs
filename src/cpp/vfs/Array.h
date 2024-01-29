@@ -4,7 +4,7 @@
 #include "internal/ArrayTagList.h"
 #include "Int.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 template<class Item,class Tags=ArrayTagList<>>
 class Array { VFS_TD_ATTRIBUTES_TT( Array, "vfs", Item, Tags );

@@ -1,6 +1,8 @@
 #pragma once
 
-namespace Vfs {
+#include "vfs_namespace.h"
+
+BEG_VFS_NAMESPACE
 
 template<class T>
 struct RaiiSave {
@@ -22,4 +24,4 @@ RaiiSave<T> raii_save( T &val, const U &nval ) {
     return RaiiSave<T>( val, nval );
 }
 
-}
+END_VFS_NAMESPACE

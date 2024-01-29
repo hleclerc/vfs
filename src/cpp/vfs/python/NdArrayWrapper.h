@@ -6,7 +6,7 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/ndarrayobject.h>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 template<class Item,class CtSizes,int dim_offset=0>
@@ -44,6 +44,6 @@ public:
 TUVi constexpr auto tensor_order( CtType<NdArrayWrapper<U,V,i>> ) { return CtInt<V::size()>(); }
 TUVi constexpr auto item_type( CtType<NdArrayWrapper<U,V,i>> ) { return CtType<U>(); }
 
-} // namespace Vfs
+END_VFS_NAMESPACE
 
 #include "NdArrayWrapper.tcc" // IWYU pragma: export

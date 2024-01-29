@@ -9,7 +9,7 @@
 #include <vfs/support/string/va_string.h>
 #include <vfs/support/string/join.h>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 std::map<Str,VpiConversionFunc *> python_to_vfs_function_map;
 
@@ -132,4 +132,4 @@ ON_INIT {
     python_to_vfs_function_map[ "str"           ] = str_conv            ;
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

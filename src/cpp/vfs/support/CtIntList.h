@@ -2,7 +2,7 @@
 
 #include "CtInt.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 template<int... A>
@@ -13,7 +13,7 @@ template<int H,int... T>
 struct CtIntList<H,T...> {
     using                    Tail                 = CtIntList<T...>;
 
-    static void              for_each_template_arg( auto &&f ) { f( Vfs::CtInt<H>() ); ( f( Vfs::CtInt<T>() ), ... ); }
+    static void              for_each_template_arg( auto &&f ) { f( VFS_NAMESPACE::CtInt<H>() ); ( f( VFS_NAMESPACE::CtInt<T>() ), ... ); }
     static auto              template_type_name   () { return "CtIntList"; }
     static constexpr auto    reduction            ( const auto &f, auto &&v ) { return Tail::reduction( f, f( CtInt<H>(), v ) ); }
     static auto              apply                ( auto &&f, auto... values ) { return Tail::apply( FORWARD( f ), values..., CtInt<H>() ); }
@@ -39,4 +39,4 @@ struct CtIntList<> {
 Ti auto ct_range( CtInt<i> ci ) { if constexpr( i ) return ct_range( CtInt<i-1>{} ).with( CtInt<i-1>{} ); else return CtIntList<>{}; }
 Ti auto ct_range() { return ct_range( CtInt<i>{} ); }
 
-}
+END_VFS_NAMESPACE

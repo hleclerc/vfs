@@ -3,7 +3,7 @@
 #include "DisplayItem_Array.h"
 #include "Displayer.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 DisplayItem *Displayer::string( std::string_view str ) {
     return pool.create<DisplayItem_String>( str );
@@ -23,4 +23,4 @@ DisplayItem *Displayer::array( const std::vector<DisplayItem *> &items ) {
     return res;
 }
 
-}
+END_VFS_NAMESPACE

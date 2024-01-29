@@ -1,6 +1,6 @@
 #include "DisplayParameters.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 
-}
+END_VFS_NAMESPACE

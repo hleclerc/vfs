@@ -2,8 +2,9 @@
 
 #include "../support/string/ctor_of_string_to_string.h"
 #include "../support/string/ctor_for.h"
+#include "../containers/Seq.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 class RtString {
@@ -18,8 +19,8 @@ inline const auto &vfs_object_ct_key( const RtString &obj ) {
     return obj.value;
 }
 
-inline Vec<Str> vfs_object_ct_cast( const RtString &obj ) {
+inline Seq<Str> vfs_object_ct_cast( const RtString &obj ) {
     return { "auto {ARG} = CtString<" + ctor_for( obj.value ) + ">();" };
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

@@ -2,7 +2,7 @@
 
 #include "../support/TypeConfig.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 struct VfsTdTypeTable {
@@ -12,4 +12,4 @@ struct VfsTdTypeTable {
     PI32 array_size                 = 256; ///< func table init their arrays with this number. If nb_inst_types > max_inst_types, func table must be resized
 };
 
-}
+END_VFS_NAMESPACE

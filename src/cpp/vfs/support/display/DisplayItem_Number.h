@@ -3,7 +3,7 @@
 #include "DisplayContext.h"
 #include "DisplayItem.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /**
 */
@@ -16,4 +16,4 @@ public:
     T            val;
 };
 
-}
+END_VFS_NAMESPACE

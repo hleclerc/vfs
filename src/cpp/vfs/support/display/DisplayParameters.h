@@ -1,8 +1,9 @@
 #pragma once
 
+#include "../vfs_namespace.h"
 #include <string>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /**
 */
@@ -22,4 +23,4 @@ public:
     int         tab_size                   = 2; ///< -1 => use the tab character. Else, use spaces
 };
 
-}
+END_VFS_NAMESPACE

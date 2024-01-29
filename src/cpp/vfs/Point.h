@@ -3,7 +3,7 @@
 #include "Scalar.h"
 #include "Array.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 using Point = Array<Scalar,ArrayTagList<ArrayTag::ForceNbDimsTo<1>,ArrayTag::WantCtSizeInAllDims>>;
 

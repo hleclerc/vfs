@@ -1,7 +1,7 @@
 #include "vfs_system/VfsSymbolCache.h"
 #include "vfs_system/RtString.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ON_INIT {
     // make a CtType from ct values
@@ -12,7 +12,7 @@ ON_INIT {
         cn.add_flags_to( cg );
 
         if ( cg.arg_casts.size() > 3 ) {
-            Vec<Str> args;
+            Seq<Str> args;
             for( PI i = 3; i < cg.arg_casts.size(); ++i )
                 args.push_back( va_string( "GET_DT_VALUE( arg_$0 )", i ) );
             cg.add_line( "vfs_td.construct( FromValue(), CtType<$0<$1>>() );", name, join( args, ", " ) );
@@ -22,4 +22,4 @@ ON_INIT {
     };
 }
 
-} // namespace
+END_VFS_NAMESPACE

@@ -3,7 +3,7 @@
 #include <vfs/vfs_system/VfsFunc.h>
 #include "../PyObject.h" // IWYU pragma: export
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 PyObject *vfs_to_python( StrLike auto &&s ) { return PyUnicode_FromStringAndSize( s.data(), s.size() ); }
 
@@ -26,4 +26,4 @@ TA PyObject *vfs_to_python( const Tuple<A...> &s ) {
     return res;
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

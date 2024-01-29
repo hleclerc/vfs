@@ -3,7 +3,7 @@
 #include "common_macros.h"
 #include "CtString.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 // needed declarations, defined elsewhere
 constexpr auto min( auto &&a, auto &&b );
@@ -37,4 +37,4 @@ constexpr auto call_by_name( CtString<"max">, auto &&a, auto &&b ) { return max(
 
 constexpr auto call_by_name( CtString<"exact_div">, auto &&a, auto &&b ) { return exact_div( FORWARD( a ), FORWARD( b ) ); }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

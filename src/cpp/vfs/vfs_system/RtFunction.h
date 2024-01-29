@@ -2,7 +2,7 @@
 
 #include "../support/CompilationFlags.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 class RtFunction {
@@ -16,8 +16,8 @@ public:
     Cf          cf;
 };
 
-void vfs_object_get_compilation_flags( CompilationFlags &cn, Vec<Str> &seen, const RtFunction &obj );
+void vfs_object_get_compilation_flags( CompilationFlags &cn, Seq<Str> &seen, const RtFunction &obj );
 const Str &vfs_object_ct_key( const RtFunction &obj );
-Vec<Str> vfs_object_ct_cast( const RtFunction &obj );
+Seq<Str> vfs_object_ct_cast( const RtFunction &obj );
 
-} // namespace Vfs
+END_VFS_NAMESPACE

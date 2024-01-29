@@ -2,7 +2,7 @@
 
 #include "../TypeConfig.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 inline Str symbol_for( const Str &str ) {
     Str res;
@@ -25,4 +25,4 @@ inline Str symbol_for( const Str &str ) {
     return res;
 }
 
-}
+END_VFS_NAMESPACE

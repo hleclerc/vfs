@@ -4,7 +4,7 @@
 #include "VfsTdType.h" // IWYU pragma: export
 #include "VfsFunc.h" // IWYU pragma: export
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 class Type;
 
 ///
@@ -53,7 +53,7 @@ bool vfs_object_update_for_ct_key( const HasVfsTd auto &obj ) {
     return true;
 }
 
-void vfs_object_get_compilation_flags( CompilationFlags &cn, Vec<Str> &seen, const HasVfsTd auto &obj ) {
+void vfs_object_get_compilation_flags( CompilationFlags &cn, Seq<Str> &seen, const HasVfsTd auto &obj ) {
     VfsTdTypeAncestor *ta = VfsTdTypeAncestor::type_at_global_index( obj._vfs_type_and_data.global_type_index );
     ta->get_compilation_flags_rec( cn, seen );
 }
@@ -67,7 +67,7 @@ PI32 vfs_object_ct_key( const HasVfsTd auto &obj ) {
     return obj._vfs_type_and_data.instantiated_type_index;
 }
 
-Vec<Str> vfs_object_ct_cast( const HasVfsTd auto &obj ) {
+Seq<Str> vfs_object_ct_cast( const HasVfsTd auto &obj ) {
     VfsTdTypeAncestor *ta = VfsTdTypeAncestor::type_at_global_index( obj._vfs_type_and_data.global_type_index );
     return { "auto &&{ARG} = vfs_td_cast( CtType<" + ta->name() + ">(), FORWARD( {ARG_DECL} ) );" };
 }
@@ -105,6 +105,5 @@ auto &&vfs_td_cast( auto type, auto &&obj ) {
     VFS_TD_ATTRIBUTES( NAME, PATH ) \
     static void          for_each_template_arg( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); f( CtType<TEMPLATE_ARG_1>() ); }
 
-}
-
+END_VFS_NAMESPACE
 #include "VfsTd.tcc" // IWYU pragma: export

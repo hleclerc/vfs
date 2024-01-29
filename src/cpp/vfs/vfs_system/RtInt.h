@@ -2,7 +2,7 @@
 
 #include "../support/CompilationFlags.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 class RtInt {
@@ -17,8 +17,8 @@ inline const auto &vfs_object_ct_key( const RtInt &obj ) {
     return obj.value;
 }
 
-inline Vec<Str> vfs_object_ct_cast( const RtInt &obj ) {
+inline Seq<Str> vfs_object_ct_cast( const RtInt &obj ) {
     return { "auto {ARG} = CtInt<" + std::to_string( obj.value ) + ">();" };
 }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

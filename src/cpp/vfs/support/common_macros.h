@@ -19,6 +19,6 @@
 
 // type handling
 #define     DECAYED_TYPE_OF( v ) std::decay_t<decltype( v )>
-#define     DECAYED_CT_OF( v )   Vfs::CtType<std::decay_t<decltype( v )>>()
+#define     DECAYED_CT_OF( v )   VFS_NAMESPACE::CtType<std::decay_t<decltype( v )>>()
 #define     GET_DT_VALUE( v )    std::decay_t<decltype( v )>::value
 #define     FORWARD( v )         std::forward<decltype( v )>( v )

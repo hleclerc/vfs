@@ -6,9 +6,9 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstring>
-#include <memory>
+// #include <memory>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 inline BumpPointerPool::BumpPointerPool( BumpPointerPool &&that ) {
     current_ptr.cp = that.current_ptr.cp;
@@ -158,4 +158,4 @@ inline void BumpPointerPool::free() {
     last_frame = nullptr;
 }
 
-}
+END_VFS_NAMESPACE

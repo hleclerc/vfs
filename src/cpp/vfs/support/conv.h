@@ -2,8 +2,8 @@
 
 #include "CtType.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 template<class T> T conv( CtType<T>, auto &&v ) { return FORWARD( v ); }
 
-} // namespace Vfs
+END_VFS_NAMESPACE

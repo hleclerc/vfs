@@ -1,15 +1,15 @@
 #pragma once
 
 #include "select_with_n_indices.h"
-#include "VecImpl.h"
+#include "Seq.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 /// static vector ---------------------------------------------------------------------
 #define DTP template<class Item,int static_size,int local_size,int alignment,bool allow_heap>
-#define UTP VecImpl<Item,static_size,local_size,alignment,allow_heap>
+#define UTP Seq<Item,static_size,local_size,alignment,allow_heap>
 
-DTP UTP::VecImpl( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, auto &&...operands ) {
+DTP UTP::Seq( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, auto &&...operands ) {
     for( PI index = 0; index < PI( size() ); ++index ) {
         nb_indices_to_take.apply( [&]( auto... nb_indices_to_take ) {
             new ( data( index ) ) Item( call_by_name( op_name, select_with_n_indices( operands, nb_indices_to_take, index )... ) );
@@ -17,7 +17,7 @@ DTP UTP::VecImpl( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take,
     }
 }
 
-DTP UTP::VecImpl( FromItemValues, auto &&...values ) {
+DTP UTP::Seq( FromItemValues, auto &&...values ) {
     PI index = 0;
 
     static_assert( sizeof...( values ) <= static_size );
@@ -27,17 +27,17 @@ DTP UTP::VecImpl( FromItemValues, auto &&...values ) {
         new ( data( index++ ) ) Item;
 }
 
-DTP UTP::VecImpl( FromItemValue, auto &&...ctor_args ) {
+DTP UTP::Seq( FromItemValue, auto &&...ctor_args ) {
     for( PI index = 0; index < size(); ++index )
         new ( data( index ) ) Item( ctor_args... );
 }
 
-DTP UTP::VecImpl( FromIterator, auto iter ) {
+DTP UTP::Seq( FromIterator, auto iter ) {
     for( PI index = 0; index < size(); ++index )
         new ( data( index ) ) Item( *( iter++ ) );
 }
 
-DTP TT UTP::VecImpl( const std::initializer_list<T> &lst ) {
+DTP TT UTP::Seq( const std::initializer_list<T> &lst ) {
     auto iter = lst.begin();
     for( PI index = 0; index < min( lst.size(), size() ); ++index )
         new ( data( index ) ) Item( *(iter++) );
@@ -46,7 +46,7 @@ DTP TT UTP::VecImpl( const std::initializer_list<T> &lst ) {
         new ( data( index ) ) Item;
 }
 
-DTP UTP::VecImpl( const HasSizeAndAccess auto &l ) {
+DTP UTP::Seq( const HasSizeAndAccess auto &l ) {
     using namespace std;
     if constexpr( requires { l[ 0 ]; } ) {
         for( PI index = 0; index < min( size(), l.size() ); ++index )
@@ -54,7 +54,7 @@ DTP UTP::VecImpl( const HasSizeAndAccess auto &l ) {
     } else {
         PI index = 0;
         for( const auto &v : l ) {
-            if ( index >= size )
+            if ( index >= size() )
                 break;
             new ( data( index++ ) ) Item( v );
         }
@@ -64,33 +64,33 @@ DTP UTP::VecImpl( const HasSizeAndAccess auto &l ) {
         new ( data( index ) ) Item;
 }
 
-DTP UTP::VecImpl( const VecImpl &that ) {
+DTP UTP::Seq( const Seq &that ) {
     for( PI index = 0; index < size(); ++index )
         new ( data( index ) ) Item( that[ index ] );
 }
 
-DTP UTP::VecImpl( VecImpl &&that ) {
+DTP UTP::Seq( Seq &&that ) {
     for( PI index = 0; index < size(); ++index )
         new ( data( index ) ) Item( std::move( that[ index ] ) );
 }
 
-DTP UTP::VecImpl() {
+DTP UTP::Seq() {
     for( PI index = 0; index < size(); ++index )
         new ( data( index ) ) Item;
 }
 
-DTP UTP::~VecImpl() {
+DTP UTP::~Seq() {
     for( PI i = static_size; i--; )
         data( i )->~Item();
 }
 
-DTP UTP &UTP::operator=( const VecImpl &that ) {
+DTP UTP &UTP::operator=( const Seq &that ) {
     for( PI i = 0; i < size(); ++i )
         operator[]( i ) = that[ i ];
     return *this;
 }
 
-DTP UTP &UTP::operator=( VecImpl &&that ) {
+DTP UTP &UTP::operator=( Seq &&that ) {
     for( PI i = 0; i < size(); ++i )
         operator[]( i ) = std::move( that[ i ] );
     return *this;
@@ -133,36 +133,47 @@ DTP Item *UTP::data() {
 
 /// dynamic vector ---------------------------------------------------------------------
 #define DTP template<class Item,int alignment>
-#define UTP VecImpl<Item,-1,0,alignment,true>
+#define UTP Seq<Item,-1,0,alignment,true>
 
-DTP UTP::VecImpl( FromSizeAndInitFunctionOnIndex, PI size, auto &&func ) : VecImpl( FromReservationSize(), size, size ) {
+DTP UTP::Seq( FromSizeAndInitFunctionOnIndex, PI size, auto &&func ) : Seq( FromReservationSize(), size, size ) {
     for( PI index = 0; index < size; ++index )
         func( data_ + index, index );
 }
 
-DTP UTP::VecImpl( FromSizeAndItemValue, PI size, auto &&...ctor_args ) : VecImpl( FromReservationSize(), size, size ) {
+DTP UTP::Seq( FromSizeAndItemValue, PI size, auto &&...ctor_args ) : Seq( FromReservationSize(), size, size ) {
     for( PI index = 0; index < size; ++index )
         new ( data_ + index ) Item( FORWARD( ctor_args )... );
 }
 
-DTP UTP::VecImpl( FromOperationOnItemsOf, auto &&a, auto &&operation ) : VecImpl( FromReservationSize(), a.size(), a.size() ) {
+DTP UTP::Seq( FromSize, PI size ) : Seq( FromReservationSize(), size, size ) {
+    for( PI index = 0; index < size; ++index )
+        new ( data_ + index ) Item;
+}
+
+DTP UTP::Seq( FromOperationOnItemsOf, auto &&a, auto &&operation ) : Seq( FromReservationSize(), a.size(), a.size() ) {
     constexpr bool move = std::is_rvalue_reference_v<decltype(a)>;
     for( PI index = 0; index < a.size(); ++index )
         new ( data_ + index ) Item( operation( move ? std::move( a[ index ] ) : a[ index ] ) );
 }
 
-DTP UTP::VecImpl( FromReservationSize, PI capa, PI raw_size ) {
+DTP UTP::Seq( FromReservationSize, PI capa, PI raw_size ) {
     data_ = allocate( capa );
     size_ = raw_size;
     capa_ = capa;
 }
 
-DTP UTP::VecImpl( FromItemValues, auto &&...values ) : VecImpl( FromReservationSize(), sizeof...( values ), sizeof...( values ) ) {
+DTP UTP::Seq( FromItemValues, auto &&...values ) : Seq( FromReservationSize(), sizeof...( values ), sizeof...( values ) ) {
     PI index = 0;
     ( new ( data_ + index++ ) Item( FORWARD( values ) ), ... );
 }
 
-DTP UTP::VecImpl( const HasSizeAndAccess auto &l ) : VecImpl( FromReservationSize(), l.size(), l.size() ) {
+DTP UTP::Seq( const std::initializer_list<Item> &l ) : Seq( FromReservationSize(), l.size(), l.size() ) {
+    PI index = 0;
+    for( const Item &v : l )
+        new ( data_ + index++ ) Item( v );
+}
+
+DTP UTP::Seq( const HasSizeAndAccess auto &l ) : Seq( FromReservationSize(), l.size(), l.size() ) {
     if constexpr( requires { l[ 0 ]; } ) {
         for( PI index = 0; index < l.size(); ++index )
             new ( data_ + index ) Item( l[ index ] );
@@ -173,21 +184,21 @@ DTP UTP::VecImpl( const HasSizeAndAccess auto &l ) : VecImpl( FromReservationSiz
     }
 }
 
-DTP UTP::VecImpl( const VecImpl &that ) : VecImpl( FromReservationSize(), that.size(), that.size() ) {
+DTP UTP::Seq( const Seq &that ) : Seq( FromReservationSize(), that.size(), that.size() ) {
     for( PI index = 0; index < that.size(); ++index )
         new ( data_ + index ) Item( that[ index ] );
 }
 
-DTP UTP::VecImpl( VecImpl &&that ) {
+DTP UTP::Seq( Seq &&that ) {
     data_ = std::exchange( that.data_, nullptr );
     size_ = std::exchange( that.size_, 0 );
     capa_ = std::exchange( that.capa_, 0 );
 }
 
-DTP UTP::VecImpl() : VecImpl( FromReservationSize(), 0, 0 ) {
+DTP UTP::Seq() : Seq( FromReservationSize(), 0, 0 ) {
 }
 
-DTP UTP::~VecImpl () {
+DTP UTP::~Seq () {
     if ( capa_ ) {
         for( PI i = size(); i--; )
             data( i )->~Item();
@@ -195,17 +206,46 @@ DTP UTP::~VecImpl () {
     }
 }
 
-DTP UTP &UTP::operator=( const VecImpl &that ) {
-    TODO;
-    for( PI i = 0; i < size(); ++i )
-        operator[]( i ) = that[ i ];
+DTP UTP &UTP::operator=( const Seq &that ) {
+    // need more room ?
+    if ( capa_ < that.size() ) {
+        if ( capa_ ) {
+            for( PI i = size(); i--; )
+                data( i )->~Item();
+            std::free( data_ );
+        } else
+            capa_ = 1;
+
+        while ( capa_ < that.size() )
+            capa_ *= 2;
+
+        data_ = allocate( capa_ );
+        size_ = that.size_;
+        for( PI i = 0; i < that.size_; ++i )
+            new ( data_ + i ) Item( that[ i ] );
+        return *this;
+    }
+
+    // else, copy in place
+    for( PI i = 0; i < std::min( size_, that.size_ ); ++i )
+        *data( i ) = that[ i ];
+    for( ; size_ < that.size_; ++size_ )
+        new ( data_ + size_ ) Item( that[ size_ ] );
+    for( ; size_ > that.size_; )
+        data( --size_ )->~Item();
+
     return *this;
 }
 
-DTP UTP &UTP::operator=( VecImpl &&that ) {
-    TODO;
-    for( PI i = 0; i < size(); ++i )
-        operator[]( i ) = std::move( that[ i ] );
+DTP UTP &UTP::operator=( Seq &&that ) {
+    if ( capa_ ) {
+        for( PI i = size(); i--; )
+            data( i )->~Item();
+        std::free( data_ );
+    }
+    data_ = std::exchange( that.data_, nullptr );
+    size_ = std::exchange( that.size_, 0 );
+    capa_ = std::exchange( that.capa_, 0 );
     return *this;
 }
 
@@ -235,6 +275,13 @@ DTP Item *UTP::data() {
 
 DTP PI UTP::size() const {
     return size_;
+}
+
+DTP Item UTP::pop_back_val() {
+    PI pos = --size_;
+    Item res = std::move( data_[ pos ] );
+    data_[ pos ].~Item();
+    return res;
 }
 
 DTP void UTP::push_back_br( auto&&...args ) {
@@ -300,8 +347,8 @@ DTP void UTP::copy_data_to( void *data ) const {
 }
 
 DTP Item *UTP::allocate( PI nb_items ) {
-    constexpr PI al = std::max( PI( alignment ), alignof( Item ) );
-    //return nb_items ? reinterpret_cast<Item *>( std::malloc( sizeof( Item ) * nb_items ) ) : nullptr;
+    // 8ul because std::aligned_alloc seems to return bad results if al if < 8...
+    constexpr PI al = std::max( 8ul, std::max( PI( alignment ), alignof( Item ) ) );
     return nb_items ? reinterpret_cast<Item *>( std::aligned_alloc( al, sizeof( Item ) * nb_items ) ) : nullptr;
 }
 
@@ -312,5 +359,4 @@ DTP UTP UTP::range( Item end ) {
 #undef DTP
 #undef UTP
 
-
-} // namespace
+END_VFS_NAMESPACE

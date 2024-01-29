@@ -7,7 +7,7 @@
 #include "is_virtual.h"
 #include "CtString.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 ///
 template<CtStringValue op,class T_A,class T_B>
@@ -20,4 +20,4 @@ constexpr auto type_promote_scalar( CtString<op>, CtType<T_A> a, CtType<T_B> b )
     );
 }
 
-}
+END_VFS_NAMESPACE

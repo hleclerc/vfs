@@ -1,11 +1,11 @@
 #pragma once
 
+#include "STATIC_ASSERT_IN_IF_CONSTEXPR.h"
 #include "call_by_name.h"
 #include "tensor_order.h"
-#include "ERROR.h"
 #include <cmath>
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
 // needed declarationsn defined elsewhere
 auto make_ArrayImpl_from_binary_operations( auto op_name, auto &&a, auto &&b ); //defined in make_ArrayImpl_from_binary_operations.h
@@ -87,11 +87,6 @@ constexpr bool is_scalar( CtType<T> t ) {
     return is_always_zero( DECAYED_CT_OF( tensor_order( t ) ) );
 }
 
-auto found_no_way( auto &&a, const char *msg = "found no way to ..." ) {
-    ERROR( msg );
-    return a;
-}
-
 constexpr auto add( auto &&a, auto &&b ) {
     // 0 + ..., ... + 0
     if constexpr( is_always_zero( DECAYED_CT_OF( a ) ) ) {
@@ -115,7 +110,8 @@ constexpr auto add( auto &&a, auto &&b ) {
     } else
 
     DEFAULT_BIN_OPERATOR_CODE( add )
-    return found_no_way( a, "found not way to call ..." );
+
+    STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "found no way to call add" );
 }
 
 constexpr auto sub( auto &&a, auto &&b ) {
@@ -130,7 +126,8 @@ constexpr auto sub( auto &&a, auto &&b ) {
     } else
 
     DEFAULT_BIN_OPERATOR_CODE( sub )
-    return found_no_way( a, "found not way to call ..." );
+
+    STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "found no way to call sub" );
 }
 
 constexpr auto mul( auto &&a, auto &&b ) {
@@ -145,7 +142,8 @@ constexpr auto mul( auto &&a, auto &&b ) {
     } else
 
     DEFAULT_BIN_OPERATOR_CODE( mul )
-    return found_no_way( a, "found not way to call ..." );
+
+    STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "found no way to call mul" );
 }
 
 constexpr auto div( auto &&a, auto &&b ) {
@@ -155,7 +153,8 @@ constexpr auto div( auto &&a, auto &&b ) {
     } else
 
     DEFAULT_BIN_OPERATOR_CODE( div )
-    return found_no_way( a, "found not way to call ..." );
+
+    STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "found no way to call div" );
 }
 
 constexpr auto mod( auto &&a, auto &&b ) {
@@ -165,21 +164,22 @@ constexpr auto mod( auto &&a, auto &&b ) {
     } else
 
     DEFAULT_BIN_OPERATOR_CODE( mod )
-    return found_no_way( a, "found not way to call ..." );
+
+    STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "found no way to call mod" );
 }
 
-constexpr auto inf( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( inf ) found_no_way( false, "found not way to call inf" ); }
-constexpr auto sup( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( sup ) found_no_way( false, "found not way to call sup" ); }
-constexpr auto leq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( leq ) found_no_way( false, "found not way to call leq" ); }
-constexpr auto geq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( geq ) found_no_way( false, "found not way to call geq" ); }
-constexpr auto equ( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( equ ) found_no_way( false, "found not way to call equ" ); }
-constexpr auto neq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( neq ) found_no_way( false, "found not way to call neq" ); }
+constexpr auto inf( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( inf ) STATIC_ASSERT_IN_IF_CONSTEXPR( false, "found not way to call inf" ); }
+constexpr auto sup( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( sup ) STATIC_ASSERT_IN_IF_CONSTEXPR( false, "found not way to call sup" ); }
+constexpr auto leq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( leq ) STATIC_ASSERT_IN_IF_CONSTEXPR( false, "found not way to call leq" ); }
+constexpr auto geq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( geq ) STATIC_ASSERT_IN_IF_CONSTEXPR( false, "found not way to call geq" ); }
+constexpr auto equ( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( equ ) STATIC_ASSERT_IN_IF_CONSTEXPR( false, "found not way to call equ" ); }
+constexpr auto neq( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( neq ) STATIC_ASSERT_IN_IF_CONSTEXPR( false, "found not way to call neq" ); }
 
 constexpr auto min( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( min ) return a <= b ? FORWARD( a ) : FORWARD( b ); }
 constexpr auto max( auto &&a, auto &&b ) { DEFAULT_BIN_OPERATOR_CODE( max ) return a >= b ? FORWARD( a ) : FORWARD( b ); }
 
-auto neg( auto &&a ) { DEFAULT_UNA_OPERATOR_CODE( neg ) found_no_way( a, "found not way to call ..." ); }
-auto abs( auto &&a ) { DEFAULT_UNA_OPERATOR_CODE( abs ) found_no_way( a, "found not way to call ..." ); }
+auto neg( auto &&a ) { DEFAULT_UNA_OPERATOR_CODE( neg ) STATIC_ASSERT_IN_IF_CONSTEXPR( a, "found not way to call ..." ); }
+auto abs( auto &&a ) { DEFAULT_UNA_OPERATOR_CODE( abs ) STATIC_ASSERT_IN_IF_CONSTEXPR( a, "found not way to call ..." ); }
 
 /// scalar product
 auto sp( auto &&a, auto &&b ) {
@@ -268,5 +268,5 @@ struct WithDefaultOperators {
     #undef ADD_UNA_OP
 };
 
-} // namespace Vfs
+END_VFS_NAMESPACE
 

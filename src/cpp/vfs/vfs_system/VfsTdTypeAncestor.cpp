@@ -1,8 +1,8 @@
 #include "VfsTdTypeAncestor.h"
 
-namespace Vfs {
+BEG_VFS_NAMESPACE
 
-static Vec<VfsTdTypeAncestor *> all_the_types( 1024 );
+static Seq<VfsTdTypeAncestor *> all_the_types( FromSize(), 1024 );
 static VfsTdTypeAncestor *last_new_type = nullptr;
 static PI total_nb_types = 0;
 
@@ -27,4 +27,4 @@ VfsTdTypeAncestor *VfsTdTypeAncestor::type_at_global_index( PI32 index ) {
     return all_the_types[ index ];
 }
 
-}
+END_VFS_NAMESPACE
