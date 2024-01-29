@@ -4,6 +4,7 @@
 
 BEG_VFS_NAMESPACE
 
+/// sequence of items that can be of any type in CtTypeListOfItems
 template<class CtTypeListOfItems>
 struct HeterogeneousArray {
     /**/           ~HeterogeneousArray   () { for_each_item( [&]( auto &item ) { delete &item; } ); }

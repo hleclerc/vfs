@@ -19,4 +19,4 @@ constexpr inline auto has_sign_bit    ( CtType<Int> ) { return CtInt<1>(); }
 // scalar_type_for (when creating "virtual" objects from "real" values)
 auto scalar_type_for( CtInt<1> /*virtual*/, CtInt<0> /*scalar class*/, auto, auto ) { return CtType<Int>(); }
 
-}
+END_VFS_NAMESPACE

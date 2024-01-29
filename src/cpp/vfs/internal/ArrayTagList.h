@@ -5,6 +5,7 @@
 
 BEG_VFS_NAMESPACE
 
+// Tag types ----------------------------------------------------------------------------------------------------------------------------------------------
 namespace ArrayTag {
     #define DECL_TAG_T( NAME ) TT struct NAME { static auto template_type_name() { return "VFS_NAMESPACE::ArrayTag::" #NAME; } static void for_each_template_arg( auto &&f ) { f( CtType<T>() ); } }
     #define DECL_TAG_i( NAME ) Ti struct NAME { static auto template_type_name() { return "VFS_NAMESPACE::ArrayTag::" #NAME; } static void for_each_template_arg( auto &&f ) { f( CtInt<i>() ); } }
@@ -22,6 +23,7 @@ namespace ArrayTag {
     constexpr auto want_nb_dims( auto tag, auto res ) { return res; }
 }
 
+///
 template<class... Tags>
 class ArrayTagList {
 public:
@@ -30,18 +32,17 @@ public:
 
     static void           for_each_template_arg( auto &&f ) { ( f( CtType<Tags>() ), ... ); }
     static void           get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( "vfs/internal/ArrayTagList.h" ); }
-    static auto           template_type_name   () { return "ArrayTagList"; }
-    static auto           memory               () { return Memory_Cpu(); }
+    static auto           template_type_name   () { return "VFS_NAMESPACE::ArrayTagList"; }
 
-    static auto           array_type_for       ( auto item_type, auto &&size ) {
+    static auto           array_type_for       ( auto obj_type, auto item_type, auto &&size ) {
         // template<class Item,class Memory,int static_size,int alignment,int local_size,bool allow_heap>
         if constexpr ( want_ct_size_in_dim( CtInt<0>() ) ) {
-            return Type( "GenericVector", "inc_file:vfs/support/containers/GenericVector.h", item_type, CtType<Memory_Cpu>(), size, CtInt<0>(), CtInt<0>(), CtInt<0>() );
+            return Type( "Vec", "inc_file:vfs/support/containers/GenericVector.h", item_type, CtType<Memory_Cpu>(), size, CtInt<0>(), CtInt<0>(), CtInt<0>() );
         } else {
-            return Type( "GenericVector", "inc_file:vfs/support/containers/GenericVector.h", item_type, CtType<Memory_Cpu>(), CtInt<-1>(), CtInt<0>(), CtInt<0>(), CtInt<1>() );
+            return Type( "Vec", "inc_file:vfs/support/containers/GenericVector.h", item_type, CtType<Memory_Cpu>(), CtInt<-1>(), CtInt<0>(), CtInt<0>(), CtInt<1>() );
         }
     }
 
 };
 
-}
+END_VFS_NAMESPACE

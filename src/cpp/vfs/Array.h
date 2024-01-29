@@ -24,6 +24,6 @@ public:
 TUV auto constexpr tensor_order( CtType<Array<U,V>> ) { return CtInt<1>(); }
 TUV auto constexpr item_type( CtType<Array<U,V>> ) { return CtType<U>(); }
 
-}
+END_VFS_NAMESPACE
 
 #include "Array.tcc"

@@ -8,19 +8,19 @@ BEG_VFS_NAMESPACE
 #define UTP Array<Item,Tags>
 
 DTP TT UTP::Array( const std::initializer_list<std::initializer_list<std::initializer_list<T>>> &values ) : Array(
-        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), Tags(), values ), Tags::memory(), values ) {
+        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), Tags(), values ), values ) {
 }
 
 DTP TT UTP::Array( const std::initializer_list<std::initializer_list<T>> &values ) : Array(
-        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), Tags(), values ), Tags::memory(), values ) {
+        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), Tags(), values ), values ) {
 }
 
 DTP TT UTP::Array( const std::initializer_list<T> &values ) : Array(
-        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), Tags(), values ), Tags::memory(), values ) {
+        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), Tags(), values ), values ) {
 }
 
 DTP TA UTP::Array( A &&...args ) requires Has_array_type_for_ctor_args<Item,Tags,A...> : Array(
-        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), args... ), Tags::memory(), FORWARD( args )... ) {
+        FromTypeAndCtorArguments(), array_type_for_ctor_args( CtType<Item>(), args... ), FORWARD( args )... ) {
 }
 
 DTP Int UTP::size() const {
@@ -30,4 +30,4 @@ DTP Int UTP::size() const {
 #undef DTP
 #undef UTP
 
-}
+END_VFS_NAMESPACE
