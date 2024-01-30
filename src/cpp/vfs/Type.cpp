@@ -14,7 +14,7 @@ ON_INIT {
         if ( cg.arg_casts.size() > 3 ) {
             Vec<Str> args;
             for( PI i = 3; i < cg.arg_casts.size(); ++i )
-                args.push_back( va_string( "GET_DT_VALUE( arg_$0 )", i ) );
+                args.push_back( va_string( "VALUE_IN_DECAYED_TYPE_OF( arg_$0 )", i ) );
             cg.add_line( "vfs_td.construct( FromValue(), CtType<$0<$1>>() );", name, join( args, ", " ) );
         } else
             cg.add_line( "vfs_td.construct( FromValue(), CtType<$0>() );", name );

@@ -33,15 +33,15 @@ inline auto PyArray_typenum_for( CtType<FP32> ) { return NPY_FLOAT; }
 
 //
 PyObject *vfs_to_python( auto &&obj )
-    requires ( GET_DT_VALUE( tensor_order( DECAYED_CT_OF( obj ) ) ) != 0 ) &&
-    requires { PyArray_typenum_for( item_type( DECAYED_CT_OF( obj ) ) ); }
+    requires ( VALUE_IN_DECAYED_TYPE_OF( tensor_order( CT_DECAYED_TYPE_OF( obj ) ) ) != 0 ) &&
+    requires { PyArray_typenum_for( item_type( CT_DECAYED_TYPE_OF( obj ) ) ); }
 {
     if( ! PyArray_API )
         import_array();
 
     // item type
-    auto item = item_type( DECAYED_CT_OF( obj ) );
-    using Item = GET_DT_VALUE( item );
+    auto item = item_type( CT_DECAYED_TYPE_OF( obj ) );
+    using Item = VALUE_IN_DECAYED_TYPE_OF( item );
 
     // data
     void *data = std::malloc( sizeof( Item ) * obj.size_tot() );

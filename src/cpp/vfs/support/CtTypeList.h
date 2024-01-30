@@ -21,8 +21,8 @@ struct CtTypeList<H,T...> {
     static constexpr auto    tail            () { return CtTypeList<T...>{}; }
     static constexpr auto    head            () { return CtType<H>{}; }
     static constexpr auto    map             ( const auto &f ) {
-        using N = GET_DT_VALUE( f( CtType<H>() ) );
-        return CtTypeList<N,typename GET_DT_VALUE( f( CtType<T>() ) )...>();
+        using N = VALUE_IN_DECAYED_TYPE_OF( f( CtType<H>() ) );
+        return CtTypeList<N,typename VALUE_IN_DECAYED_TYPE_OF( f( CtType<T>() ) )...>();
     }
 };
 

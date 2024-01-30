@@ -29,7 +29,7 @@ DTP auto UTP::template_type_name() {
 
 DTP auto UTP::make_array( auto type, auto tensor_order, auto movable, auto &&...ctor_arguments ) {
     TODO;
-    // using TR = GenericVector<typename GET_DT_VALUE( type ),Memory_Cpu,-1,0,0,1>;
+    // using TR = GenericVector<typename VALUE_IN_DECAYED_TYPE_OF( type ),Memory_Cpu,-1,0,0,1>;
     // return TR( Memory_Cpu(), FORWARD( ctor_arguments )... );
 }
 

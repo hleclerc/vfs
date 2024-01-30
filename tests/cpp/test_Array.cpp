@@ -1,5 +1,5 @@
-#include <vfs/Vector.h>
-#include <vfs/Point.h>
+// #include <vfs/Vector.h>
+// #include <vfs/Point.h>
 #include "catch_main.h"
 
 TEST_CASE( "Array", "" ) {

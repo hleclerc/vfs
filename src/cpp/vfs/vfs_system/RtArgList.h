@@ -21,7 +21,7 @@ public:
     void add( auto *arg, bool owned ) {
         // compilation flags
         Vec<Str> seen;
-        get_compilation_flags_rec( cf, seen, DECAYED_CT_OF( *arg ) );
+        get_compilation_flags_rec( cf, seen, CT_DECAYED_TYPE_OF( *arg ) );
         if constexpr ( requires { vfs_object_get_compilation_flags( cf, seen, *arg ); } )
             vfs_object_get_compilation_flags( cf, seen, *arg );
 
@@ -33,9 +33,9 @@ public:
         //
         if constexpr ( requires { vfs_object_ct_cast( *arg ); } ) {
             Vec<Str> lcasts = vfs_object_ct_cast( *arg );
-            add( arg, owned, VFS_NAMESPACE::type_name( DECAYED_CT_OF( *arg ) ), ct_key, &lcasts );
+            add( arg, owned, VFS_NAMESPACE::type_name( CT_DECAYED_TYPE_OF( *arg ) ), ct_key, &lcasts );
         } else {
-            add( arg, owned, VFS_NAMESPACE::type_name( DECAYED_CT_OF( *arg ) ), ct_key, nullptr );
+            add( arg, owned, VFS_NAMESPACE::type_name( CT_DECAYED_TYPE_OF( *arg ) ), ct_key, nullptr );
         }
     }
     

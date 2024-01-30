@@ -14,7 +14,7 @@ BEG_VFS_NAMESPACE
 template<class Item,int static_size=-1,int local_size=0,int alignment=0,bool allow_heap=true>
 class alignas( std::max( PI( alignment ), alignof( Item ) ) ) Vec : public WithDefaultOperators {
 public:
-    static auto         with_item_type( auto item_type ) { return CtType< Vec<typename GET_DT_VALUE(item_type),static_size> >{}; }
+    static auto         with_item_type( auto item_type ) { return CtType< Vec<typename VALUE_IN_DECAYED_TYPE_OF(item_type),static_size> >{}; }
 
     /**/                Vec           ( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, auto &&...operands );
     /**/                Vec           ( FromItemValues, auto &&...values );
@@ -126,8 +126,8 @@ DTP auto memory_of( const UTP &a ) { return Memory_Cpu(); }
 DTP constexpr auto tensor_order( CtType<UTP> ) { return CtInt<1>(); }
 DTP constexpr auto item_type( CtType<UTP> ) { return CtType<Item>(); }
 
-Ti auto VecType_for( auto item_type, CtInt<i> ) { return CtType<Vec<typename GET_DT_VALUE( item_type ),i>>(); }
-auto VecType_for( auto item_type, PI ) { return CtType<Vec<typename GET_DT_VALUE( item_type )>>(); }
+Ti auto VecType_for( auto item_type, CtInt<i> ) { return CtType<Vec<typename VALUE_IN_DECAYED_TYPE_OF( item_type ),i>>(); }
+auto VecType_for( auto item_type, PI ) { return CtType<Vec<typename VALUE_IN_DECAYED_TYPE_OF( item_type )>>(); }
 
 END_VFS_NAMESPACE
 

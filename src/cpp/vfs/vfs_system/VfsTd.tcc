@@ -23,7 +23,7 @@ DTP TTA void UTP::construct( FromTypeAndCtorArguments, CtType<T> t, A &&...ctor_
 }
 
 DTP TT void UTP::construct( FromValue, T &&value ) {
-    construct( FromTypeAndCtorArguments(), DECAYED_CT_OF( value ), FORWARD( value ) );
+    construct( FromTypeAndCtorArguments(), CT_DECAYED_TYPE_OF( value ), FORWARD( value ) );
 }
 
 DTP TT void UTP::destroy( CtType<T> t ) {

@@ -33,3 +33,7 @@ Pour legendre, sdot, etc..., on pourrait passer uniquement par des listes de poi
   Qu'est-ce que ça couterait de faire un type de tableau "interne"
     => il faudrait a minima faire un to_np_array
     => ça veut bien dire qu'il faut un type Mda
+
+On pourrait faire un vfs_td_impl_type( ... )
+  * ça pourrait éventuellement être utilisé par tous les ctors pour trouver les ctors adaptés
+  * du coup, il faudrait être assez restrictifs

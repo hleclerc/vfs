@@ -37,14 +37,14 @@ ON_INIT {
     // vfs td handling ----------------------------------------------------------------------------------------------------------------------------------------------------
     // vfs_td_reassign
     VFS_ADD_SURDEF( "vfs_td_reassign", "self", "that" ) {
-        cg.add_line( "self_decl._vfs_type_and_data.destroy( DECAYED_CT_OF( self ) );" );
+        cg.add_line( "self_decl._vfs_type_and_data.destroy( CT_DECAYED_TYPE_OF( self ) );" );
         cg.add_line( "self_decl._vfs_type_and_data.construct( FromValue(), FORWARD( that ) );" );
         return cg.valid();
     };
 
     // vfs_td_destroy
     VFS_ADD_SURDEF( "vfs_td_destroy", "self" ) {
-        cg.add_line( "self_decl._vfs_type_and_data.destroy( DECAYED_CT_OF( self ) );" );
+        cg.add_line( "self_decl._vfs_type_and_data.destroy( CT_DECAYED_TYPE_OF( self ) );" );
         return cg.valid();
     };
 }

@@ -43,7 +43,7 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
     } else \
 \
     /* arrays */ \
-    if constexpr( tensor_order( DECAYED_CT_OF( a ) ) || tensor_order( DECAYED_CT_OF( b ) ) ) { \
+    if constexpr( tensor_order( CT_DECAYED_TYPE_OF( a ) ) || tensor_order( CT_DECAYED_TYPE_OF( b ) ) ) { \
         return make_ArrayImpl_from_binary_operations( CtString<#NAME>(), FORWARD( a ), FORWARD( b ) ); \
     } else \
 
@@ -66,7 +66,7 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
     } else \
     \
     /* arrays */ \
-    if constexpr( tensor_order( DECAYED_CT_OF( a ) ) ) { \
+    if constexpr( tensor_order( CT_DECAYED_TYPE_OF( a ) ) ) { \
         return make_ArrayImpl_from_unary_operations( CtString<#NAME>(), FORWARD( a ) ); \
     } else \
 
@@ -84,16 +84,16 @@ constexpr bool is_always_zero( CtType<T> ) {
 
 template<class T>
 constexpr bool is_scalar( CtType<T> t ) {
-    return is_always_zero( DECAYED_CT_OF( tensor_order( t ) ) );
+    return is_always_zero( CT_DECAYED_TYPE_OF( tensor_order( t ) ) );
 }
 
 constexpr auto add( auto &&a, auto &&b ) {
     // 0 + ..., ... + 0
-    if constexpr( is_always_zero( DECAYED_CT_OF( a ) ) ) {
+    if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( a ) ) ) {
         return FORWARD( b );
     } else
 
-    if constexpr( is_always_zero( DECAYED_CT_OF( b ) ) ) {
+    if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( b ) ) ) {
         return FORWARD( a );
     } else
 
@@ -116,12 +116,12 @@ constexpr auto add( auto &&a, auto &&b ) {
 
 constexpr auto sub( auto &&a, auto &&b ) {
     // 0 - b
-    if constexpr( is_always_zero( DECAYED_CT_OF( a ) ) ) {
+    if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( a ) ) ) {
         return - FORWARD( b );
     } else
 
     // a - 0
-    if constexpr( is_always_zero( DECAYED_CT_OF( b ) ) ) {
+    if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( b ) ) ) {
         return FORWARD( a );
     } else
 
@@ -132,12 +132,12 @@ constexpr auto sub( auto &&a, auto &&b ) {
 
 constexpr auto mul( auto &&a, auto &&b ) {
     // 0 * b
-    if constexpr( is_always_zero( DECAYED_CT_OF( a ) ) ) {
+    if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( a ) ) ) {
         return FORWARD( a );
     } else
 
     // a * 0
-    if constexpr( is_always_zero( DECAYED_CT_OF( b ) ) ) {
+    if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( b ) ) ) {
         return FORWARD( b );
     } else
 
@@ -148,7 +148,7 @@ constexpr auto mul( auto &&a, auto &&b ) {
 
 constexpr auto div( auto &&a, auto &&b ) {
     // 0 / b
-    if constexpr( is_always_zero( DECAYED_CT_OF( a ) ) ) {
+    if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( a ) ) ) {
         return FORWARD( a );
     } else
 
@@ -159,7 +159,7 @@ constexpr auto div( auto &&a, auto &&b ) {
 
 constexpr auto mod( auto &&a, auto &&b ) {
     // 0 % b
-    if constexpr( is_always_zero( DECAYED_CT_OF( a ) ) ) {
+    if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( a ) ) ) {
         return FORWARD( a );
     } else
 
@@ -203,7 +203,7 @@ auto norm_2( auto &&a ) {
 }
 
 /// seq max
-auto max( auto &&a ) requires ( tensor_order( DECAYED_CT_OF( a ) ).always_equal( 1 ) ) {
+auto max( auto &&a ) requires ( tensor_order( CT_DECAYED_TYPE_OF( a ) ).always_equal( 1 ) ) {
     using std::max;
     auto res = a[ 0 ];
     for( std::size_t i = 1; i < a.size(); ++i )
@@ -212,7 +212,7 @@ auto max( auto &&a ) requires ( tensor_order( DECAYED_CT_OF( a ) ).always_equal(
 }
 
 /// seq any
-bool all( auto &&a ) requires ( tensor_order( DECAYED_CT_OF( a ) ).always_equal( 1 ) ) {
+bool all( auto &&a ) requires ( tensor_order( CT_DECAYED_TYPE_OF( a ) ).always_equal( 1 ) ) {
     bool res = true;
     for( std::size_t i = 0; i < a.size(); ++i )
         res &= a[ i ];
@@ -220,7 +220,7 @@ bool all( auto &&a ) requires ( tensor_order( DECAYED_CT_OF( a ) ).always_equal(
 }
 
 /// seq argmin
-std::size_t argmin( auto &&a ) requires ( tensor_order( DECAYED_CT_OF( a ) ).always_equal( 1 ) ) {
+std::size_t argmin( auto &&a ) requires ( tensor_order( CT_DECAYED_TYPE_OF( a ) ).always_equal( 1 ) ) {
     auto res = 0;
     for( std::size_t i = 1; i < a.size(); ++i )
         if ( a[ i ] < a[ res ] )
@@ -229,7 +229,7 @@ std::size_t argmin( auto &&a ) requires ( tensor_order( DECAYED_CT_OF( a ) ).alw
 }
 
 /// seq argmin
-std::size_t argmax( auto &&a ) requires ( tensor_order( DECAYED_CT_OF( a ) ).always_equal( 1 ) ) {
+std::size_t argmax( auto &&a ) requires ( tensor_order( CT_DECAYED_TYPE_OF( a ) ).always_equal( 1 ) ) {
     auto res = 0;
     for( std::size_t i = 1; i < a.size(); ++i )
         if ( a[ res ] < a[ i ] )

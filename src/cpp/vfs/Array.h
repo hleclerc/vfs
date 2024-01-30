@@ -1,7 +1,6 @@
 #pragma once
 
-#include "internal/array_type_for_ctor_args.h"
-#include "internal/ArrayTagList.h"
+#include "internal/ArrayTagListAnalyzer.h"
 #include "Int.h"
 
 BEG_VFS_NAMESPACE
@@ -15,10 +14,19 @@ public:
     TT   Array( const std::initializer_list<T> &values );
 
     // generic ctor that calls FromTypeAndCtorArguments() with array_type_for_ctor_args as first argument to get the real type
-    TA   Array( A &&...args ) requires Has_array_type_for_ctor_args<Item,Tags,A...>;
+    TA   Array( A &&...args ) requires ArrayTagListAnalyzer::Has_array_type_for_ctor_args<Item,Tags,A...>;
 
     Int  size () const;
 };
+
+// types for ctors --------------------------------------------------------------------------
+TUV auto vfs_td_impl_type( CtType<Array<U,V>>, const ScalarLike auto &value ) {
+    return CT_DECAYED_TYPE_OF( value );
+}
+
+TUV auto vfs_td_impl_type( CtType<Array<U,V>> ) {
+    return CtType<EmptyArrayImpl>();
+}
 
 // type info -------------------------------------------------------------------------------------------
 TUV auto constexpr tensor_order( CtType<Array<U,V>> ) { return CtInt<1>(); }

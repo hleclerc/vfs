@@ -6,9 +6,17 @@ BEG_VFS_NAMESPACE
 
 class Scalar { VFS_TD_ATTRIBUTES( Scalar, "vfs" );
 public:
-    /**/ Scalar( ScalarLike auto &&value ) : Scalar( FromValue(), FORWARD( value ) ) {}
-    /**/ Scalar() : Scalar( CtInt<0>() ) {}
 };
+
+// types for ctors --------------------------------------------------------------------------
+auto vfs_td_impl_type( CtType<Scalar>, const ScalarLike auto &value ) {
+    return CT_DECAYED_TYPE_OF( value );
+}
+
+inline auto vfs_td_impl_type( CtType<Scalar> ) {
+    return CtType<CtInt<0>>();
+}
+
 
 // -------------------------------------------------------------------------------------------
 // type info

@@ -28,7 +28,7 @@ struct HeterogeneousArray {
 DTP void UTP::for_each_item( auto &&func ) const {
     for( PI i = 0; i < type_numbers.size(); ++i ) {
         CtTypeListOfItems::get_type( type_numbers[ i ], [&]( auto ct_type ) {
-            func( *reinterpret_cast<const typename GET_DT_VALUE( ct_type ) *>( pointers[ i ] ) );
+            func( *reinterpret_cast<const typename VALUE_IN_DECAYED_TYPE_OF( ct_type ) *>( pointers[ i ] ) );
         } );
     }
 }
@@ -36,7 +36,7 @@ DTP void UTP::for_each_item( auto &&func ) const {
 DTP void UTP::for_each_item( auto &&func ) {
     for( PI i = 0; i < type_numbers.size(); ++i ) {
         CtTypeListOfItems::get_type( type_numbers[ i ], [&]( auto ct_type ) {
-            func( *reinterpret_cast<typename GET_DT_VALUE( ct_type ) *>( pointers[ i ] ) );
+            func( *reinterpret_cast<typename VALUE_IN_DECAYED_TYPE_OF( ct_type ) *>( pointers[ i ] ) );
         } );
     }
 }
