@@ -3,6 +3,7 @@
 #include "STATIC_ASSERT_IN_IF_CONSTEXPR.h"
 #include "call_by_name.h"
 #include "tensor_order.h"
+#include "CtType.h"
 #include <cmath>
 
 BEG_VFS_NAMESPACE

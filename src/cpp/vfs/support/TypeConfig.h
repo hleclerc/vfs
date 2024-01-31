@@ -4,8 +4,6 @@
 #include <string_view>
 #include <cstdint>
 #include <string>
-#include <vector>
-#include <span>
 
 BEG_VFS_NAMESPACE
 
@@ -35,7 +33,6 @@ using       FP32                       = float;
 using       StrView                    = std::string_view;
 TA using    Tuple                      = std::tuple<A...>;
 TUV using   Pair                       = std::pair<U,V>;
-TT using    Span                       = std::span<T>;
 using       Str                        = std::string;
 
 // // args for ctor selection

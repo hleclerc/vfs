@@ -1,6 +1,7 @@
 #pragma once
 
-#include "CtType.h" // IWYU pragma: export
+#include "vfs_namespace.h" // IWYU pragma: export
+#include <utility> // IWYU pragma: export
 
 // shortcuts for template<...>
 #define     TTij                          template<class T,int i,int j>

@@ -16,7 +16,7 @@ public:
     static constexpr int padd_size                   = ( 2 * sizeof( PI32 ) + data_alig - 1 ) / data_alig * data_alig - 2 * sizeof( PI32 );
     using                Object                      = Object_;
 
-    TTA void             construct                   ( FromTypeAndCtorArguments, CtType<T>, A &&...ctor_args );
+    TTA void             construct                   ( FromTypeAndCtorArguments, CtType<T>, A &&...ctor_args ); ///< with ( ctor_args... ) (and not {})
     TT void              construct                   ( FromValue, T &&value );
 
     TT void              destroy                     ( CtType<T> );
@@ -105,10 +105,10 @@ auto vfs_td_impl_type( CtType<void> ObjType, const auto &... ) {
     \
     DisplayItem*         display              ( auto &ds ) const { return VFS_CALL( display, DisplayItem *, ds, *this ); } \
     \
-    VfsTd<NAME>          _vfs_type_and_data;
+    VfsTd<NAME>          _vfs_type_and_data
 
 #define VFS_TD_ATTRIBUTES_TT( NAME, PATH, TEMPLATE_ARG_0, TEMPLATE_ARG_1 ) \
-    VFS_TD_ATTRIBUTES( NAME, PATH ) \
+    VFS_TD_ATTRIBUTES( NAME, PATH ); \
     static void          for_each_template_arg( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); f( CtType<TEMPLATE_ARG_1>() ); }
 
 END_VFS_NAMESPACE

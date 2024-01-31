@@ -19,7 +19,7 @@ DTP TTA void UTP::construct( FromTypeAndCtorArguments, CtType<T> t, A &&...ctor_
 
     if ( not_enough_room_for( t ) )
         void_ptr() = std::malloc( sizeof( T ) );
-    new ( &cast( t ) ) T{ std::forward<A>( ctor_args )... };
+    new ( &cast( t ) ) T( std::forward<A>( ctor_args )... );
 }
 
 DTP TT void UTP::construct( FromValue, T &&value ) {

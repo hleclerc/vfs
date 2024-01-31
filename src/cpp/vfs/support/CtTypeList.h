@@ -1,6 +1,7 @@
 #pragma once
 
-#include "TypeConfig.h"
+#include "common_macros.h"
+#include "CtType.h"
 
 BEG_VFS_NAMESPACE
 
@@ -15,7 +16,7 @@ struct CtTypeList<H,T...> {
 
     static H&                make_ref_on_head() { return *reinterpret_cast<H *>( nullptr ); }
     static constexpr auto    reduction       ( const auto &f, auto &&v ) { return tail().reduction( f, f( CtType<H>(), v ) ); }
-    static auto              get_type        ( PI num, auto &&func ) { if constexpr ( sizeof...( T ) ) return num ? CtTypeList<T...>::get_type( num - 1, FORWARD( func ) ) : func( CtType<H>() ); else return func( CtType<H>() ); }
+    static auto              get_type        ( std::size_t num, auto &&func ) { if constexpr ( sizeof...( T ) ) return num ? CtTypeList<T...>::get_type( num - 1, FORWARD( func ) ) : func( CtType<H>() ); else return func( CtType<H>() ); }
     TU static constexpr auto with            ( CtType<U> ) { return CtTypeList<H,T...,U>{}; }
     static constexpr int     size            () { return 1 + sizeof...( T ); }
     static constexpr auto    tail            () { return CtTypeList<T...>{}; }
@@ -30,7 +31,7 @@ struct CtTypeList<H,T...> {
 template<>
 struct CtTypeList<> {
     static constexpr auto    reduction       ( const auto &f, auto &&v ) { return FORWARD( v ); }
-    static auto              get_type        ( PI num, auto &&func ) {}
+    static auto              get_type        ( std::size_t num, auto &&func ) {}
     TU static constexpr auto with            ( CtType<U> ) { return CtTypeList<U>{}; }
     static constexpr int     size            () { return 0; }
 };

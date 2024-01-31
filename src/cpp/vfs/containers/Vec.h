@@ -124,7 +124,6 @@ DTP auto ct_sizes_of( CtType<UTP> ) { return CtIntList<static_size>(); }
 DTP auto memory_of( const UTP &a ) { return Memory_Cpu(); }
 
 DTP constexpr auto tensor_order( CtType<UTP> ) { return CtInt<1>(); }
-DTP constexpr auto item_type( CtType<UTP> ) { return CtType<Item>(); }
 
 Ti auto VecType_for( auto item_type, CtInt<i> ) { return CtType<Vec<typename VALUE_IN_DECAYED_TYPE_OF( item_type ),i>>(); }
 auto VecType_for( auto item_type, PI ) { return CtType<Vec<typename VALUE_IN_DECAYED_TYPE_OF( item_type )>>(); }

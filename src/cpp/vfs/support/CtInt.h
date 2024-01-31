@@ -39,7 +39,6 @@ struct CtInt : public WithDefaultOperators {
 };
 
 template<int i> constexpr auto ct_value_wrapper_for() { return CtInt<i>(); }
-
 auto constexpr tensor_order( auto ) { return CtInt<0>(); }
 
 // template<int i,int j> inline auto operator*( CtInt<i>, CtInt<j> ) { return CtInt<i*j>(); }

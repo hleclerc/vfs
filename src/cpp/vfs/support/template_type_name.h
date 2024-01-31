@@ -18,7 +18,6 @@ DECL_BASE_TYPE_INFO_A_( CtTypeList            );
 DECL_BASE_TYPE_INFO_T_( CtType                );
 DECL_BASE_TYPE_INFO_A_( Tuple                 );
 DECL_BASE_TYPE_INFO_UV( Pair                  );
-DECL_BASE_TYPE_INFO_T_( Span                  );
 
 #undef DECL_BASE_TYPE_INFO_UV
 #undef DECL_BASE_TYPE_INFO_A_

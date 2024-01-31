@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../support/IsSpecializationOf.h"
+#include "../support/is_specialization_of.h"
 #include "../support/CompilationFlags.h"
 #include "ArrayBlockImpl.h"
 #include "VecImpl.h"

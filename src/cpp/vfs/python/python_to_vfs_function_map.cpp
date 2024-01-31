@@ -90,7 +90,7 @@ static void list_conv( RtArgList &ral, PyObject *list ) {
     std::sort( types.begin(), types.end() );
 
     if ( types.empty() ) {
-        static EmptyArrayImpl empty_array;
+        static EmptyArrayImpl<1> empty_array;
         ral.add_borrowed( &empty_array );
         return;
     }

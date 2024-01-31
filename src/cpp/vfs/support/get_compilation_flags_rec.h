@@ -1,5 +1,6 @@
 #pragma once
 
+#include "is_specialization_of.h"
 #include "CompilationFlags.h"
 #include "type_name.h"
 
@@ -16,7 +17,7 @@ TT void get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen, CtType
     // recursion
     if constexpr ( requires { for_each_template_arg( CtType<T>(), []( auto ) {} ); } ) {
         for_each_template_arg( CtType<T>(), [&]( auto a ) {
-            if constexpr ( IsA_CtType<decltype( a )> )
+            if constexpr ( is_specialization_of<CtType,decltype( a )> )
                 get_compilation_flags_rec( res, seen, a );
         } );
     }

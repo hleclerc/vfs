@@ -4,15 +4,17 @@
 
 BEG_VFS_NAMESPACE
 
+template<int nb_dims_>
 struct EmptyArrayImpl {
     static void     get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( "vfs/containers/EmptyArrayImpl.h" ); }
+    static void     for_each_template_arg( auto &&f ) { f( CtInt<nb_dims_>() ); }
+    static auto     template_type_name   () { return "EmptyArrayImpl"; }
     void            for_each_item        ( const auto & ) const {}
-    static auto     type_name            () { return "EmptyArrayImpl"; }
     DisplayItem*    display              ( Displayer &ds ) const { return ds.array( {} ); }
-    static CtInt<0> nb_dims              () { return {}; }
-    static CtInt<0> size                 () { return {}; }
+    static auto     nb_dims              () { return CtInt<nb_dims_>(); }
+    static auto     size                 () { return CtInt<0>(); }
 };
 
-inline auto ct_value( EmptyArrayImpl v ) { return v; }
+Ti inline auto ct_value( EmptyArrayImpl<i> v ) { return v; }
 
 END_VFS_NAMESPACE
