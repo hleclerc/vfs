@@ -112,4 +112,5 @@ auto vfs_td_impl_type( CtType<void> ObjType, const auto &... ) {
     static void          for_each_template_arg( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); f( CtType<TEMPLATE_ARG_1>() ); }
 
 END_VFS_NAMESPACE
+
 #include "VfsTd.tcc" // IWYU pragma: export

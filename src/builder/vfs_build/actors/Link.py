@@ -11,6 +11,7 @@ class Link( Actor ):
     def on_start( self, link_type: str, sources: list[ str ] ) -> None:
         self.nb_sources_to_compile = 0
         self.has_used_sources = False
+        self.has_used_flags = False
         self.link_type = link_type
         self.seen_includes = []
         self.seen_sources = []
@@ -72,12 +73,33 @@ class Link( Actor ):
         self.launch( self.add_source, WriteFile( self.options_to_remove() ), content = src_content, ext = "cpp", stem = "used_sources" )
         return True
 
+    def write_used_flags( self ) -> bool:
+        if self.has_used_flags:
+            return False
+        self.has_used_flags = True
+
+        src_content  = "#include <vfs/support/used_flags.h>\n"
+        src_content += "#include <vfs/support/OnInit.h>\n"
+        src_content += "\n"
+        src_content += "ON_INIT {\n"
+        for name, value in self.options.all_the_options():
+            cvalue = value.replace( '"', '\\\\\\"' )
+            src_content += f'    VFS_NAMESPACE::used_flags.push_back( "{ name }", "{ cvalue }" );\n'
+        src_content += "}\n"
+
+        self.launch( self.add_source, WriteFile( self.options_to_remove() ), content = src_content, ext = "cpp", stem = "used_flags" )
+        return True
+
     def check_if_ended( self ):
         if self.nb_sources_to_compile:
             return
 
         # need to write the used sources ?
         if self.options[ "write-used-sources" ] and not self.options[ "do-not-link-deps" ] and self.write_used_sources():
+            return
+
+        # need to write the used flags ?
+        if self.options[ "write-used-flags" ] and not self.options[ "do-not-link-deps" ] and self.write_used_flags():
             return
 
         # extension

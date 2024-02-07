@@ -6,6 +6,7 @@
 #include "../support/lexical_comparison.h"
 #include "../support/push_back_unique.h"
 #include "../support/used_sources.h"
+#include "../support/used_flags.h"
 #include "../support/check_dir.h"
 #include "../support/OnInit.h"
 
@@ -91,6 +92,13 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
                 };
                 for( const Str &flag : global_cpp_flags )
                     push_back_unique( args, flag );
+
+                // TODO: analyze the flags (e.g. to find contradictions, incompatibilities, ...)
+                for( const auto &flag : used_flags ) {
+                    if ( flag.name == "write-used-sources" || flag.name == "write-used-flags" )
+                        continue;
+                    push_back_unique( args, "--" + flag.name + "=" + flag.value );
+                }
 
                 run( args );
 

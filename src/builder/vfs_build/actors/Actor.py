@@ -70,6 +70,7 @@ class Actor:
         self.check_file( source )
 
     def load_config_from( self, source: str ):
+        source = os.path.abspath( source )
         while True:
             source, tail = os.path.split( source )
 

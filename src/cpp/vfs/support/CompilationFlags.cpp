@@ -10,6 +10,9 @@ static bool cmp_by_flag_type( const Str &flag_a, const Str &flag_b ) {
     return flag_a.size() >= 8 && flag_b.size() >= 8 ? flag_a.substr( 0, 8 ) < flag_b.substr( 0, 8 ) : flag_a < flag_b;
 }
 
+CompilationFlags::CompilationFlags( const std::initializer_list<Str> &flags ) : flags( flags ) {
+}
+
 CompilationFlags::CompilationFlags( const Vec<Str> &flags ) : flags( flags ) {
 }
 
@@ -62,5 +65,5 @@ RtStringList ct_value( const CompilationFlags &cn ) {
     return { cn.flags };
 }
 
-
 END_VFS_NAMESPACE
+
