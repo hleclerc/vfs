@@ -11,7 +11,7 @@ public:
     /**/ Function( StrLike auto &&name ) : Function( FromValue(), RtFunction{ .name = name } ) {}
     //   Function() : Function( CtType<Void>() ) {}
 
-    TT T operator()( CtType<T>, auto &&...args ) const { return VFS_CALL_METHOD( operator(), T, FORWARD( args )... ); }
+    TT T operator()( CtType<T>, auto &&...args ) const { return VFS_CALL_METHOD( operator(), CtStringList<>, T, FORWARD( args )... ); }
     TT T call      ( auto &&...args ) const { return operator()( CtType<T>(), FORWARD( args )... ); }
 };
 

@@ -18,7 +18,7 @@ TA PyObject *vfs_to_python( const Tuple<A...> &s ) {
     std::apply( [&]( const auto &...args ) {
         PI n = 0;
         auto set_item = [&]( const auto &arg ) {
-            PyObject *obj = VFS_CALL( vfs_to_python, PyObject *, arg );
+            PyObject *obj = VFS_CALL( vfs_to_python, CtStringList<>, PyObject *, arg );
             PyTuple_SET_ITEM( res, n++, obj );
         };
         ( set_item( args ), ... );

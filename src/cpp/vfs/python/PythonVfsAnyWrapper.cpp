@@ -48,10 +48,10 @@ static PyObject *__call__( PythonVfsAnyWrapper *self, PyObject *args, PyObject *
     }
 
     // call func, with return data in an `Any` vfs object
-    Any ares = VFS_CALL( call, Any, self->obj, ral );
+    Any ares = VFS_CALL( call, CtStringList<>, Any, self->obj, ral );
 
     // conversion to a python object
-    return VFS_CALL( vfs_to_python, PyObject *, std::move( ares ) );
+    return VFS_CALL( vfs_to_python, CtStringList<>, PyObject *, std::move( ares ) );
 }
 
 PyTypeObject pytype_PythonVfsAnyWrapper = {

@@ -11,7 +11,7 @@ TEST_CASE( "Function", "" ) {
     RtArgList ral;
     ral.add_borrowed( &yo );
     ral.add_owned( new Scalar( 20 ) );
-    auto res = VFS_CALL( call, SI64, add, std::move( ral ) );
+    auto res = VFS_CALL( call, CtStringList<>, SI64, add, std::move( ral ) );
 
     P( res );
 }

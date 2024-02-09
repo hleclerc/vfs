@@ -11,8 +11,8 @@
 
 BEG_VFS_NAMESPACE
 
-#define DTP template<CtStringValue name,class Return,class... Args>
-#define UTP VfsFunc<name,Return,Args...>
+#define DTP template<CtStringValue name,class Flags,class Return,class... Args>
+#define UTP VfsFunc<name,Flags,Return,Args...>
 
 DTP UTP::VfsFunc() : array( init ) {
 }
@@ -28,6 +28,9 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
     // includes with declared types
     Vec<Str> seen;
     CompilationFlags cn;
+    Flags::for_each_string( [&]( auto str ) {
+        cn << str.to_string();
+    } );
     get_compilation_flags_rec( cn, seen, CtType<Return>() );
     ( get_compilation_flags_rec( cn, seen, CtType<A>() ), ... );
 
@@ -91,9 +94,9 @@ DTP Return UTP::init( Args ...args ) {
 }
 
 // -------------------------------------------------------------------- functions --------------------------------------------------------------------
-template<CtStringValue name,class Return,class... Args>
+template<CtStringValue name,class Flags,class Return,class... Args>
 auto vfs_call( Args&&... args ) {
-    auto &vfs_func = StaticStorage<VfsFunc<name,Return,Args&&...>>::value;
+    auto &vfs_func = StaticStorage<VfsFunc<name,Flags,Return,Args&&...>>::value;
     return vfs_func( std::forward<Args>( args )... );
 }
 

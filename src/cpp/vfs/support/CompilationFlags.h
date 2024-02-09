@@ -8,10 +8,11 @@ class VfsCodegen;
 ///
 class CompilationFlags {
 public:
-    /***/        CompilationFlags( const std::initializer_list<Str> &flags );
+    // /***/        CompilationFlags( const std::initializer_list<Str> &flags );
     /***/        CompilationFlags( const Vec<Str> &flags = {} );
 
     auto         operator<<      ( const CompilationFlags &that ) -> CompilationFlags &;
+    auto         operator<<      ( const Str &flag ) -> CompilationFlags &;
     bool         operator<       ( const CompilationFlags &that ) const;
 
     void         add_flags_to    ( VfsCodegen &cg ) const;

@@ -8,19 +8,19 @@ BEG_VFS_NAMESPACE
 #define UTP Array<Item,Tags>
 
 DTP TT UTP::Array( const std::initializer_list<std::initializer_list<std::initializer_list<T>>> &values ) {
-    VFS_CALL_METHOD_DINK( construct, void, _vfs_type_and_data, FromTypeAndCtorArguments(), vfs_td_impl_type( CtType<Array>(), values ), values );
+    VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, _vfs_type_and_data, FromTypeAndCtorArguments(), vfs_td_impl_type( CtType<Array>(), values ), values );
 }
 
 DTP TT UTP::Array( const std::initializer_list<std::initializer_list<T>> &values ) {
-    VFS_CALL_METHOD_DINK( construct, void, _vfs_type_and_data, FromTypeAndCtorArguments(), vfs_td_impl_type( CtType<Array>(), values ), values );
+    VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, _vfs_type_and_data, FromTypeAndCtorArguments(), vfs_td_impl_type( CtType<Array>(), values ), values );
 }
 
 DTP TT UTP::Array( const std::initializer_list<T> &values ) {
-    VFS_CALL_METHOD_DINK( construct, void, _vfs_type_and_data, FromTypeAndCtorArguments(), vfs_td_impl_type( CtType<Array>(), values ), values );
+    VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, _vfs_type_and_data, FromTypeAndCtorArguments(), vfs_td_impl_type( CtType<Array>(), values ), values );
 }
 
 DTP Int UTP::size() const {
-    return VFS_CALL_METHOD( size, Int, *this );
+    return VFS_CALL_METHOD( size, CtStringList<>, Int, *this );
 }
 
 #undef DTP
