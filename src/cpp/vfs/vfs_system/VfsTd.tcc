@@ -22,6 +22,16 @@ DTP TTA void UTP::construct( FromTypeAndCtorArguments, CtType<T> t, A &&...ctor_
     new ( &cast( t ) ) T( std::forward<A>( ctor_args )... );
 }
 
+DTP TT void UTP::construct( FromPointer, T &&pointer ) {
+    auto &type = StaticStorage<VfsTdType<Object,T>>::value;
+    instantiated_type_index = type.instantiated_type_index;
+    global_type_index = type.global_type_index;
+
+    if ( not_enough_room_for( t ) )
+        void_ptr() = std::malloc( sizeof( T ) );
+    new ( &cast( t ) ) T( std::forward<A>( ctor_args )... );
+}
+
 DTP TT void UTP::construct( FromValue, T &&value ) {
     construct( FromTypeAndCtorArguments(), CT_DECAYED_TYPE_OF( value ), FORWARD( value ) );
 }

@@ -119,10 +119,10 @@ public:
 DTP auto get_compilation_flags( auto &cn, CtType<UTP> ) { cn.add_inc_file( "vfs/containers/Vec.h" ); }
 DTP void for_each_template_arg( CtType<UTP>, auto &&f ) { f( CtType<Item>() ); f( CtInt<static_size>() ); f( CtInt<local_size>() ); f( CtInt<alignment>() ); f( CtInt<allow_heap>() ); }
 DTP auto template_type_name( CtType<UTP> ) { return "Vec"; }
-DTP auto block_types_of( CtType<UTP> ) { return CtTypeList<Vec<UTP,1>>(); }
-DTP auto ct_sizes_of( CtType<UTP> ) { return CtIntList<static_size>(); }
+DTP constexpr auto ct_sizes_of( CtType<UTP> ) { return CtIntList<static_size>(); }
 DTP auto memory_of( const UTP &a ) { return Memory_Cpu(); }
 
+// DTP constexpr auto block_types_of( CtType<UTP> ) { return CtTypeList<Vec<UTP,1>>(); }
 DTP constexpr auto tensor_order( CtType<UTP> ) { return CtInt<1>(); }
 
 Ti auto VecType_for( auto item_type, CtInt<i> ) { return CtType<Vec<typename VALUE_IN_DECAYED_TYPE_OF( item_type ),i>>(); }

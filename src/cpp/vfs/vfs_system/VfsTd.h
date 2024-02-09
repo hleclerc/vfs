@@ -11,32 +11,33 @@ class Type;
 template<class Object_,int size_=3 * sizeof( void * ),int alig_=alignof( void * )>
 class alignas( alig_) VfsTd {
 public:
-    static constexpr int data_size                   = size_;
-    static constexpr int data_alig                   = alig_;
-    static constexpr int padd_size                   = ( 2 * sizeof( PI32 ) + data_alig - 1 ) / data_alig * data_alig - 2 * sizeof( PI32 );
-    using                Object                      = Object_;
+    static constexpr int data_size                = size_;
+    static constexpr int data_alig                = alig_;
+    static constexpr int padd_size                = ( 2 * sizeof( PI32 ) + data_alig - 1 ) / data_alig * data_alig - 2 * sizeof( PI32 );
+    using                Object                   = Object_;
 
-    TTA void             construct                   ( FromTypeAndCtorArguments, CtType<T>, A &&...ctor_args ); ///< with ( ctor_args... ) (and not {})
-    TT void              construct                   ( FromValue, T &&value );
+    TTA void             construct                ( FromTypeAndCtorArguments, CtType<T>, A &&...ctor_args ); ///< with ( ctor_args... ) (and not {})
+    TT void              construct                ( FromPointer, T &&pointer );
+    TT void              construct                ( FromValue, T &&value );
 
-    TT void              destroy                     ( CtType<T> );
+    TT void              destroy                  ( CtType<T> );
 
-    TT constexpr bool    not_enough_room_for         ( CtType<T> );
-    void* const&         void_ptr                    () const;
-    void*&               void_ptr                    ();
-    TT const T&          cast                        ( CtType<T> ) const;
-    TT T&                cast                        ( CtType<T> );
-    TT const T&          cast                        () const;
-    TT T&                cast                        ();
+    TT constexpr bool    not_enough_room_for      ( CtType<T> );
+    void* const&         void_ptr                 () const;
+    void*&               void_ptr                 ();
+    TT const T&          cast                     ( CtType<T> ) const;
+    TT T&                cast                     ( CtType<T> );
+    TT const T&          cast                     () const;
+    TT T&                cast                     ();
 
-    static auto          get_compilation_flags       ( CompilationFlags &cn) { cn.add_inc_file( "vfs/vfs_system/VfsTd.h" ); }
-    static void          for_each_template_arg       ( auto &&f ) { f( CtType<Object>() ); }
-    static auto          template_type_name          () { return "VfsTd"; }
+    static auto          get_compilation_flags    ( CompilationFlags &cn ) { cn.add_inc_file( "vfs/vfs_system/VfsTd.h" ); }
+    static void          for_each_template_arg    ( auto &&f ) { f( CtType<Object>() ); }
+    static auto          template_type_name       () { return "VfsTd"; }
 
-    mutable PI32         instantiated_type_index;    ///<
-    PI32                 global_type_index;          ///<
-    char                 padd[ padd_size ];          ///<
-    char                 data[ data_size ];          ///<
+    mutable PI32         instantiated_type_index; ///<
+    PI32                 global_type_index;       ///<
+    char                 padd[ padd_size ];       ///<
+    char                 data[ data_size ];       ///<
 };
 
 
@@ -67,9 +68,9 @@ PI32 vfs_object_ct_key( const HasVfsTd auto &obj ) {
     return obj._vfs_type_and_data.instantiated_type_index;
 }
 
-Vec<Str> vfs_object_ct_cast( const HasVfsTd auto &obj ) {
+Vec<Str> vfs_object_ct_cast( const HasVfsTd auto &obj, bool deref ) {
     VfsTdTypeAncestor *ta = VfsTdTypeAncestor::type_at_global_index( obj._vfs_type_and_data.global_type_index );
-    return { "auto &&{ARG} = vfs_td_cast( CtType<" + ta->name() + ">(), FORWARD( {ARG_DECL} ) );" };
+    return { "auto &&{ARG} = " + Str( deref && ta->is_a_pointer() ? "*" : "" ) + "vfs_td_cast( CtType<" + ta->name() + ">(), FORWARD( {ARG_DECL} ) );" };
 }
 
 // helper to forward content of a vfs td object
@@ -101,7 +102,7 @@ auto vfs_td_impl_type( CtType<void> ObjType, const auto &... ) {
     NAME&                operator=            ( NAME &&that ) { VFS_CALL( vfs_td_reassign, CtStringList<>, void, *this, std::move( that ) ); return *this; } \
     \
     template             <CtStringValue       func> \
-    static auto          _real_type_call      ( auto &&...args ) { using Result = VALUE_IN_DECAYED_TYPE_OF( type_promote( CtString<func>(), CT_DECAYED_TYPE_OF( args )... ) ); return vfs_call<func,{},Result>( FORWARD( args )... ); }; \
+    static auto          _real_type_call      ( auto &&...args ) { using Result = VALUE_IN_DECAYED_TYPE_OF( type_promote( CtString<func>(), CT_DECAYED_TYPE_OF( args )... ) ); return vfs_call<func,CtStringList<>,Result>( FORWARD( args )... ); }; \
     \
     DisplayItem*         display              ( auto &ds ) const { return VFS_CALL( display, CtStringList<>, DisplayItem *, ds, *this ); } \
     \

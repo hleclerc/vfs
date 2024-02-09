@@ -13,6 +13,7 @@ public:
 
     virtual PI32              get_instantiated_type_index() = 0;
     virtual void              get_compilation_flags_rec  ( CompilationFlags &res, Vec<Str> &seen ) const = 0;
+    virtual bool              is_a_pointer               () const = 0;
     virtual DisplayItem*      display                    ( Displayer &ds ) const = 0;
     virtual Str               name                       () const = 0;
 
