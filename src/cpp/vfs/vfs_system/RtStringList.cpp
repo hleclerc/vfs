@@ -28,7 +28,7 @@ Vec<Str> RtStringList::cast_to_string( StrView str ) {
     return res;
 }
 
-Vec<Str> vfs_object_ct_cast( const RtStringList &obj ) {
+Vec<Str> vfs_object_ct_cast( const RtStringList &obj, bool deref ) {
     Str res = "auto {ARG} = CtStringList<";
     res += join_map( obj.value, ctor_for<Str> );
     return { res + ">();" };

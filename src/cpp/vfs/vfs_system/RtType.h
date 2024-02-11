@@ -23,7 +23,7 @@ const auto &vfs_object_ct_key( const RtType &obj ) {
     return obj.name;
 }
 
-Seq<Str> vfs_object_ct_cast( const RtType &obj ) {
+Seq<Str> vfs_object_ct_cast( const RtType &obj, bool deref = true ) {
     return { "auto {ARG} = CtType<" + obj.name + ">();" };
 }
 

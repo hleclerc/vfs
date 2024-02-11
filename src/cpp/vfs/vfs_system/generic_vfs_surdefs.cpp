@@ -45,7 +45,7 @@ ON_INIT {
     // vfs_td_destroy
     VFS_ADD_SURDEF( "vfs_td_destroy", "self" ) {
         cg.add_line( "self_decl._vfs_type_and_data.destroy( CT_DECAYED_TYPE_OF( self ) );" );
-        return cg.valid();
+        return cg.valid( { 0 } );
     };
 }
 

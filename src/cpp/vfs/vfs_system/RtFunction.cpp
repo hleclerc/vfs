@@ -33,7 +33,7 @@ const Str &vfs_object_ct_key( const RtFunction &obj ) {
     return obj.name;
 }
 
-Vec<Str> vfs_object_ct_cast( const RtFunction &obj ) {
+Vec<Str> vfs_object_ct_cast( const RtFunction &obj, bool deref = true ) {
     return { "auto {ARG} = Function_" + symbol_for( obj.name ) + "();" };
 }
 

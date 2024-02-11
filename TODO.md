@@ -38,5 +38,3 @@ On pourrait faire un vfs_td_impl_type( ... )
   * ça pourrait éventuellement être utilisé par tous les ctors pour trouver les ctors adaptés
   * du coup, il faudrait être assez restrictifs
 
-
-Rq de la mort: si on veut faire une liste de points

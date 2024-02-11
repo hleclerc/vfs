@@ -81,6 +81,7 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
             }
             
             Vec<Str> missing_cpp_files{ cpp_filename.string() };
+            Vec<Str> libs_to_load;
             while( ! missing_cpp_files.empty() ) {
                 Str cpp_to_compile = missing_cpp_files.pop_back_val();
 
@@ -118,10 +119,13 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
                         missing_cpp_files.push_back( cpp_file );
                 }
 
-                // load lib
-                load_lib( out_name );
+                // register lib
+                libs_to_load << out_name;
             }
 
+            // load libs
+            while ( libs_to_load.size() )
+                load_lib( libs_to_load.pop_back_val() );
 
             // look again in loaded_symbols
             Key key{ name, return_type, arg_types, ct_casts, cn };
@@ -198,24 +202,24 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
 
     // find surdef
     Vec<SurdefTrial> surdef_trials;
-    Vec<double> best_pertinence;
+    Vec<double> best_pertinence{ std::numeric_limits<double>::lowest() };
     for( const Surdef &surdef : surdefs ) {
         if ( ! std::regex_search( function_name, surdef.name ) )
             continue;
 
-        // temporary (should not appear)
-        bool has_same_file_and_line = false;
-        for( const SurdefTrial &surdef_trial : surdef_trials )
-            if ( surdef_trial.file == surdef.file && surdef_trial.line == surdef.line )
-                has_same_file_and_line = true;
-        if ( has_same_file_and_line )
-            continue;
+        // // temporary handling (should not appear)
+        // bool has_same_file_and_line = false;
+        // for( const SurdefTrial &surdef_trial : surdef_trials )
+        //     if ( surdef_trial.file == surdef.file && surdef_trial.line == surdef.line )
+        //         has_same_file_and_line = true;
+        // if ( has_same_file_and_line )
+        //     continue;
 
         SurdefTrial surdef_trial = try_surdef( surdef );
         if ( surdef_trial.vss.result == VfsSurdefStage::Result::invalid )
             continue;
 
-        if ( lexical_comparison( surdef_trial.vss.pertinence, best_pertinence ) )
+        if ( lexical_comparison( surdef_trial.vss.pertinence, best_pertinence, 0.0 ) )
             continue;
 
         if ( std::ranges::lexicographical_compare( best_pertinence, surdef_trial.vss.pertinence ) ) {
@@ -229,12 +233,12 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
     }
 
     if ( surdef_trials.empty() )
-        ERROR( "found no match..." );
+        ERROR( va_string( "found no match for function $0", function_name ) );
 
     if ( surdef_trials.size() >= 2 ) {
         for( const SurdefTrial &st : surdef_trials )
             std::cerr << st.file << ":" << st.line << ": error: possible surdef" << std::endl;
-        ERROR( "ambiguous overload..." );
+        ERROR( va_string( "ambiguous overload for function $0", function_name ) );
     }
 
     //

@@ -9,12 +9,12 @@
 BEG_VFS_NAMESPACE
 
 ///
-template<class Object,class Content,bool pointer_>
+template<class Object,class Content,int nb_indirections_>
 class VfsTdType : public VfsTdTypeAncestor {
 public:
     virtual PI32           get_instantiated_type_index() override;
     virtual void           get_compilation_flags_rec  ( CompilationFlags &res, Vec<Str> &seen ) const override;
-    virtual bool           is_a_pointer               () const override;
+    virtual int            nb_indirections            () const override;
     virtual DisplayItem*   display                    ( Displayer &ds ) const override;
     virtual Str            name                       () const override;
 
@@ -22,8 +22,8 @@ public:
 };
 
 // impl -------------------------------------------------------------------------------------------------------------------
-#define DTP template<class Object,class Content,bool pointer_>
-#define UTP VfsTdType<Object,Content,pointer_>
+#define DTP template<class Object,class Content,int nb_indirections_>
+#define UTP VfsTdType<Object,Content,nb_indirections_>
 
 DTP PI32 UTP::get_instantiated_type_index() {
     if ( instantiated_type_index == 0 )
@@ -35,8 +35,8 @@ DTP void UTP::get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen )
     VFS_NAMESPACE::get_compilation_flags_rec( res, seen, CtType<Content>() );
 }
 
-DTP bool UTP::is_a_pointer() const {
-    return pointer_;
+DTP int UTP::nb_indirections() const {
+    return nb_indirections_;
 }
 
 DTP DisplayItem *UTP::display( Displayer &ds ) const {

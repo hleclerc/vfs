@@ -68,9 +68,9 @@ PI32 vfs_object_ct_key( const HasVfsTd auto &obj ) {
     return obj._vfs_type_and_data.instantiated_type_index;
 }
 
-Vec<Str> vfs_object_ct_cast( const HasVfsTd auto &obj, bool deref ) {
+Vec<Str> vfs_object_ct_cast( const HasVfsTd auto &obj, bool deref = true ) {
     VfsTdTypeAncestor *ta = VfsTdTypeAncestor::type_at_global_index( obj._vfs_type_and_data.global_type_index );
-    return { "auto &&{ARG} = " + Str( deref && ta->is_a_pointer() ? "*" : "" ) + "vfs_td_cast( CtType<" + ta->name() + ">(), FORWARD( {ARG_DECL} ) );" };
+    return { "auto &&{ARG} = " + Str( deref * ta->nb_indirections(), '*' ) + "vfs_td_cast( CtType<" + ta->name() + ">(), FORWARD( {ARG_DECL} ) );" };
 }
 
 // helper to forward content of a vfs td object
@@ -92,6 +92,7 @@ auto vfs_td_impl_type( CtType<void> ObjType, const auto &... ) {
     static auto          template_type_name   () { return #NAME; } \
     \
     /**/                 NAME                 ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, _vfs_type_and_data, FromTypeAndCtorArguments(), FORWARD( ct_type ), FORWARD( args )... ); } \
+    /**/                 NAME                 ( FromPointer, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, _vfs_type_and_data, FromPointer(), FORWARD( pointer ) ); } \
     /**/                 NAME                 ( FromValue, auto &&value ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, _vfs_type_and_data, FromValue(), FORWARD( value ) ); } \
     /**/                 NAME                 ( const NAME &that ) { VFS_CALL_METHOD( construct, CtStringList<>, void, _vfs_type_and_data, FromValue(), that ); } \
     /**/                 NAME                 ( NAME &&that ) { VFS_CALL_METHOD( construct, CtStringList<>, void, _vfs_type_and_data, FromValue(), std::move( that ) ); } \

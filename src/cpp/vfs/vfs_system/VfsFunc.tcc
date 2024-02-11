@@ -34,8 +34,9 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
     get_compilation_flags_rec( cn, seen, CtType<Return>() );
     ( get_compilation_flags_rec( cn, seen, CtType<A>() ), ... );
 
-    // ct casts + nb_args + compilation needs for each arg
+    // ct casts + compilation needs for each arg
     Vec<Vec<Str>> ct_casts;
+    Vec<Str> ct_storage;
     ct_casts.reserve( sizeof...( A ) );
     auto get_ct_cast_for = [&]( const auto &arg ) {
         // includes
@@ -43,6 +44,12 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
             vfs_object_get_compilation_flags( cn, seen, arg );
 
         // casts
+        if constexpr( requires { vfs_object_ct_cast( arg ); } )
+            ct_casts.push_back( vfs_object_ct_cast( arg ) );
+        else
+            ct_casts.push_back( Vec<Str>{ "" } );
+
+        // storage
         if constexpr( requires { vfs_object_ct_cast( arg ); } )
             ct_casts.push_back( vfs_object_ct_cast( arg ) );
         else

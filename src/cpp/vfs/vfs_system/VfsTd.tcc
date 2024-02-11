@@ -13,7 +13,7 @@ DTP TT constexpr bool UTP::not_enough_room_for( CtType<T> ) {
 }
 
 DTP TTA void UTP::construct( FromTypeAndCtorArguments, CtType<T> t, A &&...ctor_args ) {
-    auto &type = StaticStorage<VfsTdType<Object,T>>::value;
+    auto &type = StaticStorage<VfsTdType<Object,T,0>>::value;
     instantiated_type_index = type.instantiated_type_index;
     global_type_index = type.global_type_index;
 
@@ -23,13 +23,14 @@ DTP TTA void UTP::construct( FromTypeAndCtorArguments, CtType<T> t, A &&...ctor_
 }
 
 DTP TT void UTP::construct( FromPointer, T &&pointer ) {
-    auto &type = StaticStorage<VfsTdType<Object,T>>::value;
+    auto &type = StaticStorage<VfsTdType<Object,T,1>>::value;
     instantiated_type_index = type.instantiated_type_index;
     global_type_index = type.global_type_index;
 
+    auto t = CT_DECAYED_TYPE_OF( pointer );
     if ( not_enough_room_for( t ) )
         void_ptr() = std::malloc( sizeof( T ) );
-    new ( &cast( t ) ) T( std::forward<A>( ctor_args )... );
+    new ( &cast( t ) ) T( FORWARD( pointer ) );
 }
 
 DTP TT void UTP::construct( FromValue, T &&value ) {

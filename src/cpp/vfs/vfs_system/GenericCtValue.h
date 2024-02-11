@@ -20,7 +20,7 @@ const auto &vfs_object_ct_key( const GenericCtValue &obj ) {
     return obj.cast;
 }
 
-Seq<Str> vfs_object_ct_cast( const GenericCtValue &obj ) {
+Seq<Str> vfs_object_ct_cast( const GenericCtValue &obj, bool deref = true ) {
     return { "auto {ARG} = " + obj.cast + ";" };
 }
 

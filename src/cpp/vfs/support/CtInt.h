@@ -41,6 +41,10 @@ struct CtInt : public WithDefaultOperators {
 template<int i> constexpr auto ct_value_wrapper_for() { return CtInt<i>(); }
 auto constexpr tensor_order( auto ) { return CtInt<0>(); }
 
+template<int i,int j> constexpr bool always_equal( CtInt<i>, CtInt<j> ) { return i == j; }
+template<int i> constexpr bool always_equal( CtInt<i>, int v ) { return v == i; }
+template<int i> constexpr bool always_equal( int v, CtInt<i> ) { return v == i; }
+
 // template<int i,int j> inline auto operator*( CtInt<i>, CtInt<j> ) { return CtInt<i*j>(); }
 // template<int i,int j> inline auto max( CtInt<i>, CtInt<j> ) { return CtInt<std::max(i,j)>(); }
 

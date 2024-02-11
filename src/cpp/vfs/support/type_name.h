@@ -41,7 +41,7 @@ DECL_TYPE_NAME( Str  );
 template<class T,class... A> Str type_name( CtType<std::function<T(A...)>> ) {
     Str res;
     ( ( res += ( res.empty() ? "" : "," ) + type_name( CtType<A>() ) ), ... );
-    return "std::function<" + type_name( CtType<T>() ) + "(" + res + ")>";
+    return Str( "std::function<" ) + type_name( CtType<T>() ) + "(" + res + ")>";
 }
 
 // helpers for the generic version

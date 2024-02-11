@@ -19,7 +19,7 @@ inline const auto &vfs_object_ct_key( const RtString &obj ) {
     return obj.value;
 }
 
-inline Vec<Str> vfs_object_ct_cast( const RtString &obj ) {
+inline Vec<Str> vfs_object_ct_cast( const RtString &obj, bool deref = true ) {
     return { "auto {ARG} = CtString<" + ctor_for( obj.value ) + ">();" };
 }
 

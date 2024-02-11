@@ -14,7 +14,7 @@ public:
     Vec<Str>    value;        ///<
 };
 
-Vec<Str>        vfs_object_ct_cast( const RtStringList &obj );
+Vec<Str>        vfs_object_ct_cast( const RtStringList &obj, bool deref = true );
 const Vec<Str> &vfs_object_ct_key ( const RtStringList &obj );
 
 END_VFS_NAMESPACE

@@ -18,6 +18,6 @@ public:
 
 void vfs_object_get_compilation_flags( CompilationFlags &cn, Vec<Str> &seen, const RtFunction &obj );
 const Str &vfs_object_ct_key( const RtFunction &obj );
-Vec<Str> vfs_object_ct_cast( const RtFunction &obj );
+Vec<Str> vfs_object_ct_cast( const RtFunction &obj, bool deref = true );
 
 END_VFS_NAMESPACE
