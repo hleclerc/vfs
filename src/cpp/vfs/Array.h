@@ -10,7 +10,7 @@ BEG_VFS_NAMESPACE
 
 ///
 template<class Item,class Tags=ArrayTagList<>>
-class Array { VFS_TD_OBJECT_ATTRIBUTES_TT( Array, "vfs", Item, Tags );
+class Array { VFS_DT_OBJECT_ATTRIBUTES_TT( Array, "vfs", Item, Tags );
 public:
     // additional ctors to allow construction using {} lists
     TT   Array( const std::initializer_list<std::initializer_list<std::initializer_list<T>>> &values );
@@ -21,7 +21,7 @@ public:
 };
 
 // types for ctors --------------------------------------------------------------------------
-TUV auto vfs_td_impl_type( CtType<Array<U,V>>, const HasSizeAndAccess auto &that ) {
+TUV auto vfs_dt_impl_type( CtType<Array<U,V>>, const HasSizeAndAccess auto &that ) {
     constexpr auto wanted_nb_dims = ArrayTagListAnalyzer::want_nb_dims( V{} );
 
     /// If it's empty, we're not going to have sample items...
@@ -29,7 +29,7 @@ TUV auto vfs_td_impl_type( CtType<Array<U,V>>, const HasSizeAndAccess auto &that
         return Type( "EmptyArrayImpl", "vfs/containers/EmptyArrayImpl.h", wanted_nb_dims );
 
     // scalar
-    auto sub_item_type = vfs_td_impl_type( CtType<U>(), item_sample( that, wanted_nb_dims ) );
+    auto sub_item_type = vfs_dt_impl_type( CtType<U>(), item_sample( that, wanted_nb_dims ) );
     if ( wanted_nb_dims == 0 )
         return Type( sub_item_type );
 
@@ -58,7 +58,7 @@ TUV auto vfs_td_impl_type( CtType<Array<U,V>>, const HasSizeAndAccess auto &that
     } );
 }
 
-TUV auto vfs_td_impl_type( CtType<Array<U,V>> ) {
+TUV auto vfs_dt_impl_type( CtType<Array<U,V>> ) {
     return CtType<EmptyArrayImpl<1>>();
 }
 

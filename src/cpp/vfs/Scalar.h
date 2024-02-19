@@ -4,16 +4,17 @@
 
 BEG_VFS_NAMESPACE
 
-class Scalar { VFS_TD_OBJECT_ATTRIBUTES( Scalar, "vfs" );
+class Scalar {
 public:
+    VFS_DT_OBJECT_ATTRIBUTES( Scalar, "vfs" );
 };
 
 // types for ctors --------------------------------------------------------------------------
-auto vfs_td_impl_type( CtType<Scalar>, const ScalarLike auto &value ) {
+auto vfs_dt_impl_type( CtType<Scalar>, const ScalarLike auto &value ) {
     return CT_DECAYED_TYPE_OF( value );
 }
 
-inline auto vfs_td_impl_type( CtType<Scalar> ) {
+inline auto vfs_dt_impl_type( CtType<Scalar> ) {
     return CtType<CtInt<0>>();
 }
 

@@ -3,14 +3,14 @@
 #include "../support/get_compilation_flags_rec.h"
 #include "../support/StaticStorage.h"
 #include "../support/type_name.h"
-#include "VfsTdTypeAncestor.h"
-#include "VfsTdTypeTable.h"
+#include "VfsDtTypeAncestor.h"
+#include "VfsDtTypeTable.h"
 
 BEG_VFS_NAMESPACE
 
 ///
 template<class Object,class Content,int nb_indirections_>
-class VfsTdType : public VfsTdTypeAncestor {
+class VfsDtType : public VfsDtTypeAncestor {
 public:
     virtual PI32           get_instantiated_type_index() override;
     virtual void           get_compilation_flags_rec  ( CompilationFlags &res, Vec<Str> &seen ) const override;
@@ -23,11 +23,11 @@ public:
 
 // impl -------------------------------------------------------------------------------------------------------------------
 #define DTP template<class Object,class Content,int nb_indirections_>
-#define UTP VfsTdType<Object,Content,nb_indirections_>
+#define UTP VfsDtType<Object,Content,nb_indirections_>
 
 DTP PI32 UTP::get_instantiated_type_index() {
     if ( instantiated_type_index == 0 )
-        instantiated_type_index = StaticStorage<VfsTdTypeTable,Object>::value.new_instantiated_type_index();
+        instantiated_type_index = StaticStorage<VfsDtTypeTable,Object>::value.new_instantiated_type_index();
     return instantiated_type_index;
 }
 

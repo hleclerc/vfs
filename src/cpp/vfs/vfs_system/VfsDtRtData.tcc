@@ -1,30 +1,26 @@
 #pragma once
 
-#include "VfsArgWithRtIntType.h"
+#include "VfsDtCtData.h"
+#include "VfsDtRtData.h"
+#include "VfsDtType.h" // IWYU pragma: export
 
 BEG_VFS_NAMESPACE
 
 #define DTP template<class Object_,int size_,int alig_>
-#define UTP VfsArgWithRtIntType<Object_,size_,alig_>
+#define UTP VfsDtRtData<Object_,size_,alig_>
 
 // DTP TT constexpr bool UTP::not_enough_room_for( CtType<T> ) {
 //     constexpr int off = ( 2 * sizeof( PI32 ) + alignof( T ) - 1 ) / alignof( T ) * alignof( T );
 //     return alignof( T ) > data_alig || off + sizeof( T ) > sizeof( *this );
 // }
 
-DTP TTA void UTP::construct( FromTypeAndCtorArguments, CtType<T> t, A &&...ctor_args ) {
-    auto &type = StaticStorage<VfsTdType<Object,T,0>>::value;
-    instantiated_type_index = type.instantiated_type_index;
-    global_type_index = type.global_type_index;
-
-
-    if ( not_enough_room_for( t ) )
-        void_ptr() = std::malloc( sizeof( T ) );
-    new ( &cast( t ) ) T( std::forward<A>( ctor_args )... );
+DTP TT void UTP::construct( FromTypeAndCtorArguments, CtType<T> t, auto &&...ctor_args ) {
+    new ( this ) VfsDtCtData<Object,T>( FORWARD( ctor_args )... );
 }
 
-// DTP TT void UTP::construct( FromPointer, T &&pointer ) {
-//     auto &type = StaticStorage<VfsTdType<Object,T,1>>::value;
+DTP TT void UTP::construct( FromPointer, T &&pointer ) {
+    TODO;
+//     auto &type = StaticStorage<VfsDtType<Object,T,1>>::value;
 //     instantiated_type_index = type.instantiated_type_index;
 //     global_type_index = type.global_type_index;
 
@@ -32,17 +28,18 @@ DTP TTA void UTP::construct( FromTypeAndCtorArguments, CtType<T> t, A &&...ctor_
 //     if ( not_enough_room_for( t ) )
 //         void_ptr() = std::malloc( sizeof( T ) );
 //     new ( &cast( t ) ) T( FORWARD( pointer ) );
-// }
+}
 
-// DTP TT void UTP::construct( FromValue, T &&value ) {
-//     construct( FromTypeAndCtorArguments(), CT_DECAYED_TYPE_OF( value ), FORWARD( value ) );
-// }
+DTP TT void UTP::construct( FromValue, T &&value ) {
+     construct( FromTypeAndCtorArguments(), CT_DECAYED_TYPE_OF( value ), FORWARD( value ) );
+}
 
-// DTP TT void UTP::destroy( CtType<T> t ) {
-//     cast( t ).~T();
-//     if ( not_enough_room_for( t ) )
-//         std::free( void_ptr() );
-// }
+DTP TT void UTP::destroy( CtType<T> t ) {
+    TODO;
+    //     cast( t ).~T();
+    //     if ( not_enough_room_for( t ) )
+    //         std::free( void_ptr() );
+}
 
 // DTP void *const &UTP::void_ptr() const {
 //     constexpr int off = ( 2 * sizeof( PI32 ) + alignof( void * ) - 1 ) / alignof( void * ) * alignof( void * );
@@ -75,7 +72,7 @@ DTP TTA void UTP::construct( FromTypeAndCtorArguments, CtType<T> t, A &&...ctor_
 // }
 
 
-// #undef DTP
-// #undef UTP
+#undef DTP
+#undef UTP
 
 END_VFS_NAMESPACE

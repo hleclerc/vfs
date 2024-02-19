@@ -5,7 +5,7 @@
 BEG_VFS_NAMESPACE
 
 ///
-struct VfsTdTypeTable {
+struct VfsDtTypeTable {
     PI32 new_instantiated_type_index();
 
     PI32 nb_instantiated_types      = 0;   ///<

@@ -1,18 +1,18 @@
-#include "VfsTdTypeAncestor.h"
+#include "VfsDtTypeAncestor.h"
 
 BEG_VFS_NAMESPACE
 
-static Vec<VfsTdTypeAncestor *> all_the_types( FromSize(), 1024 );
-static VfsTdTypeAncestor *last_new_type = nullptr;
+static Vec<VfsDtTypeAncestor *> all_the_types( FromSize(), 1024 );
+static VfsDtTypeAncestor *last_new_type = nullptr;
 static PI total_nb_types = 0;
 
-VfsTdTypeAncestor::VfsTdTypeAncestor() {
+VfsDtTypeAncestor::VfsDtTypeAncestor() {
     global_type_index = total_nb_types++;
     prev_new_type = last_new_type;
     last_new_type = this;
 }
 
-void VfsTdTypeAncestor::register_the_new_types() {
+void VfsDtTypeAncestor::register_the_new_types() {
     for( ; last_new_type; last_new_type = last_new_type->prev_new_type ) {
         auto p = last_new_type->global_type_index;
         while( p >= all_the_types.size() )
@@ -21,7 +21,7 @@ void VfsTdTypeAncestor::register_the_new_types() {
     }
 }
 
-VfsTdTypeAncestor *VfsTdTypeAncestor::type_at_global_index( PI32 index ) {
+VfsDtTypeAncestor *VfsDtTypeAncestor::type_at_global_index( PI32 index ) {
     register_the_new_types();
     ASSERT( index < all_the_types.size() );
     return all_the_types[ index ];

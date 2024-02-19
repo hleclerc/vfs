@@ -6,8 +6,10 @@
 BEG_VFS_NAMESPACE
 
 ///
-class Type { VFS_TD_OBJECT_ATTRIBUTES( Type, "vfs" );
+class Type {
 public:
+    VFS_DT_OBJECT_ATTRIBUTES( Type, "vfs" );
+
     /**/ Type( auto &&name, auto &&compilation_flags, auto &&...template_parameters ); ///< template_parameters are automatically transformed to ct_value to be used as real template args
     /**/ Type( auto name ) : Type( name, CompilationFlags() ) {}
     TT   Type( CtType<T> ) : Type( FromValue(), CtType<CtType<T>>() ) {}
@@ -15,14 +17,15 @@ public:
 };
 
 // to get the Type of a VfsObject
-auto type_of( const IsAVfsTdObject auto &v ) { return VFS_CALL( type_of, CtStringList<>, Type, v ); }
+auto type_of( const VfsDtObject auto &v ) { return VFS_CALL( type_of, CtStringList<>, Type, v ); }
 
 inline const auto &ct_value( const Type &v ) { return v; }
 
 
 // impl ----------------------------------------------------------------------------------------------------------------------------------
 Type::Type( auto &&name, auto &&compilation_flags, auto &&...template_parameters ) {
-    VFS_CALL_DINK( construct_Type, CtStringList<>, void, _vfs_type_and_data, ct_value( name ), ct_value( compilation_flags ), ct_value( template_parameters )... );
+    // VFS_CALL_DINK( construct_Type, CtStringList<>, void, _vfs_object_rt_data, ct_value( name ), ct_value( compilation_flags ), ct_value( template_parameters )... );
+    TODO;
 }
 
 ///

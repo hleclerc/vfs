@@ -15,7 +15,7 @@ Ti auto ct_value( CtInt<i> v ) { return v; }
 // by default
 auto ct_value( const auto &v ) {
     using T = decltype( v );
-    if constexpr( HasVfsObjectCtKey<T> )
+    if constexpr( VfsArg<T> )
         return VFS_CALL( ct_value, CtStringList<>, Any, FORWARD( v ) );
     else if constexpr( ScalarLike<T> )
         return RtInt{ int( v ) };
