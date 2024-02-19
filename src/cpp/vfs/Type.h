@@ -6,7 +6,7 @@
 BEG_VFS_NAMESPACE
 
 ///
-class Type { VFS_TD_ATTRIBUTES( Type, "vfs" );
+class Type { VFS_TD_OBJECT_ATTRIBUTES( Type, "vfs" );
 public:
     /**/ Type( auto &&name, auto &&compilation_flags, auto &&...template_parameters ); ///< template_parameters are automatically transformed to ct_value to be used as real template args
     /**/ Type( auto name ) : Type( name, CompilationFlags() ) {}
@@ -15,7 +15,7 @@ public:
 };
 
 // to get the Type of a VfsObject
-auto type_of( const HasVfsTd auto &v ) { return VFS_CALL( type_of, CtStringList<>, Type, v ); }
+auto type_of( const IsAVfsTdObject auto &v ) { return VFS_CALL( type_of, CtStringList<>, Type, v ); }
 
 inline const auto &ct_value( const Type &v ) { return v; }
 

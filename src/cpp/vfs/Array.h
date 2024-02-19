@@ -10,7 +10,7 @@ BEG_VFS_NAMESPACE
 
 ///
 template<class Item,class Tags=ArrayTagList<>>
-class Array { VFS_TD_ATTRIBUTES_TT( Array, "vfs", Item, Tags );
+class Array { VFS_TD_OBJECT_ATTRIBUTES_TT( Array, "vfs", Item, Tags );
 public:
     // additional ctors to allow construction using {} lists
     TT   Array( const std::initializer_list<std::initializer_list<std::initializer_list<T>>> &values );

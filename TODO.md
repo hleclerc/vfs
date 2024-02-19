@@ -38,3 +38,10 @@ On pourrait faire un vfs_td_impl_type( ... )
   * ça pourrait éventuellement être utilisé par tous les ctors pour trouver les ctors adaptés
   * du coup, il faudrait être assez restrictifs
 
+Comment faire les arguments variadiques ?
+  * on l'avait fait avec RtArgList, mais ce n'était pas si ouf: on utilisait en fin de compte des clés Str...
+  * mais en pratique, on avait besoin de ce côté dynamique
+  * et on n'avait ensuite qu'une seule étape 
+
+  * Rq: on pourrait gérer les arguments multiples dans les ArgTrait<>::ct_cast
+    =>  CtValueOf... ne ferait que le stockage

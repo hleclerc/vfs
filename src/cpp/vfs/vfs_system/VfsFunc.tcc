@@ -7,6 +7,7 @@
 
 #include "apply_on_ct_keys_of_vfs_objects.h"
 #include "get_vfs_func_inst.h"
+#include "VfsArgTrait.h"
 #include "VfsFunc.h"
 
 BEG_VFS_NAMESPACE
@@ -27,31 +28,26 @@ DTP Return UTP::operator()( Args ...args ) {
 DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
     // includes with declared types
     Vec<Str> seen;
-    CompilationFlags cn;
+    CompilationFlags compilation_flags;
     Flags::for_each_string( [&]( auto str ) {
-        cn << str.to_string();
+        compilation_flags << str.to_string();
     } );
-    get_compilation_flags_rec( cn, seen, CtType<Return>() );
-    ( get_compilation_flags_rec( cn, seen, CtType<A>() ), ... );
+    get_compilation_flags_rec( compilation_flags, seen, CtType<Return>() );
+    ( get_compilation_flags_rec( compilation_flags, seen, CtType<A>() ), ... );
 
     // ct casts + compilation needs for each arg
     Vec<Vec<Str>> ct_casts;
     Vec<Str> ct_storage;
     ct_casts.reserve( sizeof...( A ) );
     auto get_ct_cast_for = [&]( const auto &arg ) {
-        // includes
-        if constexpr( requires { vfs_object_get_compilation_flags( cn, seen, arg ); } )
-            vfs_object_get_compilation_flags( cn, seen, arg );
+        // virtual compilation flags
+        using Obj = DECAYED_TYPE_OF( arg );
+        if constexpr( requires { VfsArgTrait<Obj>::compilation_flags( compilation_flags, seen, arg ); } )
+            VfsArgTrait<Obj>::compilation_flags( compilation_flags, seen, arg );
 
         // casts
-        if constexpr( requires { vfs_object_ct_cast( arg ); } )
-            ct_casts.push_back( vfs_object_ct_cast( arg ) );
-        else
-            ct_casts.push_back( Vec<Str>{ "" } );
-
-        // storage
-        if constexpr( requires { vfs_object_ct_cast( arg ); } )
-            ct_casts.push_back( vfs_object_ct_cast( arg ) );
+        if constexpr( requires { VfsArgTrait<Obj>::ct_cast( arg ); } )
+            ct_casts.push_back( VfsArgTrait<Obj>::ct_cast( arg ) );
         else
             ct_casts.push_back( Vec<Str>{ "" } );
     };
@@ -64,7 +60,7 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
         { type_name<Args>()... },
         { ( std::is_trivial_v<std::decay_t<Args>> && sizeof( Args ) <= sizeof( void * ) )... },
         std::move( ct_casts ),
-        std::move( cn )
+        std::move( compilation_flags )
     ) );
 }
 
@@ -76,8 +72,9 @@ DTP Return UTP::init( Args ...args ) {
     // test and update object
     bool made_key_update = false;
     auto tst_need_update = [&]( const auto &vfs_object ) {
-        if constexpr ( requires { vfs_object_update_for_ct_key( vfs_object ); } )
-            if ( vfs_object_update_for_ct_key( vfs_object ) )
+        using Obj = DECAYED_TYPE_OF( vfs_object );
+        if constexpr ( requires { VfsArgTrait<Obj>::update_of_ct_key( vfs_object ); } )
+            if ( VfsArgTrait<Obj>::update_of_ct_key( vfs_object ) )
                 made_key_update = true;
     };
     ( tst_need_update( args ), ... );

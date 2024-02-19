@@ -3,7 +3,7 @@
 
 BEG_VFS_NAMESPACE
     
-    void RtArgList::add( void *arg, bool owned, const Str &type_name, const Str &ct_key, const Vec<Str> *lcasts ) {
+void RtArgList::add( void *arg, bool owned, const Str &type_name, const Str &ct_key, const Vec<Str> *lcasts ) {
     // type names
     type_names.push_back( type_name );
 

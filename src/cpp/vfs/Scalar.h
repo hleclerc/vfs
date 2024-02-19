@@ -4,7 +4,7 @@
 
 BEG_VFS_NAMESPACE
 
-class Scalar { VFS_TD_ATTRIBUTES( Scalar, "vfs" );
+class Scalar { VFS_TD_OBJECT_ATTRIBUTES( Scalar, "vfs" );
 public:
 };
 

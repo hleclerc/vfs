@@ -4,7 +4,7 @@
 
 BEG_VFS_NAMESPACE
 
-class Int { VFS_TD_ATTRIBUTES( Int, "vfs" );
+class Int { VFS_TD_OBJECT_ATTRIBUTES( Int, "vfs" );
 public:
     /**/ Int( ScalarLike auto &&value ) : Int( FromValue(), FORWARD( value ) ) {}
     /**/ Int() : Int( CtInt<0>() ) {}
