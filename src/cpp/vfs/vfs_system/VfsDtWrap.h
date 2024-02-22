@@ -8,7 +8,7 @@ class Type;
 /// raw content of `VfsDtObject`s (like `Scalar`, `Type`, ...)
 /// VfsArg with Dynamic Type and some room for inline data (that can be the content or a pointer to the content)
 template<class Object_, int size_ = 3 * sizeof( void * ), int alig_ = alignof( void * )>
-class alignas( alig_) VfsDtRtData {
+class alignas( alig_) VfsDtWrap {
 public:
     static constexpr int data_size                = ( 2 * sizeof( PI32 ) + alig_ - 1 ) / alig_ * alig_ - 2 * sizeof( PI32 ) + size_;
     using                Object                   = Object_;
@@ -39,4 +39,4 @@ public:
 
 END_VFS_NAMESPACE
 
-#include "VfsDtRtData.tcc" // IWYU pragma: export
+#include "VfsDtWrap.tcc" // IWYU pragma: export

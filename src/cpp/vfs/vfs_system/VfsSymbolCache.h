@@ -16,24 +16,24 @@ BEG_VFS_NAMESPACE
 class VfsSymbolCache {
 public:
     using           Path                   = std::filesystem::path;
-    using           Key                    = Tuple<Str, Str, Vec<Str>, Vec<Vec<Str>>, CompilationFlags>;
+    using           Key                    = Tuple<Str, Str, Vec<Str>, CompilationFlags, Vec<Vec<Str>>, Vec<Vec<Str>>, Vec<Str>, Vec<Str>>;
     using           LoadedSymbols          = std::map<Key,void *,SizeAndLexicalComparison>;
     using           SurdefFunc             = std::function<VfsSurdefStage( VfsCodegen &cg )>;
 
     /**/            VfsSymbolCache         ();
     
-    void            register_func          ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn, void *symbol );
+    void            register_func          ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types, const Vec<Str> &cast_refs, void *symbol );
     SurdefFunc&     add_surdef             ( const Str &file, int line, const std::regex &name, const Vec<Str> &arg_names = {} );
-    void*           find_func              ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn );
+    void*           find_func              ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types, const Vec<Str> &cast_refs );
     
     static Vec<Str> global_cpp_flags;
 
 private:
-    struct          Surdef                 { Str file; int line; std::regex name; Vec<Str> arg_names; SurdefFunc f; };
+    struct          Surdef                 { Str file; int line; std::regex name; Vec<Str> arg_names; SurdefFunc f; Str arg_name( PI i ) const; };
 
     Str             make_tmp_file          ( PI64 base );
-    void*           load_lib_for           ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn );
-    Str             cpp_for                ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn );
+    void*           load_lib_for           ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types, const Vec<Str> &cast_refs );
+    Str             cpp_for                ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types, const Vec<Str> &cast_refs );
 
     void            check_build_config_file();
     void            load_lib               ( const std::filesystem::path &so_filename );

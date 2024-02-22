@@ -7,7 +7,7 @@ BEG_VFS_NAMESPACE
 
 /// What VfsDt objects actually store
 template<class Object,class Content>
-struct VfsDtCtData {
+struct VfsDtWrap_ {
     struct alignas( Object::VfsDtSpec::alig ) DataDirect {
         /**/                     DataDirect( auto &&...ctor_args ) : content( FORWARD( ctor_args )... ) {}
         auto*                    ptr       () const { return &content; }
@@ -24,7 +24,7 @@ struct VfsDtCtData {
 
     using        Data       = std::conditional_t<( alignof( Content ) > Object::VfsDtSpec::alig || sizeof( DataDirect ) > sizeof( typename Object::VfsDtSpec ) ), DataHeap, DataDirect>;
 
-    /**/         VfsDtCtData( auto &&...args ) : data( FORWARD( args )... ) {
+    /**/         VfsDtWrap_( auto &&...args ) : data( FORWARD( args )... ) {
         const auto &type = StaticStorage<VfsDtType<Object,Content,0>>::value;
         instantiated_type_index = type.instantiated_type_index;
         global_type_index = type.global_type_index;

@@ -5,7 +5,7 @@
 #include "../support/type_name.h"
 #include "../support/OnInit.h"
 
-#include "apply_on_ct_keys_of_vfs_objects.h"
+#include "apply_on_keys_of_vfs_objects.h"
 #include "get_vfs_func_inst.h"
 #include "VfsArgTrait.h"
 #include "VfsFunc.h"
@@ -19,14 +19,14 @@ DTP UTP::VfsFunc() : array( init ) {
 }
 
 DTP Return UTP::operator()( Args ...args ) {
-    Callable *callable = apply_on_ct_keys_of_vfs_objects( [&]( const auto &...keys ) {
+    Callable *callable = apply_on_keys_of_vfs_objects( [&]( const auto &...keys ) {
         return *array( keys... );
     }, Tuple<>{}, args... );
     return callable( std::forward<Args>( args )... );
 }
 
 DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
-    // includes with declared types
+    // compilation flags with declared types
     Vec<Str> seen;
     CompilationFlags compilation_flags;
     Flags::for_each_string( [&]( auto str ) {
@@ -35,23 +35,27 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
     get_compilation_flags_rec( compilation_flags, seen, CtType<Return>() );
     ( get_compilation_flags_rec( compilation_flags, seen, CtType<A>() ), ... );
 
-    // ct casts + compilation needs for each arg
-    Vec<Vec<Str>> ct_casts;
-    Vec<Str> ct_storage;
-    ct_casts.reserve( sizeof...( A ) );
-    auto get_ct_cast_for = [&]( const auto &arg ) {
-        // virtual compilation flags
-        using Obj = DECAYED_TYPE_OF( arg );
-        if constexpr( requires { VfsArgTrait<Obj>::compilation_flags( compilation_flags, seen, arg ); } )
-            VfsArgTrait<Obj>::compilation_flags( compilation_flags, seen, arg );
+    // codegen data for each arg
+    Vec<Vec<Str>> final_types( FromReservationSize(), sizeof...( A ) );
+    Vec<Vec<Str>> final_refs( FromReservationSize(), sizeof...( A ) );
+    Vec<Str> cast_types( FromReservationSize(), sizeof...( A ) );
+    Vec<Str> cast_refs( FromReservationSize(), sizeof...( A ) );
+    auto get_cg_data_for = [&]( const auto &arg ) {
+        Vec<Str> sub_final_types;
+        Vec<Str> sub_final_refs;
+        Str cast_type;
+        Str cast_ref;
 
-        // casts
-        if constexpr( requires { VfsArgTrait<Obj>::ct_cast( arg ); } )
-            ct_casts.push_back( VfsArgTrait<Obj>::ct_cast( arg ) );
-        else
-            ct_casts.push_back( Vec<Str>{ "" } );
+        using Obj = DECAYED_TYPE_OF( arg );
+        if constexpr( VfsArg<Obj> )
+            VfsArgTrait<Obj>::get_cg_data( compilation_flags, seen, cast_type, cast_ref, sub_final_types, sub_final_refs, arg );
+
+        final_types << sub_final_types;
+        final_refs << sub_final_refs;
+        cast_types << cast_type;
+        cast_refs << cast_ref;
     };
-    ( get_ct_cast_for( args ), ... );
+    ( get_cg_data_for( args ), ... );
 
     // get the right callable
     return reinterpret_cast<Callable *>( get_vfs_func_inst(
@@ -59,22 +63,24 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
         type_name<Return>(),
         { type_name<Args>()... },
         { ( std::is_trivial_v<std::decay_t<Args>> && sizeof( Args ) <= sizeof( void * ) )... },
-        std::move( ct_casts ),
-        std::move( compilation_flags )
+        std::move( compilation_flags ),
+        std::move( final_types ),
+        std::move( final_refs ),
+        std::move( cast_types ),
+        std::move( cast_refs )
     ) );
 }
 
 DTP Return UTP::init( Args ...args ) {
     // to get up to date indices and surdefs
-    // VfsTypeAncestor::register_the_new_types();
     OnInit::update();
 
     // test and update object
     bool made_key_update = false;
     auto tst_need_update = [&]( const auto &vfs_object ) {
         using Obj = DECAYED_TYPE_OF( vfs_object );
-        if constexpr ( requires { VfsArgTrait<Obj>::update_of_ct_key( vfs_object ); } )
-            if ( VfsArgTrait<Obj>::update_of_ct_key( vfs_object ) )
+        if constexpr ( requires { VfsArgTrait<Obj>::key_update( vfs_object ); } )
+            if ( VfsArgTrait<Obj>::key_update( vfs_object ) )
                 made_key_update = true;
     };
     ( tst_need_update( args ), ... );
@@ -88,9 +94,10 @@ DTP Return UTP::init( Args ...args ) {
     Callable *callable = callable_for( args... );
 
     // register it
-    Callable **ptr = apply_on_ct_keys_of_vfs_objects( [&]( const auto &...keys ) {
+    Callable **ptr = apply_on_keys_of_vfs_objects( [&]( const auto &...keys ) {
         return vfs_func.array( keys... );
     }, Tuple<>{}, args... );
+
     *ptr = callable;
 
     // call it

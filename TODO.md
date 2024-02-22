@@ -45,3 +45,9 @@ Comment faire les arguments variadiques ?
 
   * Rq: on pourrait gérer les arguments multiples dans les ArgTrait<>::ct_cast
     =>  CtValueOf... ne ferait que le stockage
+
+
+Pb: on voudrait stocker des objets via leurs pointeurs
+  => il faudrait dire
+    * une description précise du stockage de l'objet
+    * comment obtenur

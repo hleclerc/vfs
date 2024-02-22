@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vfs_system/RtFunction.h"
-#include "vfs_system/VfsDtRtData.h"
+#include "vfs_system/VfsDtWrap.h"
 
 BEG_VFS_NAMESPACE
 

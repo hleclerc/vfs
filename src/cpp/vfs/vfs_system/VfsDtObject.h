@@ -1,7 +1,7 @@
 #pragma once
 
 // #include "../support/type_promote.h" // IWYU pragma: export
-#include "VfsDtRtData.h" // IWYU pragma: export
+#include "VfsDtWrap.h" // IWYU pragma: export
 #include "VfsArgTrait.h"
 #include "VfsDtType.h" // IWYU pragma: export
 
@@ -12,26 +12,26 @@ TT concept VfsDtObject = requires ( T &t ) {
     t._vfs_object_rt_data.global_type_index;
 };
 
-///
+
+/// VfsArgTrait for VfsDtObject
 template<VfsDtObject Obj>
 struct VfsArgTrait<Obj,true> {
-    static void compilation_flags( CompilationFlags &cn, Vec<Str> &seen, const Obj &obj ) {
+    static void get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const Obj &obj ) {
         VfsDtTypeAncestor *ta = VfsDtTypeAncestor::type_at_global_index( obj._vfs_object_rt_data.global_type_index );
-        ta->get_compilation_flags_rec( cn, seen );
+        ta->get_compilation_flags_rec( cf, seen_for_cf );
+        final_types = ta->final_types();
+        final_refs = ta->final_refs();
+        cast_type = ta->cast_type();
+        cast_ref = ta->cast_ref();
     }
 
-    /// get a correct instantiated_type_index if not done
-    static bool update_of_ct_key( const Obj &obj ) {
+    /// ensures `instantiated_type_index` is correct
+    static bool key_update( const Obj &obj ) {
         if ( obj._vfs_object_rt_data.instantiated_type_index )
             return false;
         VfsDtTypeAncestor *ta = VfsDtTypeAncestor::type_at_global_index( obj._vfs_object_rt_data.global_type_index );
         obj._vfs_object_rt_data.instantiated_type_index = ta->get_instantiated_type_index();
         return true;
-    }
-
-    static Vec<Str> ct_cast( const Obj &obj, bool deref = true ) {
-        VfsDtTypeAncestor *ta = VfsDtTypeAncestor::type_at_global_index( obj._vfs_object_rt_data.global_type_index );
-        return { "auto &&{ARG} = " + Str( deref * ta->nb_indirections(), '*' ) + "vfs_td_cast( CtType<" + ta->name() + ">(), FORWARD( {ARG_DECL} ) );" };
     }
 
     static PI32 key_max( const Obj &obj ) {
@@ -63,10 +63,10 @@ auto vfs_dt_impl_type( CtType<void> ObjType, const auto &... ) {
     static void          get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( PATH "/" #NAME ".h" ); } \
     static auto          template_type_name   () { return #NAME; } \
     \
-    using                VfsDtSpec            = VfsDtRtData<NAME>; \
+    using                VfsDtSpec            = VfsDtWrap<NAME>; \
     \
-    TT const auto&       impl                 () const { return static_cast<const VfsDtCtData<VfsDtSpec,T> &>( *this ); } \
-    TT auto&             impl                 () { return static_cast<VfsDtCtData<VfsDtSpec,T> &>( *this ); } \
+    TT const auto&       impl                 () const { return static_cast<const VfsDtWrap_<VfsDtSpec,T> &>( *this ); } \
+    TT auto&             impl                 () { return static_cast<VfsDtWrap_<VfsDtSpec,T> &>( *this ); } \
     \
     /**/                 NAME                 ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, _vfs_object_rt_data, FromTypeAndCtorArguments(), FORWARD( ct_type ), FORWARD( args )... ); } \
     /**/                 NAME                 ( FromPointer, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, _vfs_object_rt_data, FromPointer(), FORWARD( pointer ) ); } \

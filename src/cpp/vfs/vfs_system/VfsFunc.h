@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types_of_ct_keys_of_vfs_objects.h"
+#include "types_of_keys_of_vfs_objects.h"
 #include "../support/CtStringList.h" // IWYU pragma: export
 #include "VfsFuncArray.h"
 #include "VfsArg.h" // IWYU pragma: export
@@ -12,7 +12,7 @@ template<CtStringValue name,class Flags,class Return,class... Args>
 class VfsFunc {
 public:
     using               Callable    = Return( Args... );
-    using               KeyList     = decltype( types_of_ct_keys_of_vfs_objects( CtTypeList<>{}, CtTypeList<Args...>{} ) );
+    using               KeyList     = decltype( types_of_keys_of_vfs_objects( CtTypeList<>{}, CtTypeList<Args...>{} ) );
     using               Array       = VfsFuncArray<KeyList,Callable>;
 
     /**/                VfsFunc     ();

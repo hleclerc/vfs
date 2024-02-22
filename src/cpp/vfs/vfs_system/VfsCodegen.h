@@ -54,6 +54,10 @@ public:
     void           _write_inline_inc( std::ostream &os, const Str &str );
     void           _write_lines     ( std::ostream &os, const Vec<Str> &lines, int nsp = 0 );
 
+    //
+    VfsCodegen*    parent;
+
+    // flags
     Vec<Str>       extra_cpp_flags; ///<
     Vec<Str>       prelimaries;
     Vec<Str>       init_lines;      ///< ON_INIT ...
@@ -64,15 +68,19 @@ public:
     Vec<Str>       lib_names;
     Vec<Str>       lines;
 
-    VfsCodegen*    parent;
-
-    Str            function_name;
+    //
     Str            return_type;
-    Vec<Str>       arg_types;
-    Vec<Str>       arg_names;
-    Vec<Str>       arg_casts;
+    Str            func_name;
     Vec<Str>       props;
     Vec<Str>       parms;
+
+    //
+    Vec<Str>       final_types;
+    Vec<Str>       final_names;
+    Vec<Str>       cast_types;
+    Vec<Str>       cast_names;
+    Vec<Str>       arg_types;
+    Vec<Str>       arg_names;
 };
 
 END_VFS_NAMESPACE

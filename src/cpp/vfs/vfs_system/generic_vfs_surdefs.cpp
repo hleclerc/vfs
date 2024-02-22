@@ -6,13 +6,13 @@ ON_INIT {
     // generic forwarders -------------------------------------------------------------------------------------------------------------------------------------------------
     // forward call
     VFS_ADD_SURDEF( ".*" ) {
-        cg.add_line( "return $0( $1 );", cg.function_name, join( cg.forwarded_args() ) );
+        cg.add_line( "return $0( $1 );", cg.func_name, join( cg.forwarded_args() ) );
         return cg.valid( { -1e6 } );
     };
 
     // forward method call
     VFS_ADD_SURDEF( ".*__method" ) {
-        cg.add_line( "return $0.$1( $2 );", cg.arg_names[ 0 ], cg.function_name.substr( 0, cg.function_name.size() - 8 ), join( cg.forwarded_args_from( 1 ) ) );
+        cg.add_line( "return $0.$1( $2 );", cg.arg_names[ 0 ], cg.func_name.substr( 0, cg.func_name.size() - 8 ), join( cg.forwarded_args_from( 1 ) ) );
         return cg.valid( { -1e6 + 1 } );
     };
 

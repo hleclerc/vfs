@@ -15,8 +15,10 @@ public:
     virtual PI32           get_instantiated_type_index() override;
     virtual void           get_compilation_flags_rec  ( CompilationFlags &res, Vec<Str> &seen ) const override;
     virtual int            nb_indirections            () const override;
+    virtual Vec<Str>       final_types                () const override;
+    virtual Vec<Str>       final_refs                 () const override;
+    virtual Str            cast_type                  () const override;
     virtual DisplayItem*   display                    ( Displayer &ds ) const override;
-    virtual Str            name                       () const override;
 
     PI32                   instantiated_type_index    = 0; ///< used to find the right function in VfsFunc (for small number of virtual arguments)
 };
@@ -40,11 +42,19 @@ DTP int UTP::nb_indirections() const {
 }
 
 DTP DisplayItem *UTP::display( Displayer &ds ) const {
-    return ds.string( name() );
+    return ds.string( type_name<Content>() );
 }
 
-DTP Str UTP::name() const {
-    return type_name<Content>();
+DTP Vec<Str> UTP::final_types() const {
+    return { type_name<Content>() };
+}
+
+DTP Vec<Str> UTP::final_refs() const {
+    return { "{DECL} = {CAST}.data;" };
+}
+
+DTP Str UTP::cast_type() const {
+    return "VfsDtWrap_<" + type_name<Object>() + "," + type_name<Content>() + ">";
 }
 
 #undef DTP

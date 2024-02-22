@@ -1,13 +1,13 @@
 #pragma once
 
-#include "VfsDtCtData.h"
-#include "VfsDtRtData.h"
+#include "VfsDtWrap_.h"
+#include "VfsDtWrap.h"
 #include "VfsDtType.h" // IWYU pragma: export
 
 BEG_VFS_NAMESPACE
 
 #define DTP template<class Object_,int size_,int alig_>
-#define UTP VfsDtRtData<Object_,size_,alig_>
+#define UTP VfsDtWrap<Object_,size_,alig_>
 
 // DTP TT constexpr bool UTP::not_enough_room_for( CtType<T> ) {
 //     constexpr int off = ( 2 * sizeof( PI32 ) + alignof( T ) - 1 ) / alignof( T ) * alignof( T );
@@ -15,7 +15,7 @@ BEG_VFS_NAMESPACE
 // }
 
 DTP TT void UTP::construct( FromTypeAndCtorArguments, CtType<T> t, auto &&...ctor_args ) {
-    new ( this ) VfsDtCtData<Object,T>( FORWARD( ctor_args )... );
+    new ( this ) VfsDtWrap_<Object,T>( FORWARD( ctor_args )... );
 }
 
 DTP TT void UTP::construct( FromPointer, T &&pointer ) {

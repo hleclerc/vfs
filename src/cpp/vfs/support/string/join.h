@@ -15,6 +15,16 @@ template<class T> std::string join( const T &vec, std::string sep = ", " ) {
     return res;
 }
 
+template<class T> std::string join( const T &vec, std::string sep, std::string last_sep ) {
+    std::string res;
+    for( const auto &v : vec ) {
+        if ( res.size() )
+            res += &v == &vec.back() ? last_sep : sep;
+        res += to_string( v );
+    }
+    return res;
+}
+
 template<class T,class F> std::string join_map( const T &vec, F &&func, std::string sep, std::string last_sep ) {
     std::string res;
     for( const auto &v : vec ) {

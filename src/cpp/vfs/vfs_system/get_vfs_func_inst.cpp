@@ -6,7 +6,17 @@
 
 BEG_VFS_NAMESPACE
     
-    void *get_vfs_func_inst( const Str &name, const Str &return_type, Vec<Str> &&arg_types, Vec<bool> &&arg_trivs, Vec<Vec<Str>> &&ct_casts, CompilationFlags &&cn ) {
+void *get_vfs_func_inst(
+        const Str &name,
+        const Str &return_type,
+        Vec<Str> &&arg_types,
+        Vec<bool> &&arg_trivs,
+        CompilationFlags &&compilation_flags,
+        Vec<Vec<Str>> &&final_types,
+        Vec<Vec<Str>> &&final_refs,
+        Vec<Str> &&cast_types,
+        Vec<Str> &&cast_refs
+ ) {
     // normalize arguments
     // for( PI i = 0; i < arg_types.size(); ++i ) {
     //     if ( arg_trivs[ i ] ) {
@@ -18,7 +28,7 @@ BEG_VFS_NAMESPACE
     // }
 
     // find or construct the function
-    return vfs_symbol_cache.find_func( name, return_type, arg_types, ct_casts, cn );
+    return vfs_symbol_cache.find_func( name, return_type, arg_types, compilation_flags, final_types, final_refs, cast_types, cast_refs );
 }
 
 END_VFS_NAMESPACE

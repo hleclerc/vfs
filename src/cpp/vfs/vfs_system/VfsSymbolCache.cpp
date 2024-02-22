@@ -27,8 +27,8 @@ Vec<Str> VfsSymbolCache::global_cpp_flags;
 VfsSymbolCache::VfsSymbolCache() {
 }
 
-void VfsSymbolCache::register_func( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn, void *symbol ) {
-    Key key{ name, return_type, arg_types, ct_casts, cn };
+void VfsSymbolCache::register_func( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types, const Vec<Str> &cast_refs, void *symbol ) {
+    Key key{ name, return_type, arg_types, compilation_flags, final_types, final_refs, cast_types, cast_refs };
     loaded_symbols[ key ] = symbol;
 }
 
@@ -38,11 +38,11 @@ VfsSymbolCache::SurdefFunc &VfsSymbolCache::add_surdef( const Str &file, int lin
     return surdefs[ size ].f;
 }
 
-void *VfsSymbolCache::find_func( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn ) {
-    Key key{ name, return_type, arg_types, ct_casts, cn };
+void *VfsSymbolCache::find_func( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types, const Vec<Str> &cast_refs ) {
+    Key key{ name, return_type, arg_types, compilation_flags, final_types, final_refs, cast_types, cast_refs };
     auto iter = loaded_symbols.find( key );
     if ( iter == loaded_symbols.end() )
-        iter = loaded_symbols.insert( iter, { key, load_lib_for( name, return_type, arg_types, ct_casts, cn ) } );
+        iter = loaded_symbols.insert( iter, { key, load_lib_for( name, return_type, arg_types, compilation_flags, final_types, final_refs, cast_types, cast_refs ) } );
     return iter->second;
 }
 
@@ -61,9 +61,9 @@ Str VfsSymbolCache::make_tmp_file( PI64 base ) {
     return {};
 }
 
-void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn ) {
+void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types, const Vec<Str> &cast_refs ) {
     // get surdef, make the corresponding cpp
-    Str cpp_content = cpp_for( name, return_type, arg_types, ct_casts, cn );
+    Str cpp_content = cpp_for( name, return_type, arg_types, compilation_flags, final_types, final_refs, cast_types, cast_refs );
 
     // find file with the right line or make it
     std::hash<Str> hash;
@@ -128,7 +128,7 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
                 load_lib( libs_to_load.pop_back_val() );
 
             // look again in loaded_symbols
-            Key key{ name, return_type, arg_types, ct_casts, cn };
+            Key key{ name, return_type, arg_types, compilation_flags, final_types, final_refs, cast_types, cast_refs };
             auto iter = loaded_symbols.find( key );
             if ( iter == loaded_symbols.end() )
                 ERROR( va_string( "library did not add the symbol for key $0", key ) );
@@ -137,55 +137,77 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
     }
 }
 
-Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, const Vec<Str> &arg_types, const Vec<Vec<Str>> &ct_casts, const CompilationFlags &cn ) {
+Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types, const Vec<Str> &cast_refs ) {
     //
     struct SurdefTrial { Str file; int line; VfsCodegen cg; VfsSurdefStage vss; };
     auto try_surdef = [&]( const Surdef &surdef ) -> SurdefTrial {
         VfsCodegen cg;
-        cg.add_cpp_flag( "-g3");
         cg.add_cpp_flag( "-I" VFS_SOURCE_DIR );
         cg.add_inc_file( "vfs/vfs_system/VfsSymbolCache.h" );
         cg.add_preliminary( "USING_VFS_NAMESPACE" );
-        cg.function_name = function_name;
+        cg.func_name = function_name;
         cg.return_type = return_type;
+        cg.cast_types = cast_types;
         cg.arg_types = arg_types;
 
-        cn.add_flags_to( cg );
+        compilation_flags.add_flags_to( cg );
 
-        // arg_names
-        Vec<Str> func_arg_names;
-        Vec<Str> func_arg_decls;
-        for( PI i = 0, n = 0; i < arg_types.size(); n += ct_casts[ i++ ].size() ) {
-            Str func_arg_name;
-            if ( ct_casts[ i ].size() == 1 ) {
-                func_arg_name = ( i == n && n < surdef.arg_names.size() ? surdef.arg_names[ n ] : ( "arg_" + std::to_string( n ) ) );
-                if ( ct_casts[ i ][ 0 ].size() )
-                    func_arg_name += "_decl";
-            } else
-                func_arg_name = "__va_arg_" + std::to_string( i );
-            func_arg_names.push_back( func_arg_name );
+        // cg.arg_names + cg.cast_names + arg_decls
+        Vec<Str> arg_decls;
+        for( PI i = 0, n = 0; i < arg_types.size(); ++i ) {
+            // arg_name
+            Vec<Str> loc_arg_names;
+            for( PI j = 0; j < final_refs[ i ].size(); ++j )
+                loc_arg_names << surdef.arg_name( n++ );
 
+            Str arg_name = join( loc_arg_names, "_", "_and_" );
+            if ( cast_refs[ i ].size() || final_refs[ i ].size() )
+                arg_name += "_decl";
+
+            cg.cast_names << arg_name;
+            cg.arg_names << arg_name;
+
+            // arg_decl
             bool nosp = arg_types[ i ].ends_with( "&" ) || arg_types[ i ].ends_with( "*" );
-            func_arg_decls.push_back( arg_types[ i ] + ( nosp ? ""  : " " ) + func_arg_name );
+            arg_decls << arg_types[ i ] + ( nosp ? ""  : " " ) + arg_name;
         }
 
         // opening
-        cg.add_line( "static $0 __func( $1 ) {", cg.return_type, join( func_arg_decls, ", " ) );
+        cg.add_line( "static $0 __func( $1 ) {", cg.return_type, join( arg_decls, ", " ) );
 
         // casts
-        for( PI i = 0, n = 0; i < arg_types.size(); ++i ) {
-            for( PI j = 0; j < ct_casts[ i ].size(); ++j, ++n ) {
-                Str cast = ct_casts[ i ][ j ];
-                if ( cast.empty() && i != n )
-                    cast = "auto &&{ARG} = FORWARD( {ARG_DECL} );";
+        for( PI i = 0; i < cast_refs.size(); ++i ) {
+            //
+            Str cast = cast_refs[ i ];
 
-                Str cg_arg_name = n < surdef.arg_names.size() ? surdef.arg_names[ n ] : ( "arg_" + std::to_string( n ) );
-                cast = std::regex_replace( cast, std::regex( "\\{ARG_DECL\\}" ), func_arg_names[ i ] );
-                cast = std::regex_replace( cast, std::regex( "\\{ARG\\}" ), cg_arg_name );
-                cg.arg_names.push_back( cg_arg_name );
-                cg.arg_casts.push_back( cast );
-                if ( cast.size() )
-                    cg.add_line( cast );
+            //Str cg_arg_name = n < surdef.arg_names.size() ? surdef.arg_names[ n ] : ( "arg_" + std::to_string( n ) );
+            // cast = std::regex_replace( cast, std::regex( "\\{ARG_DECL\\}" ), arg_names[ i ] );
+            //cast = std::regex_replace( cast, std::regex( "\\{ARG\\}" ), arg_name );
+
+            if ( cast.size() )
+                cg.add_line( cast );
+        }
+
+        // finals
+        for( PI i = 0, n = 0; i < final_refs.size(); ++i ) {
+            for( PI j = 0; j < final_refs[ i ].size(); ++j, ++n ) {
+                // final_types + final_names
+                cg.final_types << final_types[ i ][ j ];
+                cg.final_names << surdef.arg_name( n );
+
+                // final_refs
+                Str ref = final_refs[ i ][ j ];
+
+                // Str cg_arg_name = n < surdef.arg_names.size() ? surdef.arg_names[ n ] : ( "arg_" + std::to_string( n ) );
+                // cast = std::regex_replace( cast, std::regex( "\\{ARG_DECL\\}" ), func_arg_names[ i ] );
+                // cast = std::regex_replace( cast, std::regex( "\\{ARG\\}" ), cg_arg_name );
+                // cg.arg_names.push_back( cg_arg_name );
+                // cg.arg_casts.push_back( cast );
+                // if ( cast.size() )
+                //     cg.add_line( cast );
+
+                if ( ref.size() )
+                    cg.add_line( ref );
             }
         }
 
@@ -195,7 +217,9 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
         // closing
         cg.add_line( "}" );
 
-        cg.add_init_line( "vfs_symbol_cache.register_func( $0, $1, $2, $3, $4, (void *)&__func );", ctor_for( function_name ), ctor_for( return_type ), ctor_for( arg_types ), ctor_for( ct_casts ), ctor_for( cn ) );
+        cg.add_init_line( "vfs_symbol_cache.register_func( $0, $1, $2, $3, $4, $5, $6, $7, (void *)&__func );",
+                ctor_for( function_name ), ctor_for( return_type ), ctor_for( arg_types ), ctor_for( compilation_flags ),
+                ctor_for( final_types ), ctor_for( final_refs ), ctor_for( cast_types ), ctor_for( cast_refs ) );
 
         return { surdef.file, surdef.line, std::move( cg ), vss };
     };
@@ -206,14 +230,6 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
     for( const Surdef &surdef : surdefs ) {
         if ( ! std::regex_search( function_name, surdef.name ) )
             continue;
-
-        // // temporary handling (should not appear)
-        // bool has_same_file_and_line = false;
-        // for( const SurdefTrial &surdef_trial : surdef_trials )
-        //     if ( surdef_trial.file == surdef.file && surdef_trial.line == surdef.line )
-        //         has_same_file_and_line = true;
-        // if ( has_same_file_and_line )
-        //     continue;
 
         SurdefTrial surdef_trial = try_surdef( surdef );
         if ( surdef_trial.vss.result == VfsSurdefStage::Result::invalid )
@@ -281,4 +297,11 @@ void VfsSymbolCache::load_lib( const std::filesystem::path &so_filename ) {
     OnInit::update();
 }
 
+Str VfsSymbolCache::Surdef::arg_name( PI i ) const {
+    if ( i < arg_names.size() )
+        return arg_names[ i ];
+    return va_string( "__arg_$0", i );
+}
+
 END_VFS_NAMESPACE
+
