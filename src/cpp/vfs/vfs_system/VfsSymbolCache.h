@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../support/size_and_lexical_comparison.h"
 #include "../support/CompilationFlags.h"
 #include "../support/OnInit.h" // IWYU pragma: export
 #include "VfsSurdefStage.h"
@@ -17,7 +16,7 @@ class VfsSymbolCache {
 public:
     using           Path                   = std::filesystem::path;
     using           Key                    = Tuple<Str, Str, Vec<Str>, CompilationFlags, Vec<Vec<Str>>, Vec<Vec<Str>>, Vec<Str>, Vec<Str>>;
-    using           LoadedSymbols          = std::map<Key,void *,SizeAndLexicalComparison>;
+    using           LoadedSymbols          = std::map<Key,void *,Less>;
     using           SurdefFunc             = std::function<VfsSurdefStage( VfsCodegen &cg )>;
 
     /**/            VfsSymbolCache         ();

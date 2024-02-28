@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../support/size_and_lexical_comparison.h"
 #include "../support/TypeConfig.h"
 #include "Memory/Memory_Cpu.h"
 
@@ -96,8 +95,8 @@ public:
     PI                  size        () const;
 
     Item                pop_back_val();
-    void                push_back_br( auto&&...args ); ///< push_back with Item{ FORWARD( args )... }
-    void                push_back   ( auto&&...args ); ///< push_back with Item( FORWARD( args )... )
+    Item*               push_back_br( auto&&...args ); ///< push_back with Item{ FORWARD( args )... }
+    Item*               push_back   ( auto&&...args ); ///< push_back with Item( FORWARD( args )... )
     void                reserve     ( PI capa );
     void                resize      ( PI size, auto&&...ctor_args );
     void                append      ( auto &&that );
@@ -129,14 +128,6 @@ Ti auto VecType_for( auto item_type, CtInt<i> ) { return CtType<Vec<typename VAL
 auto VecType_for( auto item_type, PI ) { return CtType<Vec<typename VALUE_IN_DECAYED_TYPE_OF( item_type )>>(); }
 
 END_VFS_NAMESPACE
-
-namespace std {
-DTP struct less<VFS_NAMESPACE::UTP> { // : public binary_function<VFS_NAMESPACE::UTP, VFS_NAMESPACE::UTP, bool>
-    constexpr bool operator()( const VFS_NAMESPACE::UTP &a, const VFS_NAMESPACE::UTP &b ) const {
-        return size_and_lexical_comparison( a, b );
-    }
-};
-} // namespace std
 
 #undef DTP
 #undef UTP

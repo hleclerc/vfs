@@ -98,3 +98,4 @@ END_VFS_NAMESPACE
 // #include "initialize.h" // IWYU pragma: export
 // #include "convert.h" // IWYU pragma: export
 
+#include "Compare.h" // IWYU pragma: export

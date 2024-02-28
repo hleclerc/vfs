@@ -8,7 +8,7 @@ TEST_CASE( "Function", "" ) {
 
     SI32 yo = 21;
 
-    RtArgList ral;
+    VirtualArgList ral;
     ral.add_borrowed( &yo );
     ral.add_owned( new Scalar( 20 ) );
     auto res = VFS_CALL( call, CtStringList<>, SI64, add, std::move( ral ) );

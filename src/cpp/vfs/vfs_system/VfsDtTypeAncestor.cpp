@@ -13,7 +13,7 @@ VfsDtTypeAncestor::VfsDtTypeAncestor() {
 }
 
 Str VfsDtTypeAncestor::cast_ref() const {
-    return "{ARG_CSTNESS}auto {ARG_REFNESS}{CAST_NAME} = reinterpret_cast<{ARG_CSTNESS}" + cast_type() + " {ARG_REFNESS}>( {ARG_NAME}._vfs_object_rt_data );";
+    return "reinterpret_cast<{ARG_CSTNESS}" + cast_type() + " {ARG_REFNESS}>( {ARG_NAME}._vfs_object_rt_data );";
 }
 
 void VfsDtTypeAncestor::register_the_new_types() {

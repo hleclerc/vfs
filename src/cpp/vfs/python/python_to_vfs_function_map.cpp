@@ -14,7 +14,7 @@ BEG_VFS_NAMESPACE
 std::map<Str,VpiConversionFunc *> python_to_vfs_function_map;
 
 // numpy ------------------------------------------------------------------------------------------------------------------------------
-TT static void ndarray_conv_with_type( RtArgList &ral, PyObject *arg ) {
+TT static void ndarray_conv_with_type( VirtualArgList &ral, PyObject *arg ) {
     auto *a = reinterpret_cast<PyArrayObject *>( arg );
     switch ( PyArray_NDIM( a ) ) {
     case 0: return ral.add_owned( new NdArrayWrapper<T,CtIntList<>>( a ) );
@@ -27,7 +27,7 @@ TT static void ndarray_conv_with_type( RtArgList &ral, PyObject *arg ) {
     }
 }
 
-static void ndarray_conv( RtArgList &ral, PyObject *arg ) {
+static void ndarray_conv( VirtualArgList &ral, PyObject *arg ) {
     auto *obj = reinterpret_cast<PyArrayObject *>( arg );
     switch ( PyArray_DTYPE( obj )->type ) {
     case 'l': return ndarray_conv_with_type<SI64>( ral, arg );
@@ -69,10 +69,10 @@ static void ndarray_conv( RtArgList &ral, PyObject *arg ) {
 }
 
 // list ------------------------------------------------------------------------------------------------------------------------------
-static void list_conv( RtArgList &ral, PyObject *list ) {
+static void list_conv( VirtualArgList &ral, PyObject *list ) {
     PI n = PyList_Size( list );
 
-    RtArgList sub_ral;
+    VirtualArgList sub_ral;
     for( PI i = 0; i < n; ++i ) {
         PyObject *arg = PyList_GetItem( list, i );
         Str type = _PyType_Name( Py_TYPE( arg ) );
@@ -111,15 +111,15 @@ static void list_conv( RtArgList &ral, PyObject *list ) {
 }
 
 // PythonVfsAnyWrapper ---------------------------------------------------------------------------------------------------------------------
-static void vfs_any_wrapper_conv( RtArgList &ral, PyObject *arg ) {
+static void vfs_any_wrapper_conv( VirtualArgList &ral, PyObject *arg ) {
     auto *wro = reinterpret_cast<PythonVfsAnyWrapper *>( arg );
     ral.add_borrowed( &wro->obj );
 }
 
 // common types ----------------------------------------------------------------------------------------------------------------------
-static void float_conv( RtArgList &ral, PyObject *arg ) { return ral.add_owned( new FP64( PyFloat_AsDouble( arg ) ) ); }
-static void int_conv  ( RtArgList &ral, PyObject *arg ) { return ral.add_owned( new SI64( PyLong_AsLong( arg ) ) ); }
-static void str_conv  ( RtArgList &ral, PyObject *arg ) { return ral.add_owned( new Str ( py_string_to_std_string( arg ) ) ); }
+static void float_conv( VirtualArgList &ral, PyObject *arg ) { return ral.add_owned( new FP64( PyFloat_AsDouble( arg ) ) ); }
+static void int_conv  ( VirtualArgList &ral, PyObject *arg ) { return ral.add_owned( new SI64( PyLong_AsLong( arg ) ) ); }
+static void str_conv  ( VirtualArgList &ral, PyObject *arg ) { return ral.add_owned( new Str ( py_string_to_std_string( arg ) ) ); }
 
 
 // registering ------------------------------------------------------------------------------------------------------------------------

@@ -1,58 +1,59 @@
 #pragma once
 
 #include "../support/get_compilation_flags_rec.h"
-#include "../support/string/to_string.h"
 #include "../support/CompilationFlags.h"
 #include "../support/type_name.h"
+#include "VfsArg.h"
 
 BEG_VFS_NAMESPACE
 
-///
-class RtArgList {
+/// VFS_CALL( ..., VirtualArgList( arg ) )  will make the call with arg[ 0 ], arg[ 1 ], ...
+/// onwed pointers => `delete` at the end of the call
+class VirtualArgList {
 public:
-    void add_borrowed( auto *arg ) {
-        add( arg, false );
-    }
+    static void      get_compilation_flags( CompilationFlags &cn );
+    static Str       type_name            ();
+    SI               compare              ( const VirtualArgList &that ) const;
 
-    void add_owned( auto *arg ) {
-        add( arg, true );
-    }
+    void             add_borrowed         ( auto *arg ) { add( arg, false ); }
+    void             add_owned            ( auto *arg ) { add( arg, true ); }
+    void             add                  ( auto *arg, bool owned );
 
-    void add( auto *arg, bool owned ) {
-        // compilation flags
-        Vec<Str> seen;
-        get_compilation_flags_rec( cf, seen, CT_DECAYED_TYPE_OF( *arg ) );
-        if constexpr ( requires { vfs_object_get_compilation_flags( cf, seen, *arg ); } )
-            vfs_object_get_compilation_flags( cf, seen, *arg );
-
-        // ct_key
-        Str ct_key;
-        if constexpr ( requires { vfs_object_ct_key( *arg ); } )
-            ct_key = to_string( vfs_object_ct_key( *arg ) );
-
-        //
-        if constexpr ( requires { vfs_object_ct_cast( *arg ); } ) {
-            Vec<Str> lcasts = vfs_object_ct_cast( *arg );
-            add( arg, owned, VFS_NAMESPACE::type_name( CT_DECAYED_TYPE_OF( *arg ) ), ct_key, &lcasts );
-        } else {
-            add( arg, owned, VFS_NAMESPACE::type_name( CT_DECAYED_TYPE_OF( *arg ) ), ct_key, nullptr );
-        }
-    }
-    
-    void add( void *arg, bool owned, const Str &type_name, const Str &ct_key, const Vec<Str> *lcasts );
-
-    static void get_compilation_flags( CompilationFlags &cn );
-    static auto type_name() { return "RtArgList"; }
-    
-    Vec<Str>         type_names;
+    Vec<Str>         seen_for_cf;
+    Vec<Vec<Str>>    final_types;
+    Vec<Vec<Str>>    final_refs;
+    Vec<Str>         cast_types;
+    Vec<Str>         cast_refs;
+    Vec<Str>         arg_types;
     Vec<void *>      pointers;
-    Vec<Str>         casts;
-    Str              keys;
+    Vec<Str>         keys;
     CompilationFlags cf;
 };
 
-void vfs_object_get_compilation_flags( CompilationFlags &cf, Vec<Str> &seen, const RtArgList &ral );
-const Vec<Str> &vfs_object_ct_cast( const RtArgList &ral );
-const Str &vfs_object_ct_key( const RtArgList &ral );
+/// VfsArgTrait for VirtualCtString
+template<>
+struct VfsArgTrait<VirtualArgList> {
+    static void get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualArgList &obj );
+    static auto key        ( const VirtualArgList &obj ) -> const VirtualArgList&;
+};
+
+// implementation
+void VirtualArgList::add( auto *arg, bool owned ) {
+    using T = DECAYED_TYPE_OF( *arg );
+    get_compilation_flags_rec( cf, seen_for_cf, CtType<T>() );
+
+    Vec<Str> &final_type = *final_types.push_back();
+    Vec<Str> &final_ref = *final_refs.push_back();
+    Str &cast_type = *cast_types.push_back();
+    Str &cast_ref = *cast_refs.push_back();
+    arg_types << VFS_NAMESPACE::type_name<T>();
+    pointers << arg;
+
+    if constexpr ( VfsArg<T> ) {
+        VfsArgTrait<T>::get_cg_data( cf, seen_for_cf, cast_type, cast_ref, final_type, final_ref, *arg );
+        keys << VfsArgTrait<T>::key( *arg );
+    }
+}
 
 END_VFS_NAMESPACE
+

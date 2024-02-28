@@ -7,8 +7,8 @@ BEG_VFS_NAMESPACE
 template<class T>
 class VecWithComparison {
 public:
-    bool operator<( const VecWithComparison &that ) const {
-        return size_and_lexical_comparison( content, that.content );
+    int operator<( const VecWithComparison &that ) const {
+        // return size_and_lexical_comparison( content, that.content ) < 0;
     }
 
     Vec<T> content;

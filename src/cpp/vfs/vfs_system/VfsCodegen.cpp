@@ -71,7 +71,7 @@ VfsSurdefStage VfsCodegen::valid( Vec<double> pertinence ) {
 
 Vec<Str> VfsCodegen::forwarded_args_from( PI start ) {
     Vec<Str> res;
-    for( PI i = start; i < arg_names.size(); ++i )
+    for( PI i = start; i < final_names.size(); ++i )
         res.push_back( forwarded_arg( i ) );
     return res;
 }

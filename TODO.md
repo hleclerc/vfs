@@ -51,3 +51,18 @@ Pb: on voudrait stocker des objets via leurs pointeurs
   => il faudrait dire
     * une description précise du stockage de l'objet
     * comment obtenur
+
+L'idée de cast, c'était de dire quel est le type réel des objets qui cachent des données, et surtout, la façon dont c'est stocké
+  C'est le cas des DtObjects ou des ArgList.
+    Dans le cas d'un pointeur, le cast va toujours donner un pointeur
+    Dans le cas de ArgList, on va remplacer les void * par des unique_ptr<cast>
+      Rq: dans le format actuel, les casts sont des lignes de codes, mais on pourrait aussi faire du code inline pour être capables de faire le cast du bon type
+      => du coup, on pourrait garder le Vec<void *>, mais on aurait un destructeur capable d'aller chercher les bons types
+      Rq: on pourrait directement donner le type (se passer de cast_ref)
+        À ce moment là, il faudrait enlever le _vfs_object_rt_data
+        
+
+  Ça peut être intéressant pour les reassign ou destroy dans la mesure où ce n'est pas sur les final refs que ça doit agir en premier lieu.
+  En particulier, les final_refs ne décrivent pas la fçon 
+
+

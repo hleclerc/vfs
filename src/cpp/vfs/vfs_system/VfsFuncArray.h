@@ -14,7 +14,7 @@ template<class... KeyTypes,class Callable>
 class VfsFuncArray<CtTypeList<KeyTypes...>,Callable> {
 public:
     using      Key         = std::tuple<KeyTypes...>;
-    using      FuncMap     = std::map<Key,Callable *>;
+    using      FuncMap     = std::map<Key,Callable *,Less>;
 
     /**/       VfsFuncArray( Callable *init );
     Callable** operator()  ( auto &&...keys );

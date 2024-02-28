@@ -284,14 +284,14 @@ DTP Item UTP::pop_back_val() {
     return res;
 }
 
-DTP void UTP::push_back_br( auto&&...args ) {
+DTP Item *UTP::push_back_br( auto&&...args ) {
     reserve( size_ + 1 );
-    new ( data_ + size_++ ) Item{ FORWARD( args )... };
+    return new ( data_ + size_++ ) Item{ FORWARD( args )... };
 }
 
-DTP void UTP::push_back( auto&&...args ) {
+DTP Item *UTP::push_back( auto&&...args ) {
     reserve( size_ + 1 );
-    new ( data_ + size_++ ) Item( FORWARD( args )... );
+    return new ( data_ + size_++ ) Item( FORWARD( args )... );
 }
 
 DTP void UTP::resize( PI size, auto&&...ctor_args ) {

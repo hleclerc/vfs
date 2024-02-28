@@ -8,27 +8,27 @@ class VfsCodegen;
 ///
 class CompilationFlags {
 public:
-    // /***/     CompilationFlags( const std::initializer_list<Str> &flags );
-    /***/        CompilationFlags( const Vec<Str> &flags = {} );
+    // /***/       CompilationFlags( const std::initializer_list<Str> &flags );
+    /***/          CompilationFlags( const Vec<Str> &flags = {} );
 
-    auto         operator<<      ( const CompilationFlags &that ) -> CompilationFlags &;
-    auto         operator<<      ( const Str &flag ) -> CompilationFlags &;
-    bool         operator<       ( const CompilationFlags &that ) const;
+    auto           operator<<      ( const CompilationFlags &that ) -> CompilationFlags &;
+    auto           operator<<      ( const Str &flag ) -> CompilationFlags &;
 
-    void         add_flags_to    ( VfsCodegen &cg ) const;
-    DisplayItem* display         ( Displayer &ds ) const;
+    void           add_flags_to    ( VfsCodegen &cg ) const;
+    SI             compare         ( const CompilationFlags &that ) const;
+    DisplayItem*   display         ( Displayer &ds ) const;
 
-    void         add_cpp_flag    ( const Str &val );
-    void         add_cpp_file    ( const Str &val );
-    void         add_inc_file    ( const Str &val );
-    void         add_inc_path    ( const Str &val );
-    void         add_lib_flag    ( const Str &val );
-    void         add_lib_name    ( const Str &val );
-    void         add_lib_path    ( const Str &val );
+    void           add_cpp_flag    ( const Str &val );
+    void           add_cpp_file    ( const Str &val );
+    void           add_inc_file    ( const Str &val );
+    void           add_inc_path    ( const Str &val );
+    void           add_lib_flag    ( const Str &val );
+    void           add_lib_name    ( const Str &val );
+    void           add_lib_path    ( const Str &val );
 
-    void         sort            ();
+    void           sort            ();
 
-    Vec<Str>     flags;          ///< like "inc_file:..."
+    Vec<Str>       flags;          ///< like "inc_file:..."
 };
 
 VirtualCtStringList ct_value( const CompilationFlags &cn );

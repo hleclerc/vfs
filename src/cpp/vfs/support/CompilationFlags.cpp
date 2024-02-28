@@ -1,4 +1,3 @@
-#include "../support/size_and_lexical_comparison.h"
 #include "../support/push_back_unique.h"
 #include "../support/string/ctor_for.h"
 #include "../vfs_system/VfsCodegen.h"
@@ -29,10 +28,6 @@ CompilationFlags &CompilationFlags::operator<<( const Str &flag ) {
     return *this;
 }
 
-bool CompilationFlags::operator<( const CompilationFlags &that ) const {
-    return size_and_lexical_comparison( flags, that.flags );
-}
-
 void CompilationFlags::add_flags_to( VfsCodegen &cg ) const {
     for( const Str &flag : flags ) {
         if ( flag.starts_with( "cpp_flag:" ) ) { cg.add_cpp_flag( flag.substr( 9 ) ); continue; }
@@ -45,6 +40,10 @@ void CompilationFlags::add_flags_to( VfsCodegen &cg ) const {
         PE( flag );
         ERROR( "not a know flag" );
     }
+}
+
+SI CompilationFlags::compare( const CompilationFlags &that ) const {
+    return VFS_NAMESPACE::compare( flags, that.flags );
 }
 
 DisplayItem *CompilationFlags::display( Displayer &ds ) const {

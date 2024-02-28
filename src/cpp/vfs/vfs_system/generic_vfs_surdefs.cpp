@@ -19,19 +19,20 @@ ON_INIT {
     // call( func, args... )
     VFS_ADD_SURDEF( "call", "func" ) {
         // intermediate function to replace an inline `if constexpr ( std::is_same_v<void,...> )` that does not work as expected (at least for g++-13.2)
-        cg.add_prel_block( [&]( VfsCodegen &cg ) {
-            cg.add_line( "auto __apply( CtInt<0>, const auto &func, auto &&...args ) {" );
-            cg.add_line( "return func( FORWARD( args )... );" );
-            cg.add_line( "}" );
-            cg.add_line( "" );
-            cg.add_line( "auto __apply( CtInt<1>, const auto &func, auto &&...args ) {" );
-            cg.add_line( "func( FORWARD( args )... );" );
-            cg.add_line( "return Void{};" );
-            cg.add_line( "}" );
-        } );
+        // cg.add_prel_block( [&]( VfsCodegen &cg ) {
+        //     cg.add_line( "auto __apply( CtInt<0>, const auto &func, auto &&...args ) {" );
+        //     cg.add_line( "return func( FORWARD( args )... );" );
+        //     cg.add_line( "}" );
+        //     cg.add_line( "" );
+        //     cg.add_line( "auto __apply( CtInt<1>, const auto &func, auto &&...args ) {" );
+        //     cg.add_line( "func( FORWARD( args )... );" );
+        //     cg.add_line( "return Void{};" );
+        //     cg.add_line( "}" );
+        // } );
 
         // forward args
-        cg.add_line( "return __apply( CtInt<std::is_same_v<void,decltype( func( $0 ) )>>{}, $1 );", join( cg.forwarded_args_from( 1 ) ), join( cg.forwarded_args() ) );
+        //cg.add_line( "return __apply( CtInt<std::is_same_v<void,decltype( func( $0 ) )>>{}, $1 );", join( cg.forwarded_args_from( 1 ) ), join( cg.forwarded_args() ) );
+        cg.add_line( "return func( $0 );", join( cg.forwarded_args_from( 1 ) ) );
         return cg.valid();
     };
 
