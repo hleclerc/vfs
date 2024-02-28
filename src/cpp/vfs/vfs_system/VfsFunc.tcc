@@ -39,16 +39,14 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
     Vec<Vec<Str>> final_types( FromReservationSize(), sizeof...( A ) );
     Vec<Vec<Str>> final_refs( FromReservationSize(), sizeof...( A ) );
     Vec<Str> cast_types( FromReservationSize(), sizeof...( A ) );
-    Vec<Str> cast_refs( FromReservationSize(), sizeof...( A ) );
     auto get_cg_data_for = [&]( const auto &arg ) {
         Vec<Str> sub_final_types;
         Vec<Str> sub_final_refs;
         Str cast_type;
-        Str cast_ref;
 
         using Obj = DECAYED_TYPE_OF( arg );
         if constexpr( VfsArg<Obj> )
-            VfsArgTrait<Obj>::get_cg_data( compilation_flags, seen, cast_type, cast_ref, sub_final_types, sub_final_refs, arg );
+            VfsArgTrait<Obj>::get_cg_data( compilation_flags, seen, cast_type, sub_final_types, sub_final_refs, arg );
         else {
             sub_final_types = { type_name<Obj>() };
             sub_final_refs = { "" };
@@ -57,7 +55,6 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
         final_types << sub_final_types;
         final_refs << sub_final_refs;
         cast_types << cast_type;
-        cast_refs << cast_ref;
     };
     ( get_cg_data_for( args ), ... );
 
@@ -70,8 +67,7 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
         std::move( compilation_flags ),
         std::move( final_types ),
         std::move( final_refs ),
-        std::move( cast_types ),
-        std::move( cast_refs )
+        std::move( cast_types )
     ) );
 }
 

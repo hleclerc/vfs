@@ -54,7 +54,7 @@ DTP Vec<Str> UTP::final_refs() const {
 }
 
 DTP Str UTP::cast_type() const {
-    return "VfsDtWrap_<" + type_name<Object>() + "," + type_name<Content>() + ">";
+    return "VfsDtWrap<" + type_name<Object>() + "," + type_name<Content>() + ">";
 }
 
 #undef DTP

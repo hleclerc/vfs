@@ -4,9 +4,9 @@
 
 BEG_VFS_NAMESPACE
 
-class Scalar {
+class Scalar : public VfsDtObject<> {
 public:
-    VFS_DT_OBJECT_ATTRIBUTES( Scalar, "vfs" );
+    VfsDtObject_STD_METHODS( Scalar, "vfs" );
 };
 
 // types for ctors --------------------------------------------------------------------------

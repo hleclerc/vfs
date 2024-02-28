@@ -6,10 +6,10 @@
 BEG_VFS_NAMESPACE
 
 /// What VfsDt objects actually store
-template<class Object,class Content>
-struct VfsDtWrap_ {
+template< class Object, class Content, CtStringValue... RefAccess >
+struct VfsDtWrap {
     /// inline storage
-    struct alignas( Object::VfsDtSpec::alig ) DataDirect {
+    struct alignas( Object::_vdo_inline_data_alig ) DataDirect {
         /**/                     DataDirect( auto &&...ctor_args ) : content( FORWARD( ctor_args )... ) {}
         auto*                    ptr       () const { return &content; }
 
@@ -19,7 +19,7 @@ struct VfsDtWrap_ {
     };
 
     /// indirect storage
-    struct alignas( Object::VfsDtSpec::alig ) DataHeap {
+    struct alignas( Object::_vdo_inline_data_alig ) DataHeap {
         /**/                     DataHeap  ( auto &&...ctor_args ) : content( std::make_unique<Content>( FORWARD( ctor_args )... ) ) {}
         auto*                    ptr       () const { return content.get(); }
 
@@ -28,15 +28,15 @@ struct VfsDtWrap_ {
         std::unique_ptr<Content> content;                 ///<
     };
 
-    using        Data       = std::conditional_t<( alignof( Content ) > Object::VfsDtSpec::alig || sizeof( DataDirect ) > sizeof( typename Object::VfsDtSpec ) ), DataHeap, DataDirect>;
+    using        Data      = std::conditional_t< ( alignof( Content ) > Object::_vdo_inline_data_alig || sizeof( DataDirect ) > sizeof( Object ) ), DataHeap, DataDirect >;
 
-    /**/         VfsDtWrap_( auto &&...args ) : data( FORWARD( args )... ) {
+    /**/         VfsDtWrap( auto &&...args ) : data( FORWARD( args )... ) {
         const auto &type = StaticStorage<VfsDtType<Object,Content,0>>::value;
         data.instantiated_type_index = type.instantiated_type_index;
         data.global_type_index = type.global_type_index;
     }
 
-    Data         data;                    ///<
+    Data         data;    ///<
 };
 
 END_VFS_NAMESPACE

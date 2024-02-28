@@ -14,8 +14,7 @@ void *get_vfs_func_inst(
         CompilationFlags &&compilation_flags,
         Vec<Vec<Str>> &&final_types,
         Vec<Vec<Str>> &&final_refs,
-        Vec<Str> &&cast_types,
-        Vec<Str> &&cast_refs
+        Vec<Str> &&cast_types
  ) {
     // normalize arguments
     // for( PI i = 0; i < arg_types.size(); ++i ) {
@@ -28,7 +27,7 @@ void *get_vfs_func_inst(
     // }
 
     // find or construct the function
-    return vfs_symbol_cache.find_func( name, return_type, arg_types, compilation_flags, final_types, final_refs, cast_types, cast_refs );
+    return vfs_symbol_cache.find_func( name, return_type, arg_types, compilation_flags, final_types, final_refs, cast_types );
 }
 
 END_VFS_NAMESPACE

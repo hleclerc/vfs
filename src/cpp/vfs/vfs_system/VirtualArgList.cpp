@@ -5,9 +5,10 @@ BEG_VFS_NAMESPACE
 
 void VfsArgTrait<VirtualArgList>::get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualArgList &obj ) {
     // on pourrait faire un cast pour passer des `Vec<void *> pointers` à un tuple avec des unique_ptrs si c'est owned
-    final_types = obj.final_types;
-    final_refs = obj.final_refs;
-    cf << obj.cf;
+    // final_types = obj.final_types;
+    // final_refs = obj.final_refs;
+    // cf << obj.cf;
+    TODO;
 }
 
 const VirtualArgList &VfsArgTrait<VirtualArgList>::key( const VirtualArgList &obj ) {

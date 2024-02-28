@@ -19,7 +19,6 @@ public:
     virtual Vec<Str>          final_types                () const = 0;
     virtual Vec<Str>          final_refs                 () const = 0;
     virtual Str               cast_type                  () const = 0;
-    virtual Str               cast_ref                   () const;
     virtual DisplayItem*      display                    ( Displayer &ds ) const = 0;
 
     static void               register_the_new_types     ();

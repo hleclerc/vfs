@@ -4,9 +4,9 @@
 
 BEG_VFS_NAMESPACE
 
-class Any {
+class Any : public VfsDtObject<> {
 public:
-    /**/ VFS_DT_OBJECT_ATTRIBUTES( Any, "vfs" );
+    VfsDtObject_STD_METHODS( Any, "vfs" );
 
     /**/ Any( auto &&value ) : Any( FromValue(), FORWARD( value ) ) {}
     /**/ Any() : Any( Void() ) {}

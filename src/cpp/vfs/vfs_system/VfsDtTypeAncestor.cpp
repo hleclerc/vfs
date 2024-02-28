@@ -12,10 +12,6 @@ VfsDtTypeAncestor::VfsDtTypeAncestor() {
     last_new_type = this;
 }
 
-Str VfsDtTypeAncestor::cast_ref() const {
-    return "reinterpret_cast<{ARG_CSTNESS}" + cast_type() + " {ARG_REFNESS}>( {ARG_NAME}._vfs_object_rt_data );";
-}
-
 void VfsDtTypeAncestor::register_the_new_types() {
     for( ; last_new_type; last_new_type = last_new_type->prev_new_type ) {
         auto p = last_new_type->global_type_index;

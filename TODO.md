@@ -59,8 +59,17 @@ L'idée de cast, c'était de dire quel est le type réel des objets qui cachent 
       Rq: dans le format actuel, les casts sont des lignes de codes, mais on pourrait aussi faire du code inline pour être capables de faire le cast du bon type
       => du coup, on pourrait garder le Vec<void *>, mais on aurait un destructeur capable d'aller chercher les bons types
       Rq: on pourrait directement donner le type (se passer de cast_ref)
-        À ce moment là, il faudrait enlever le _vfs_object_rt_data
-        
+        À ce moment là, il faudrait enlever le _vfs_object_rt_data...
+        Qu'est-ce qui défini un VfsDtObject ?
+          On pourrait faire un héritage
+        Idéalement, quand on fait un cast, il faudrait que ça soit un static_cast. Par exemple, le cast d'un Scalar donnerait un type qui hérite de Scalar.
+        Pb: on ne peut pas donner de nouveau le type d'un attribut hérité
+
+        Ou alors, on dit que ce n'est pas un cast, mais plutôt un accès aux données
+          => _actual_content
+          => ou on garde _cast
+
+
 
   Ça peut être intéressant pour les reassign ou destroy dans la mesure où ce n'est pas sur les final refs que ça doit agir en premier lieu.
   En particulier, les final_refs ne décrivent pas la fçon 
