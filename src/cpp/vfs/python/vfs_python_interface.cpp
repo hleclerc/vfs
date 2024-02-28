@@ -1,5 +1,5 @@
 #include <vfs/vfs_system/VfsSymbolCache.h>
-#include <vfs/vfs_system/RtFunction.h>
+#include <vfs/vfs_system/VirtualFunction.h>
 
 #include <vfs/support/push_back_unique.h>
 #include <vfs/support/ThreadPool.h> //  TODO: place it in the appropriate place
@@ -40,7 +40,7 @@ PyObject *function( PyObject *self, PyObject *args, PyObject *kwargs ) {
         return PyErr_Format( PyExc_TypeError, "Please specify at least the name of the function" );
 
     auto *res = PyObject_NEW( PythonVfsAnyWrapper, &pytype_PythonVfsAnyWrapper );
-    new ( &res->obj ) Any( RtFunction{ .name = name, .cf = cf } );
+    new ( &res->obj ) Any( VirtualFunction{ .name = name, .cf = cf } );
     Py_IncRef( (PyObject *)res );
     return (PyObject *)res;
 }

@@ -12,7 +12,7 @@ public:
     Str         cast;
 };
 
-// void vfs_object_get_compilation_flags( Vec<Str> &seen, const RtType &obj ) {
+// void vfs_object_get_compilation_flags( Vec<Str> &seen, const VirtualCtType &obj ) {
 //     push_back_unique( includes, obj.include );
 // }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vfs/vfs_system/RtArgList.h>
+#include <vfs/vfs_system/VirtualArgList.h>
 #include "PyObject.h" // IWYU pragma: export
 #include <map>
 

@@ -1,11 +1,25 @@
 #include "../support/string/symbol_for.h"
 #include "../support/string/ctor_for.h"
-#include "RtFunction.h"
+#include "VirtualFunction.h"
 
 BEG_VFS_NAMESPACE
-    
-    void vfs_object_get_compilation_flags( CompilationFlags &cn, Vec<Str> &seen, const RtFunction &obj ) {
-    cn << obj.cf;
+
+void VirtualFunction::get_compilation_flags( CompilationFlags &cn ) {
+    cn.add_inc_file( "vfs/vfs_system/VirtualFunction.h" );
+}
+
+Str VirtualFunction::type_name() {
+    return "VirtualFunction";
+}
+
+bool VirtualFunction::operator<( const VirtualFunction &that ) const {
+    if ( name != that.name )
+        return name < that.name;
+    return cf < that.cf;
+}
+
+void VfsArgTrait<VirtualFunction>::get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualFunction &obj ) {
+    cf << obj.cf;
 
     // make the function code,
     Str code = "inline:";
@@ -15,7 +29,7 @@ BEG_VFS_NAMESPACE
     code += "BEG_VFS_NAMESPACE\n";
     code += "\n";
     code += "struct Function_" + sym + " {\n";
-    code += "    static auto get_compilation_flags( CompilationFlags &cn ) { CompilationFlags tn( " + ctor_for( cn.flags ) + " ); cn << tn; cn.add_inc_file( \"{INCLUDE_PATH}\" ); }\n";
+    code += "    static auto get_compilation_flags( CompilationFlags &cn ) { CompilationFlags tn( " + ctor_for( cf.flags ) + " ); cn << tn; cn.add_inc_file( \"{INCLUDE_PATH}\" ); }\n";
     code += "    static auto type_name            () { return \"Function_" + sym + "\"; }\n";
     if ( obj.name.ends_with( "__method" ) )
         code += "    auto        operator()           ( auto &&obj, auto &&...args ) const { return obj." + obj.name.substr( 0, obj.name.size() - 8 ) + "( FORWARD( args )... ); }\n";
@@ -26,15 +40,11 @@ BEG_VFS_NAMESPACE
     code += "END_VFS_NAMESPACE\n";
 
     // in an include file
-    cn.add_inc_file( code );
+    cf.add_inc_file( code );
+
+    final_types = { "Function_" + symbol_for( obj.name ) + "" };
+    final_refs = { final_types[ 0 ] + " {FINAL_NAME};" };
 }
 
-const Str &vfs_object_ct_key( const RtFunction &obj ) {
-    return obj.name;
-}
-
-Vec<Str> vfs_object_ct_cast( const RtFunction &obj, bool deref = true ) {
-    return { "auto {ARG} = Function_" + symbol_for( obj.name ) + "();" };
-}
 
 END_VFS_NAMESPACE

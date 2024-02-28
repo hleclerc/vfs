@@ -23,6 +23,7 @@ ON_INIT {
             cg.add_line( "auto __apply( CtInt<0>, const auto &func, auto &&...args ) {" );
             cg.add_line( "return func( FORWARD( args )... );" );
             cg.add_line( "}" );
+            cg.add_line( "" );
             cg.add_line( "auto __apply( CtInt<1>, const auto &func, auto &&...args ) {" );
             cg.add_line( "func( FORWARD( args )... );" );
             cg.add_line( "return Void{};" );

@@ -1,4 +1,4 @@
-#include <vfs/vfs_system/VirtualCtStringList.h>
+#include <vfs/vfs_system/VirtualFunction.h>
 #include <vfs/Scalar.h>
 #include "catch_main.h"
 
@@ -21,5 +21,5 @@
 // }
 
 TEST_CASE( "Scalar from pointer", "" ) {
-    VFS_CALL( P, CtStringList<>, void, VirtualCtStringList( { "yo", "ya" } ) );
+    VFS_CALL( call, CtStringList<>, void, VirtualFunction( "P" ), 17 );
 }

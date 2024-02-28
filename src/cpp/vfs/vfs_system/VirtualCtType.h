@@ -5,26 +5,24 @@
 BEG_VFS_NAMESPACE
 
 ///
-class RtType {
+class VirtualCtType {
 public:
-    using       Cn       = CompilationFlags;
+    using       Cn                   = CompilationFlags;
 
-    static auto type_name() { return "RtType"; }
+    static void get_compilation_flags( CompilationFlags &cn );
+    static Str  type_name            ();
+    bool        operator<            ( const VirtualCtType &that ) const;
 
-    Str         name;    ///<
-    Cn          cn;      ///<
+    Str         name;                ///<
+    Cn          cn;                  ///<
 };
 
-void vfs_object_get_compilation_flags( CompilationFlags &cn, Vec<Str> &seen, const RtType &obj ) {
-    cn << obj.cn;
-}
+/// VfsArgTrait for VirtualCtType
+template<>
+struct VfsArgTrait<VirtualCtType> {
+    static void  get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtType &obj );
+    static auto& key        ( const VirtualCtType &obj ) { return obj; }
+};
 
-const auto &vfs_object_ct_key( const RtType &obj ) {
-    return obj.name;
-}
-
-Seq<Str> vfs_object_ct_cast( const RtType &obj, bool deref = true ) {
-    return { "auto {ARG} = CtType<" + obj.name + ">();" };
-}
 
 END_VFS_NAMESPACE
