@@ -67,7 +67,7 @@ Str ctor_for( const CompilationFlags &cn ) {
     return "{ " + ctor_for( cn.flags ) + " }";
 }
 
-RtStringList ct_value( const CompilationFlags &cn ) {
+VirtualCtStringList ct_value( const CompilationFlags &cn ) {
     return { cn.flags };
 }
 

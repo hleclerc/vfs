@@ -50,7 +50,7 @@ DTP Vec<Str> UTP::final_types() const {
 }
 
 DTP Vec<Str> UTP::final_refs() const {
-    return { "{DECL} = {CAST}.data;" };
+    return { "{ARG_CSTNESS}auto {ARG_REFNESS}{FINAL_NAME} = {CAST_NAME}.data.content;" };
 }
 
 DTP Str UTP::cast_type() const {

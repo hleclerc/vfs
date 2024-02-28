@@ -1,20 +1,26 @@
 #pragma once
 
 #include "../containers/Vec.h"
+#include "VfsArgTrait.h"
+class CompilationFlags;
 
 BEG_VFS_NAMESPACE
 
 ///
-class RtStringList {
+class VirtualCtStringList {
 public:
-    static auto cast_to_string( StrView str ) -> Vec<Str>;
+    static auto final_type_name_to_content( StrView str ) -> Vec<Str>;
+    static void get_compilation_flags     ( CompilationFlags &cn );
+    static Str  type_name                 ();
 
-    static auto type_name     () { return "RtStringList"; }
-
-    Vec<Str>    value;        ///<
+    Vec<Str>    value;                    ///<
 };
 
-Vec<Str>        vfs_object_ct_cast( const RtStringList &obj, bool deref = true );
-const Vec<Str> &vfs_object_ct_key ( const RtStringList &obj );
+/// VfsArgTrait for VirtualCtString
+template<>
+struct VfsArgTrait<VirtualCtStringList> {
+    static void get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtStringList &obj );
+    static Str  key        ( const VirtualCtStringList &obj );
+};
 
 END_VFS_NAMESPACE

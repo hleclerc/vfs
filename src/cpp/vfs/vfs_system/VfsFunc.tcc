@@ -49,6 +49,10 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
         using Obj = DECAYED_TYPE_OF( arg );
         if constexpr( VfsArg<Obj> )
             VfsArgTrait<Obj>::get_cg_data( compilation_flags, seen, cast_type, cast_ref, sub_final_types, sub_final_refs, arg );
+        else {
+            sub_final_types = { type_name<Obj>() };
+            sub_final_refs = { "" };
+        }
 
         final_types << sub_final_types;
         final_refs << sub_final_refs;

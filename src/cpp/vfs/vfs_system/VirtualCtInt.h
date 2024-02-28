@@ -1,24 +1,31 @@
 #pragma once
 
 #include "../support/CompilationFlags.h"
+#include "VfsArgTrait.h"
 
 BEG_VFS_NAMESPACE
 
 ///
-class RtInt {
+class VirtualCtInt {
 public:
-    static void get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( "vfs/vfs_system/RtInt.h" ); }
-    static auto type_name            () { return "RtInt"; }
+    static void get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( "vfs/vfs_system/VirtualCtInt.h" ); }
+    static auto type_name            () { return "VirtualCtInt"; }
 
     int         value;
 };
 
-inline const auto &vfs_object_ct_key( const RtInt &obj ) {
-    return obj.value;
-}
+/// VfsArgTrait for VirtualCtInt
+template<>
+struct VfsArgTrait<VirtualCtInt> {
+    static void get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtInt &obj ) {
+        Str type = "CtInt<" + std::to_string( obj.value ) + ">";
+        final_refs = { "auto {FINAL_NAME} = " + type + "();" };
+        final_types = { type };
+    }
 
-inline Vec<Str> vfs_object_ct_cast( const RtInt &obj, bool deref = true ) {
-    return { "auto {ARG} = CtInt<" + std::to_string( obj.value ) + ">();" };
-}
+    static PI32 key( const VirtualCtInt &obj ) {
+        return obj.value;
+    }
+};
 
 END_VFS_NAMESPACE

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../vfs_system/RtStringList.h"
+#include "../vfs_system/VirtualCtStringList.h"
 
 BEG_VFS_NAMESPACE
 class VfsCodegen;
@@ -31,7 +31,7 @@ public:
     Vec<Str>     flags;          ///< like "inc_file:..."
 };
 
-RtStringList ct_value( const CompilationFlags &cn );
+VirtualCtStringList ct_value( const CompilationFlags &cn );
 Str          ctor_for( const CompilationFlags &cn );
 
 // by default, call T::get_compilation_flags( res )

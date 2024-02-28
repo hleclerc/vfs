@@ -18,7 +18,7 @@ ON_INIT {
 
     // call( func, args... )
     VFS_ADD_SURDEF( "call", "func" ) {
-        // intermediate function to replace an inline `if constexpr ( std::is_same_v<void,...> )` that does not work (at least for g++-13.2)
+        // intermediate function to replace an inline `if constexpr ( std::is_same_v<void,...> )` that does not work as expected (at least for g++-13.2)
         cg.add_prel_block( [&]( VfsCodegen &cg ) {
             cg.add_line( "auto __apply( CtInt<0>, const auto &func, auto &&...args ) {" );
             cg.add_line( "return func( FORWARD( args )... );" );
@@ -37,14 +37,22 @@ ON_INIT {
     // vfs td handling ----------------------------------------------------------------------------------------------------------------------------------------------------
     // vfs_td_reassign
     VFS_ADD_SURDEF( "vfs_td_reassign", "self", "that" ) {
-        cg.add_line( "self_decl._vfs_object_rt_data.destroy( CT_DECAYED_TYPE_OF( self ) );" );
+        // if same types
+        if ( cg.final_types[ 0 ] == cg.final_types[ 1 ] ) {
+            cg.add_line( "self = that;" );
+            return cg.valid();
+        }
+
+        cg.add_line( "using T = std::decay_t<decltype( self_cast )>;" );
+        cg.add_line( "self_cast.~T();" );
         cg.add_line( "self_decl._vfs_object_rt_data.construct( FromValue(), FORWARD( that ) );" );
         return cg.valid();
     };
 
-    // vfs_td_destroy
+    // vfs_td_destroy => destroy the _decl variable
     VFS_ADD_SURDEF( "vfs_td_destroy", "self" ) {
-        cg.add_line( "self_decl._vfs_object_rt_data.destroy( CT_DECAYED_TYPE_OF( self ) );" );
+        cg.add_line( "using T = std::decay_t<decltype( self_cast )>;" );
+        cg.add_line( "self_cast.~T();" );
         return cg.valid( { 0 } );
     };
 }

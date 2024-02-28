@@ -6,6 +6,8 @@ BEG_VFS_NAMESPACE
 class CompilationFlags;
 
 /**
+ * cast_ref can be used to get the real type of an argument
+ * final_ref describe the ref intended to be used
 */
 class VfsDtTypeAncestor {
 public:

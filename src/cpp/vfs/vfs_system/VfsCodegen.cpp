@@ -81,23 +81,7 @@ Vec<Str> VfsCodegen::forwarded_args() {
 }
 
 Str VfsCodegen::forwarded_arg( PI num ) {
-    return "FORWARD( " + arg_names[ num ] + " )";
-}
-
-Str VfsCodegen::real_type( PI num ) {
-    if ( arg_casts[ num ].empty() )
-        return arg_types[ num ];
-
-    // TODO: something more robust
-    auto i = arg_casts[ num ].find( "CtType<" );
-    if ( i == Str::npos ) {
-        PE( arg_casts[ num ], function_name );
-        ERROR( "no 'CtType<' to find real_type " );
-    }
-    auto e = arg_casts[ num ].rfind( ">" );
-    if ( e == Str::npos )
-        ERROR( "no '>'" );
-    return { arg_casts[ num ].begin() + i + 7, arg_casts[ num ].begin() + e };
+    return "FORWARD( " + final_names[ num ] + " )";
 }
 
 void VfsCodegen::add_prel_block( const std::function<void (VfsCodegen &)> &f ) {

@@ -1,10 +1,11 @@
+#include "../support/CompilationFlags.h"
 #include "../support/string/ctor_for.h"
 #include "../support/string/join.h"
-#include "RtStringList.h"
+#include "VirtualCtStringList.h"
 
 BEG_VFS_NAMESPACE
 
-Vec<Str> RtStringList::cast_to_string( StrView str ) {
+Vec<Str> VirtualCtStringList::final_type_name_to_content( StrView str ) {
     Vec<Str> res;
     PI i = str.find( "CtStringList<" ) + 13;
     for( ; i < str.size(); ++i ) {
@@ -28,16 +29,25 @@ Vec<Str> RtStringList::cast_to_string( StrView str ) {
     return res;
 }
 
-Vec<Str> vfs_object_ct_cast( const RtStringList &obj, bool deref ) {
-    Str res = "auto {ARG} = CtStringList<";
-    res += join_map( obj.value, ctor_for<Str> );
-    return { res + ">();" };
+void VirtualCtStringList::get_compilation_flags( CompilationFlags &cn ) {
+    cn.add_inc_file( "vfs/vfs_system/VirtualCtStringList.h" );
 }
 
-const Vec<Str> &vfs_object_ct_key( const RtStringList &obj ) {
-    return obj.value;
+Str VirtualCtStringList::type_name() {
+    return "VirtualCtStringList";
 }
 
+void VfsArgTrait<VirtualCtStringList>::get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtStringList &obj ) {
+    final_types = { "CtStringList<" + join_map( obj.value, ctor_for<Str> ) + ">" };
+    final_refs = { "auto {FINAL_NAME} = " + final_types[ 0 ] + "();" };
+}
+
+Str VfsArgTrait<VirtualCtStringList>::key( const VirtualCtStringList &obj ) {
+    return join_map( obj.value, ctor_for<Str> ); // TODO OPTIMIZE (Vec<Str> does not support comparison)
+}
 
 
 END_VFS_NAMESPACE
+
+
+

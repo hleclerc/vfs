@@ -1,26 +1,29 @@
 #pragma once
 
-#include "../support/string/ctor_of_string_to_string.h"
-#include "../support/string/ctor_for.h"
 #include "../containers/Vec.h"
+#include "VfsArgTrait.h"
+class CompilationFlags;
 
 BEG_VFS_NAMESPACE
 
 ///
-class RtString {
+class VirtualCtString {
 public:
-    static auto cast_to_string( StrView str ) { auto i = str.find( "CtString<" ); return ctor_of_string_to_string( str.substr( i + 9, str.size() - ( i + 9 + 4 ) ) ); }
-    static auto type_name     () { return "RtString"; }
+    static Str  final_type_name_to_content( StrView final_type_name );
+    static void get_compilation_flags     ( CompilationFlags &cn );
+    static Str  type_name                 ();
 
-    Str         value;        ///<
+    Str         value;                    ///<
 };
 
-inline const auto &vfs_object_ct_key( const RtString &obj ) {
-    return obj.value;
-}
+/// VfsArgTrait for VirtualCtString
+template<>
+struct VfsArgTrait<VirtualCtString> {
+    static void get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtString &obj );
 
-inline Vec<Str> vfs_object_ct_cast( const RtString &obj, bool deref = true ) {
-    return { "auto {ARG} = CtString<" + ctor_for( obj.value ) + ">();" };
-}
+    static const Str &key( const VirtualCtString &obj ) {
+        return obj.value;
+    }
+};
 
 END_VFS_NAMESPACE

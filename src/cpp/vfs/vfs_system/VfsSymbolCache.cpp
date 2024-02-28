@@ -152,19 +152,22 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
 
         compilation_flags.add_flags_to( cg );
 
-        // cg.arg_names + cg.cast_names + arg_decls
+        // names + arg_decls
         Vec<Str> arg_decls;
         for( PI i = 0, n = 0; i < arg_types.size(); ++i ) {
-            // arg_name
+            // base arg_name
             Vec<Str> loc_arg_names;
             for( PI j = 0; j < final_refs[ i ].size(); ++j )
                 loc_arg_names << surdef.arg_name( n++ );
+            Str name = join( loc_arg_names, "_", "_and_" );
 
-            Str arg_name = join( loc_arg_names, "_", "_and_" );
-            if ( cast_refs[ i ].size() || final_refs[ i ].size() )
-                arg_name += "_decl";
+            // names
+            bool sep_decl = cast_refs[ i ].size() || final_refs[ i ].size() != 1 || final_refs[ i ][ 0 ].size();
+            Str arg_name = name + ( sep_decl ? "_decl" : "" );
 
-            cg.cast_names << arg_name;
+            for( PI j = 0; j < loc_arg_names.size(); ++j )
+                cg.final_names << loc_arg_names[ j ];
+            cg.cast_names << name + "_cast";
             cg.arg_names << arg_name;
 
             // arg_decl
@@ -179,10 +182,11 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
         for( PI i = 0; i < cast_refs.size(); ++i ) {
             //
             Str cast = cast_refs[ i ];
-
-            //Str cg_arg_name = n < surdef.arg_names.size() ? surdef.arg_names[ n ] : ( "arg_" + std::to_string( n ) );
-            // cast = std::regex_replace( cast, std::regex( "\\{ARG_DECL\\}" ), arg_names[ i ] );
-            //cast = std::regex_replace( cast, std::regex( "\\{ARG\\}" ), arg_name );
+            cast = std::regex_replace( cast, std::regex( "\\{ARG_CSTNESS\\}" ), cg.arg_types[ i ].starts_with( "const " ) ? "const " : "" );
+            cast = std::regex_replace( cast, std::regex( "\\{ARG_REFNESS\\}" ), cg.arg_types[ i ].ends_with( "&&" ) && ! cg.arg_types[ i ].ends_with( "&" ) ? "&&" : "&" );
+            cast = std::regex_replace( cast, std::regex( "\\{CAST_NAME\\}" ), cg.cast_names[ i ] );
+            cast = std::regex_replace( cast, std::regex( "\\{CAST_TYPE\\}" ), cg.cast_types[ i ] );
+            cast = std::regex_replace( cast, std::regex( "\\{ARG_NAME\\}" ), cg.arg_names[ i ] );
 
             if ( cast.size() )
                 cg.add_line( cast );
@@ -191,20 +195,20 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
         // finals
         for( PI i = 0, n = 0; i < final_refs.size(); ++i ) {
             for( PI j = 0; j < final_refs[ i ].size(); ++j, ++n ) {
+                Str final_name = surdef.arg_name( n );
+
                 // final_types + final_names
                 cg.final_types << final_types[ i ][ j ];
-                cg.final_names << surdef.arg_name( n );
+                cg.final_names << final_name;
 
                 // final_refs
                 Str ref = final_refs[ i ][ j ];
-
-                // Str cg_arg_name = n < surdef.arg_names.size() ? surdef.arg_names[ n ] : ( "arg_" + std::to_string( n ) );
-                // cast = std::regex_replace( cast, std::regex( "\\{ARG_DECL\\}" ), func_arg_names[ i ] );
-                // cast = std::regex_replace( cast, std::regex( "\\{ARG\\}" ), cg_arg_name );
-                // cg.arg_names.push_back( cg_arg_name );
-                // cg.arg_casts.push_back( cast );
-                // if ( cast.size() )
-                //     cg.add_line( cast );
+                ref = std::regex_replace( ref, std::regex( "\\{ARG_CSTNESS\\}" ), cg.arg_types[ i ].starts_with( "const " ) ? "const " : "" );
+                ref = std::regex_replace( ref, std::regex( "\\{ARG_REFNESS\\}" ), cg.arg_types[ i ].ends_with( "&&" ) && ! cg.arg_types[ i ].ends_with( "&" ) ? "&&" : "&" );
+                ref = std::regex_replace( ref, std::regex( "\\{FINAL_NAME\\}" ), final_name );
+                ref = std::regex_replace( ref, std::regex( "\\{CAST_NAME\\}" ), cg.cast_names[ i ] );
+                ref = std::regex_replace( ref, std::regex( "\\{CAST_TYPE\\}" ), cg.cast_types[ i ] );
+                ref = std::regex_replace( ref, std::regex( "\\{ARG_NAME\\}" ), cg.arg_names[ i ] );
 
                 if ( ref.size() )
                     cg.add_line( ref );

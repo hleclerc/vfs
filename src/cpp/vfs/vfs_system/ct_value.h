@@ -1,7 +1,7 @@
 #pragma once
 
-#include "RtString.h"
-#include "RtInt.h"
+#include "VirtualCtString.h"
+#include "VirtualCtInt.h"
 
 #include "../Any.h"
 
@@ -18,9 +18,9 @@ auto ct_value( const auto &v ) {
     if constexpr( VfsArg<T> )
         return VFS_CALL( ct_value, CtStringList<>, Any, FORWARD( v ) );
     else if constexpr( ScalarLike<T> )
-        return RtInt{ int( v ) };
+        return VirtualCtInt{ int( v ) };
     else if constexpr( StrLike<T> )
-        return RtString{ FORWARD( v ) };
+        return VirtualCtString{ FORWARD( v ) };
     else
         STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( 0, "don't know how to make ct value" );
 }

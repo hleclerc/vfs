@@ -38,8 +38,6 @@ public:
     Vec<Str>       forwarded_args_from( PI start );
     Vec<Str>       forwarded_args     ();
     Str            forwarded_arg      ( PI num );
-    Str            real_type          ( PI num );
-
 
     void           _add_preliminary ( const Str &str );
     void           _add_init_line   ( const Str &str );

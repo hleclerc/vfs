@@ -9,11 +9,6 @@ BEG_VFS_NAMESPACE
 #define DTP template<class Object_,int size_,int alig_>
 #define UTP VfsDtWrap<Object_,size_,alig_>
 
-// DTP TT constexpr bool UTP::not_enough_room_for( CtType<T> ) {
-//     constexpr int off = ( 2 * sizeof( PI32 ) + alignof( T ) - 1 ) / alignof( T ) * alignof( T );
-//     return alignof( T ) > data_alig || off + sizeof( T ) > sizeof( *this );
-// }
-
 DTP TT void UTP::construct( FromTypeAndCtorArguments, CtType<T> t, auto &&...ctor_args ) {
     new ( this ) VfsDtWrap_<Object,T>( FORWARD( ctor_args )... );
 }
@@ -32,13 +27,6 @@ DTP TT void UTP::construct( FromPointer, T &&pointer ) {
 
 DTP TT void UTP::construct( FromValue, T &&value ) {
      construct( FromTypeAndCtorArguments(), CT_DECAYED_TYPE_OF( value ), FORWARD( value ) );
-}
-
-DTP TT void UTP::destroy( CtType<T> t ) {
-    TODO;
-    //     cast( t ).~T();
-    //     if ( not_enough_room_for( t ) )
-    //         std::free( void_ptr() );
 }
 
 // DTP void *const &UTP::void_ptr() const {

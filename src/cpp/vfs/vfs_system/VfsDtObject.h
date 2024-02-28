@@ -1,8 +1,8 @@
 #pragma once
 
 // #include "../support/type_promote.h" // IWYU pragma: export
-#include "VfsDtWrap.h" // IWYU pragma: export
 #include "VfsArgTrait.h"
+#include "VfsDtWrap.h" // IWYU pragma: export
 #include "VfsDtType.h" // IWYU pragma: export
 
 BEG_VFS_NAMESPACE

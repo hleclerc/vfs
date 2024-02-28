@@ -52,7 +52,7 @@ DTP DisplayItem *UTP::display( Displayer &ds ) const {
 DTP auto ct_value( const UTP &array ) {
     if constexpr ( CtTypeListOfItems::size() == 1 ) {
         if constexpr ( StrLike<typename CtTypeListOfItems::Head> ) {
-            RtStringList res;
+            VirtualCtStringList res;
             array.for_each_item( [&]( const auto &item ) {
                 res.value.push_back( item );
             } );
