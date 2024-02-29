@@ -74,4 +74,6 @@ L'idée de cast, c'était de dire quel est le type réel des objets qui cachent 
   Ça peut être intéressant pour les reassign ou destroy dans la mesure où ce n'est pas sur les final refs que ça doit agir en premier lieu.
   En particulier, les final_refs ne décrivent pas la fçon 
 
-
+On pourrait envisager de traiter les types de références uniquement avec la référence de l'argument de fonction
+  Cependant, on peut imaginer avec les listes d'arguments avoir des pointeurs ou des références où certains arguments sont owned et d'autres non.
+  Prop: un booleen pour dire si c'est owned...

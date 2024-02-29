@@ -9,12 +9,11 @@
 BEG_VFS_NAMESPACE
 
 ///
-template<class Object,class Content,int nb_indirections_>
+template<class Object,class Content,class... RefAccess>
 class VfsDtType : public VfsDtTypeAncestor {
 public:
     virtual PI32           get_instantiated_type_index() override;
     virtual void           get_compilation_flags_rec  ( CompilationFlags &res, Vec<Str> &seen ) const override;
-    virtual int            nb_indirections            () const override;
     virtual Vec<Str>       final_types                () const override;
     virtual Vec<Str>       final_refs                 () const override;
     virtual Str            cast_type                  () const override;
@@ -24,8 +23,8 @@ public:
 };
 
 // impl -------------------------------------------------------------------------------------------------------------------
-#define DTP template<class Object,class Content,int nb_indirections_>
-#define UTP VfsDtType<Object,Content,nb_indirections_>
+#define DTP template<class Object,class Content,class... RefAccess>
+#define UTP VfsDtType<Object,Content,RefAccess...>
 
 DTP PI32 UTP::get_instantiated_type_index() {
     if ( instantiated_type_index == 0 )
@@ -37,20 +36,20 @@ DTP void UTP::get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen )
     VFS_NAMESPACE::get_compilation_flags_rec( res, seen, CtType<Content>() );
 }
 
-DTP int UTP::nb_indirections() const {
-    return nb_indirections_;
-}
-
 DTP DisplayItem *UTP::display( Displayer &ds ) const {
     return ds.string( type_name<Content>() );
 }
 
 DTP Vec<Str> UTP::final_types() const {
-    return { type_name<Content>() };
+    Vec<Str> res;
+    ( res.push_back( type_name( CT_DECAYED_TYPE_OF( RefAccess::ref( *(Content *)nullptr ) ) ) ), ... );
+    return res;
 }
 
 DTP Vec<Str> UTP::final_refs() const {
-    return { "{ARG_CSTNESS}auto {ARG_REFNESS}{FINAL_NAME} = {CAST_NAME}.data.content;" };
+    Vec<Str> res;
+    ( res.push_back( RefAccess::code() ), ... );
+    return res;
 }
 
 DTP Str UTP::cast_type() const {

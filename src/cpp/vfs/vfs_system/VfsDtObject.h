@@ -1,6 +1,8 @@
 #pragma once
 
 // #include "../support/type_promote.h" // IWYU pragma: export
+#include "VfsRefAccessOnDtContent.h"
+#include "VfsRefAccessDeref.h"
 #include "VfsArgTrait.h"
 #include "VfsDtWrap.h" // IWYU pragma: export
 #include "VfsDtType.h" // IWYU pragma: export
@@ -20,7 +22,7 @@ public:
     static void          for_each_template_arg    ( auto &&f ) { f( CtInt<inline_data_size>() ); f( CtInt<inline_data_alig>() ); }
     static auto          template_type_name       () { return "VfsDtObject"; }
 
-    TSsUV void           construct                ( CtStringList<S...> /*Ref access*/, CtType<U> /*Object type*/, CtType<V> /*Content type*/, auto &&...ctor_args ) { new ( this ) VfsDtWrap<U,V,S...>( FORWARD( ctor_args )... ); }
+    TAUV void            construct                ( CtTypeList<A...> /*Ref access*/, CtType<U> /*Object type*/, CtType<V> /*Content type*/, auto &&...ctor_args ) { new ( this ) VfsDtWrap<U,V,A...>( FORWARD( ctor_args )... ); }
 
     mutable PI32         instantiated_type_index; ///<
     PI32                 global_type_index;       ///<
@@ -65,10 +67,9 @@ struct VfsArgTrait<Obj> {
 #define VfsDtObject_STD_METHODS( NAME, PATH ) public: \
     static void          get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( PATH "/" #NAME ".h" ); } \
     static auto          type_name            () { return #NAME; } \
-    auto&                _vdo                 () { return static_cast<VfsDtObject<_vdo_inline_data_size,_vdo_inline_data_alig> &>( *this ); } \
     \
-    /**/                 NAME                 ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, _vdo(), CtStringList<>(), CtType<NAME>(), FORWARD( ct_type ), FORWARD( args )... ); } \
-    /**/                 NAME                 ( FromPointer, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, _vdo(), CtStringList<>(), CtType<NAME>(), CT_DECAYED_TYPE_OF( pointer ), FORWARD( pointer ) ); } \
+    /**/                 NAME                 ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, static_cast<VfsDtObject<_vdo_inline_data_size,_vdo_inline_data_alig> &>( *this ), CtTypeList<VfsRefAccessDirect>(), CtType<NAME>(), FORWARD( ct_type ), FORWARD( args )... ); } \
+    /**/                 NAME                 ( FromPointer, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, static_cast<VfsDtObject<_vdo_inline_data_size,_vdo_inline_data_alig> &>( *this ), CtTypeList<VfsRefAccessDeref>(), CtType<NAME>(), CT_DECAYED_TYPE_OF( pointer ), FORWARD( pointer ) ); } \
     /**/                 NAME                 ( FromValue, auto &&value ) : NAME( FromTypeAndCtorArguments(), CT_DECAYED_TYPE_OF( value ), FORWARD( value ) ) {} \
     /**/                 NAME                 ( const NAME &that ) : NAME( FromValue(), that ) {} \
     /**/                 NAME                 ( NAME &&that ) : NAME( FromValue(), std::move( that ) ) {} \

@@ -15,7 +15,6 @@ public:
 
     virtual PI32              get_instantiated_type_index() = 0;
     virtual void              get_compilation_flags_rec  ( CompilationFlags &res, Vec<Str> &seen ) const = 0;
-    virtual int               nb_indirections            () const = 0;
     virtual Vec<Str>          final_types                () const = 0;
     virtual Vec<Str>          final_refs                 () const = 0;
     virtual Str               cast_type                  () const = 0;

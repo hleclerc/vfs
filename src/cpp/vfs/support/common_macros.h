@@ -4,7 +4,7 @@
 #include <utility> // IWYU pragma: export
 
 // shortcuts for template<...>
-#define     TSsUV                         template<CtStringValue... S,class U,class V>
+#define     TAUV                          template<class... A,class U,class V>
 #define     TTij                          template<class T,int i,int j>
 #define     TUVi                          template<class U,class V,int i>
 #define     TTA                           template<class T,class... A>
