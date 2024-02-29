@@ -9,7 +9,7 @@
 BEG_VFS_NAMESPACE
 
 ///
-template<class Object,class Content,class... RefAccess>
+template<class Object,class Content,class RefAccess>
 class VfsDtType : public VfsDtTypeAncestor {
 public:
     virtual PI32           get_instantiated_type_index() override;
@@ -23,8 +23,8 @@ public:
 };
 
 // impl -------------------------------------------------------------------------------------------------------------------
-#define DTP template<class Object,class Content,class... RefAccess>
-#define UTP VfsDtType<Object,Content,RefAccess...>
+#define DTP template<class Object,class Content,class RefAccess>
+#define UTP VfsDtType<Object,Content,RefAccess>
 
 DTP PI32 UTP::get_instantiated_type_index() {
     if ( instantiated_type_index == 0 )
@@ -41,19 +41,15 @@ DTP DisplayItem *UTP::display( Displayer &ds ) const {
 }
 
 DTP Vec<Str> UTP::final_types() const {
-    Vec<Str> res;
-    ( res.push_back( type_name( CT_DECAYED_TYPE_OF( RefAccess::ref( *(Content *)nullptr ) ) ) ), ... );
-    return res;
+    return { type_name( CT_DECAYED_TYPE_OF( RefAccess::ref( *(Content *)nullptr ) ) ) };
 }
 
 DTP Vec<Str> UTP::final_refs() const {
-    Vec<Str> res;
-    ( res.push_back( RefAccess::code() ), ... );
-    return res;
+    return { RefAccess::code().replace( "{CONTENT}", "{CONTENT}.data.content" ) };
 }
 
 DTP Str UTP::cast_type() const {
-    return "VfsDtWrap<" + type_name<Object>() + "," + type_name<Content>() + ">";
+    return "VfsDtWrap<" + type_name<Object>() + "," + type_name<Content>() + "," + type_name<RefAccess>() + ">";
 }
 
 #undef DTP

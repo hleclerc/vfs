@@ -1,7 +1,7 @@
 #pragma once
 
 // #include "../support/type_promote.h" // IWYU pragma: export
-#include "VfsRefAccessOnDtContent.h"
+#include "VfsRefAccessDirect.h"
 #include "VfsRefAccessDeref.h"
 #include "VfsArgTrait.h"
 #include "VfsDtWrap.h" // IWYU pragma: export
@@ -69,7 +69,7 @@ struct VfsArgTrait<Obj> {
     static auto          type_name            () { return #NAME; } \
     \
     /**/                 NAME                 ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, static_cast<VfsDtObject<_vdo_inline_data_size,_vdo_inline_data_alig> &>( *this ), CtTypeList<VfsRefAccessDirect>(), CtType<NAME>(), FORWARD( ct_type ), FORWARD( args )... ); } \
-    /**/                 NAME                 ( FromPointer, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, static_cast<VfsDtObject<_vdo_inline_data_size,_vdo_inline_data_alig> &>( *this ), CtTypeList<VfsRefAccessDeref>(), CtType<NAME>(), CT_DECAYED_TYPE_OF( pointer ), FORWARD( pointer ) ); } \
+    /**/                 NAME                 ( FromPointer, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, static_cast<VfsDtObject<_vdo_inline_data_size,_vdo_inline_data_alig> &>( *this ), CtTypeList<VfsRefAccessDeref<VfsRefAccessDirect,true>>(), CtType<NAME>(), CT_DECAYED_TYPE_OF( pointer ), FORWARD( pointer ) ); } \
     /**/                 NAME                 ( FromValue, auto &&value ) : NAME( FromTypeAndCtorArguments(), CT_DECAYED_TYPE_OF( value ), FORWARD( value ) ) {} \
     /**/                 NAME                 ( const NAME &that ) : NAME( FromValue(), that ) {} \
     /**/                 NAME                 ( NAME &&that ) : NAME( FromValue(), std::move( that ) ) {} \

@@ -77,3 +77,13 @@ L'idée de cast, c'était de dire quel est le type réel des objets qui cachent 
 On pourrait envisager de traiter les types de références uniquement avec la référence de l'argument de fonction
   Cependant, on peut imaginer avec les listes d'arguments avoir des pointeurs ou des références où certains arguments sont owned et d'autres non.
   Prop: un booleen pour dire si c'est owned...
+
+La proposition, c'est d'avoir pour chaque argument
+  * un "cast" qui permet de trouver le type réel avec du code généré
+  * une liste de final_ref pour trouver les données que l'utilisat•rice•eur va manipuler
+
+Avec les objects VfsDt, le cast est un VfsDtWrap, qui contient la données brute. A priori le VfsDtWrap n'a pas à gérer les références finales, et on pourrait très bien se baser uniquement sur du code généré.
+  Rq: avoir plusieurs arguments dans un VfsDrWrap n'est pas obligatoire.
+  Pour les collections d'arguments, on pourrait très bien passer un autre wrapper.
+  
+
