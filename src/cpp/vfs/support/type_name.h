@@ -45,7 +45,7 @@ template<class T,class... A> Str type_name( CtType<std::function<T(A...)>> ) {
 }
 
 // helpers for the generic version
-TT auto CtType<T>::to_string() { return type_name( CtType<value>{} ); }
+TT auto CtType<T>::to_string() { return type_name( CtType<CtType<value>>{} ); }
 TT auto *CtType<T>::display( auto &ds ) { return ds.string( to_string() ); }
 
 // generic version
@@ -54,7 +54,7 @@ TT Str type_name( CtType<T> ) {
         return T::type_name();
     } else if constexpr( requires { template_type_name( CtType<T>() ); } ) {
         Str res = template_type_name( CtType<T>() );
-        if constexpr( requires { for_each_template_arg( CtType<T>(), []( auto f ) {} ); } ) {
+        if constexpr( requires { for_each_template_arg( CtType<T>(), []( auto ) {} ); } ) {
             res += "<";
             PI nb_template_args = 0;
             for_each_template_arg( CtType<T>(), [&]( auto n ) {

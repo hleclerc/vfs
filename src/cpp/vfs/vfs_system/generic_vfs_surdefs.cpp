@@ -12,7 +12,7 @@ ON_INIT {
 
     // forward method call
     VFS_ADD_SURDEF( ".*__method" ) {
-        cg.add_line( "return $0.$1( $2 );", cg.arg_names[ 0 ], cg.func_name.substr( 0, cg.func_name.size() - 8 ), join( cg.forwarded_args_from( 1 ) ) );
+        cg.add_line( "return $0.$1( $2 );", cg.final_names[ 0 ], cg.func_name.substr( 0, cg.func_name.size() - 8 ), join( cg.forwarded_args_from( 1 ) ) );
         return cg.valid( { -1e6 + 1 } );
     };
 
@@ -52,7 +52,7 @@ ON_INIT {
     };
 
     // vfs_td_destroy => destroy the _decl variable
-    VFS_ADD_SURDEF( "vfs_td_destroy", "self" ) {
+    VFS_ADD_SURDEF( "destroy", "self" ) {
         cg.add_line( "using T = std::decay_t<decltype( self_cast )>;" );
         cg.add_line( "self_cast.~T();" );
         return cg.valid( { 0 } );

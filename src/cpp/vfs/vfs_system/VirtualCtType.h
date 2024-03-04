@@ -11,7 +11,7 @@ public:
 
     static void get_compilation_flags( CompilationFlags &cn );
     static Str  type_name            ();
-    bool        operator<            ( const VirtualCtType &that ) const;
+    int         compare              ( const VirtualCtType &that ) const;
 
     Str         name;                ///<
     Cn          cn;                  ///<
@@ -20,7 +20,7 @@ public:
 /// VfsArgTrait for VirtualCtType
 template<>
 struct VfsArgTrait<VirtualCtType> {
-    static void  get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtType &obj );
+    static void  get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtType &obj );
     static auto& key        ( const VirtualCtType &obj ) { return obj; }
 };
 

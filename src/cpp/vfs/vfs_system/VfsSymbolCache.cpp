@@ -159,18 +159,18 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
             Vec<Str> loc_arg_names;
             for( PI j = 0; j < final_refs[ i ].size(); ++j )
                 loc_arg_names << surdef.arg_name( n++ );
-            Str name = join( loc_arg_names, "_", "_and_" );
+            Str base_name = join( loc_arg_names, "_", "_and_" );
+            Str arg_name = base_name + "_decl";
 
-            // names
-            bool sep_decl = cast_types[ i ].size() || final_refs[ i ].size() != 1 || final_refs[ i ][ 0 ].size();
-            Str arg_name = name + ( sep_decl ? "_decl" : "" );
-
-            for( PI j = 0; j < loc_arg_names.size(); ++j )
+            // info in cg
+            for( PI j = 0; j < loc_arg_names.size(); ++j ) {
+                cg.final_types << final_types[ i ][ j ];
                 cg.final_names << loc_arg_names[ j ];
-            cg.cast_names << name + "_cast";
+            }
+            cg.cast_names << base_name + "_cast";
             cg.arg_names << arg_name;
 
-            // arg_decl
+            // args in func decl
             bool nosp = arg_types[ i ].ends_with( "&" ) || arg_types[ i ].ends_with( "*" );
             arg_decls << arg_types[ i ] + ( nosp ? ""  : " " ) + arg_name;
         }
@@ -180,26 +180,25 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
 
         // casts
         for( PI i = 0; i < cast_types.size(); ++i ) {
-            //
-            Str cast = cast_types[ i ];
-            cast = std::regex_replace( cast, std::regex( "\\{ARG_CSTNESS\\}" ), cg.arg_types[ i ].starts_with( "const " ) ? "const " : "" );
-            cast = std::regex_replace( cast, std::regex( "\\{ARG_REFNESS\\}" ), cg.arg_types[ i ].ends_with( "&&" ) && ! cg.arg_types[ i ].ends_with( "&" ) ? "&&" : "&" );
-            cast = std::regex_replace( cast, std::regex( "\\{CAST_NAME\\}" ), cg.cast_names[ i ] );
-            cast = std::regex_replace( cast, std::regex( "\\{CAST_TYPE\\}" ), cg.cast_types[ i ] );
-            cast = std::regex_replace( cast, std::regex( "\\{ARG_NAME\\}" ), cg.arg_names[ i ] );
+            bool is_rvalue = cg.arg_types[ i ].ends_with( "&&" ) && ! cg.arg_types[ i ].ends_with( "&" );
+            bool is_const = cg.arg_types[ i ].starts_with( "const " );
 
-            if ( cast.size() )
-                cg.add_line( cast );
+            if ( cast_types[ i ].size() )
+                cg.add_line( "auto &&$0 = reinterpret_cast<$1$2 $3>( $4 );",
+                    cg.cast_names[ i ],
+                    is_const ? "const " : "",
+                    cast_types[ i ],
+                    is_rvalue ? "&&" : "&",
+                    cg.arg_names[ i ]
+                );
+            else
+                cg.add_line( "auto &&$0 = $1;", cg.cast_names[ i ], cg.arg_names[ i ] );
         }
 
         // finals
         for( PI i = 0, n = 0; i < final_refs.size(); ++i ) {
             for( PI j = 0; j < final_refs[ i ].size(); ++j, ++n ) {
-                Str final_name = surdef.arg_name( n );
-
-                // final_types + final_names
-                cg.final_types << final_types[ i ][ j ];
-                cg.final_names << final_name;
+                Str final_name = cg.final_names[ n ];
 
                 // final_refs
                 Str ref = final_refs[ i ][ j ];
@@ -210,8 +209,7 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
                 ref = std::regex_replace( ref, std::regex( "\\{CAST_TYPE\\}" ), cg.cast_types[ i ] );
                 ref = std::regex_replace( ref, std::regex( "\\{ARG_NAME\\}" ), cg.arg_names[ i ] );
 
-                if ( ref.size() )
-                    cg.add_line( ref );
+                cg.add_line( "auto &&$0 = $1;", final_name, ref.size() ? ref : cg.cast_names[ i ] );
             }
         }
 

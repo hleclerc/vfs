@@ -86,4 +86,7 @@ Avec les objects VfsDt, le cast est un VfsDtWrap, qui contient la données brute
   Rq: avoir plusieurs arguments dans un VfsDrWrap n'est pas obligatoire.
   Pour les collections d'arguments, on pourrait très bien passer un autre wrapper.
   
+Pb du destroy: on doit appliquer la méthode au cast, et pas aux final_refs
+  C'était d'ailleurs pour le destroy qu'on est partis sur l'idée de faire un cast
+  Prop: on fait un nom du genre "_on_cast_"
 

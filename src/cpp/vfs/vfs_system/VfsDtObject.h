@@ -75,7 +75,7 @@ struct VfsArgTrait<Obj> {
     /**/                 NAME                 ( NAME &&that ) : NAME( FromValue(), std::move( that ) ) {} \
     /**/                 NAME                 ( auto &&...args ) requires requires { vfs_dt_impl_type( CtType<NAME>(), args... ); } : NAME( FromTypeAndCtorArguments(), vfs_dt_impl_type( CtType<NAME>(), args... ), FORWARD( args )... ) {} \
     \
-    /**/                ~NAME                 () { VFS_CALL( vfs_td_destroy, CtStringList<>, void, *this ); } \
+    /**/                ~NAME                 () { VFS_CALL( destroy, CtStringList<>, void, *this ); } \
     \
     NAME&                operator=            ( const NAME &that ) { VFS_CALL( vfs_td_reassign, CtStringList<>, void, *this, that ); return *this; } \
     NAME&                operator=            ( NAME &&that ) { VFS_CALL( vfs_td_reassign, CtStringList<>, void, *this, std::move( that ) ); return *this; } \

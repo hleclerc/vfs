@@ -12,13 +12,11 @@ Str VirtualFunction::type_name() {
     return "VirtualFunction";
 }
 
-bool VirtualFunction::operator<( const VirtualFunction &that ) const {
-    if ( name != that.name )
-        return name < that.name;
-    return cf < that.cf;
+int VirtualFunction::compare( const VirtualFunction &that ) const {
+    return compare_chain( name, that.name, cf, that.cf );
 }
 
-void VfsArgTrait<VirtualFunction>::get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualFunction &obj ) {
+void VfsArgTrait<VirtualFunction>::get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualFunction &obj ) {
     cf << obj.cf;
 
     // make the function code,
@@ -42,8 +40,9 @@ void VfsArgTrait<VirtualFunction>::get_cg_data( CompilationFlags &cf, Vec<Str> &
     // in an include file
     cf.add_inc_file( code );
 
-    final_types = { "Function_" + symbol_for( obj.name ) + "" };
-    final_refs = { final_types[ 0 ] + " {FINAL_NAME};" };
+    Str type = "Function_" + symbol_for( obj.name );
+    final_refs = { type + "()" };
+    final_types = { type };
 }
 
 

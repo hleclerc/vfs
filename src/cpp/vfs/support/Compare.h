@@ -17,6 +17,11 @@ SI compare( const auto &a, const auto &b ) {
         return - b.compare( a );
     } else
 
+    // string like
+    if constexpr ( StrLike<decltype(a)> && StrLike<decltype(b)> ) {
+        return StrView( a ).compare( StrView( b ) );
+    } else
+
     // vector like
     if constexpr ( requires { a.size(); b.size(); a[ 0 ]; b[ 0 ]; } ) {
         if ( SI d = a.size() - b.size() )

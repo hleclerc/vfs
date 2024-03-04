@@ -5,6 +5,7 @@
 #include "../support/type_name.h"
 #include "VfsDtTypeAncestor.h"
 #include "VfsDtTypeTable.h"
+#include <regex>
 
 BEG_VFS_NAMESPACE
 
@@ -45,7 +46,8 @@ DTP Vec<Str> UTP::final_types() const {
 }
 
 DTP Vec<Str> UTP::final_refs() const {
-    return { RefAccess::code().replace( "{CONTENT}", "{CONTENT}.data.content" ) };
+    Str code = std::regex_replace( RefAccess::code(), std::regex( "\\{CONTENT\\}" ), "{CAST_NAME}.data.content" );
+    return { code };
 }
 
 DTP Str UTP::cast_type() const {

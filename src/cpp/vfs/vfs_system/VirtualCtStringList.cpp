@@ -37,9 +37,10 @@ Str VirtualCtStringList::type_name() {
     return "VirtualCtStringList";
 }
 
-void VfsArgTrait<VirtualCtStringList>::get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtStringList &obj ) {
-    final_types = { "CtStringList<" + join_map( obj.value, ctor_for<Str> ) + ">" };
-    final_refs = { "auto {FINAL_NAME} = " + final_types[ 0 ] + "();" };
+void VfsArgTrait<VirtualCtStringList>::get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtStringList &obj ) {
+    Str type = "CtStringList<" + join_map( obj.value, ctor_for<Str> ) + ">";
+    final_refs = { type + "();" };
+    final_types = { type };
 }
 
 Str VfsArgTrait<VirtualCtStringList>::key( const VirtualCtStringList &obj ) {

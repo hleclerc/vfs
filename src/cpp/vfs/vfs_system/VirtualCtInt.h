@@ -17,9 +17,9 @@ public:
 /// VfsArgTrait for VirtualCtInt
 template<>
 struct VfsArgTrait<VirtualCtInt> {
-    static void get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtInt &obj ) {
+    static void get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtInt &obj ) {
         Str type = "CtInt<" + std::to_string( obj.value ) + ">";
-        final_refs = { "auto {FINAL_NAME} = " + type + "();" };
+        final_refs = { type + "();" };
         final_types = { type };
     }
 

@@ -19,7 +19,7 @@ public:
 /// VfsArgTrait for VirtualCtString
 template<>
 struct VfsArgTrait<VirtualCtStringList> {
-    static void get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtStringList &obj );
+    static void get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtStringList &obj );
     static Str  key        ( const VirtualCtStringList &obj );
 };
 

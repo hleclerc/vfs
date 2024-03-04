@@ -18,9 +18,9 @@ Str VirtualCtString::type_name() {
     return "VirtualCtString";
 }
 
-void VfsArgTrait<VirtualCtString>::get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Str &cast_ref, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtString &obj ) {
+void VfsArgTrait<VirtualCtString>::get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualCtString &obj ) {
     Str type = "CtString<" + ctor_for( obj.value ) + ">";
-    final_refs = { "auto {FINAL_NAME} = " + type + "();" };
+    final_refs = { type + "();" };
     final_types = { type };
 }
 

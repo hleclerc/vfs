@@ -1,11 +1,11 @@
-//#include <vfs/vfs_system/VirtualArgList.h>
+#include <vfs/vfs_system/VirtualArgList.h>
 #include <vfs/Scalar.h>
 #include "catch_main.h"
 
-TEST_CASE( "Scalar", "" ) {
-    Scalar b = 17;
-    P( b );
-}
+// TEST_CASE( "Scalar", "" ) {
+//     Scalar b = 17;
+//     P( b );
+// }
 
 // TEST_CASE( "Scalar from pointer", "" ) {
 //     int a = 10;
@@ -20,9 +20,9 @@ TEST_CASE( "Scalar", "" ) {
 //     //     // P( b );
 // }
 
-// TEST_CASE( "Scalar from arg list", "" ) {
-//     VirtualArgList val;
-//     val.add_owned( new int( 17 ) );
-//     val.add_owned( new int( 18 ) );
-//     VFS_CALL( P, CtStringList<>, void, std::move( val ) );
-// }
+TEST_CASE( "Scalar from arg list", "" ) {
+    VirtualArgList val;
+    val.add_owned( new int( 17 ) );
+    val.add_owned( new int( 18 ) );
+    VFS_CALL( P, CtStringList<>, void, std::move( val ) );
+}
