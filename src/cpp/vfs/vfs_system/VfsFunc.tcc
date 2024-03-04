@@ -62,7 +62,7 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
     return reinterpret_cast<Callable *>( get_vfs_func_inst(
         name.to_string(),
         type_name<Return>(),
-        { type_name<Args>()... },
+        { type_name<Args &&>()... },
         { ( std::is_trivial_v<std::decay_t<Args>> && sizeof( Args ) <= sizeof( void * ) )... },
         std::move( compilation_flags ),
         std::move( final_types ),
@@ -108,7 +108,7 @@ DTP Return UTP::init( Args ...args ) {
 template<CtStringValue name,class Flags,class Return,class... Args>
 auto vfs_call( Args&&... args ) {
     auto &vfs_func = StaticStorage<VfsFunc<name,Flags,Return,Args&&...>>::value;
-    return vfs_func( std::forward<Args>( args )... );
+    return vfs_func( FORWARD( args )... );
 }
 
 #undef DTP

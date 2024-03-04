@@ -12,7 +12,7 @@ BEG_VFS_NAMESPACE
 /// onwed pointers => `delete` at the end of the call
 class VirtualArgList {
 public:
-    struct           TypeData             { Vec<Str> final_types, final_refs; Str cast_type, arg_type, key; SI compare( const TypeData &that ) const; };
+    struct           TypeData             { Vec<Str> final_types, final_refs; Str cast_type, arg_type, key; bool owned; SI compare( const TypeData &that ) const; };
     struct           Key                  { Vec<TypeData> type_data; CompilationFlags cf; SI compare( const Key &that ) const; };
 
     /**/            ~VirtualArgList       ();
@@ -44,12 +44,16 @@ void VirtualArgList::add( auto *arg, bool owned ) {
 
     TypeData *ad = key.type_data.push_back();
     ad->arg_type = VFS_NAMESPACE::type_name<T>();
+    ad->owned = owned;
     if constexpr ( VfsArg<T> ) {
         VfsArgTrait<T>::get_cg_data( key.cf, seen_for_cf, ad->cast_type, ad->final_types, ad->final_refs, *arg );
         ad->key = VfsArgTrait<T>::key( *arg );
     } else {
         Str ptr_type = va_string( owned ? "std::unique_ptr<$0> &" : "$0 *", ad->arg_type );
-        ad->final_refs << va_string( "*reinterpret_cast<$0>( {CAST_NAME}.pointers[ $1 ] )", ptr_type, pointers.size() );
+        ad->final_refs << va_string( "$2*reinterpret_cast<$0>( {CAST_NAME}.pointers[ $1 ] )$3", ptr_type, pointers.size(),
+            owned ? "{BEG_ARG_FORWARD}" : "",
+            owned ? "{END_ARG_FORWARD}" : ""
+        );
         ad->final_types << ad->arg_type;
     }
 

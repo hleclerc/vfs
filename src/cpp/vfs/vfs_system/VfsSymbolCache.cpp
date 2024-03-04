@@ -183,8 +183,8 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
 
         // casts
         for( PI i = 0; i < cast_types.size(); ++i ) {
-            bool is_rvalue = cg.arg_types[ i ].ends_with( "&&" ) && ! cg.arg_types[ i ].ends_with( "&" );
-            bool is_const = cg.arg_types[ i ].starts_with( "const " );
+            const bool is_rvalue = cg.arg_types[ i ].ends_with( "&&" );
+            const bool is_const = cg.arg_types[ i ].starts_with( "const " );
 
             if ( cast_types[ i ].size() )
                 cg.add_line( "auto &&$0 = reinterpret_cast<$1$2 $3>( $4 );",
@@ -205,6 +205,7 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
 
                 // final_refs
                 Str ref = final_refs[ i ][ j ];
+                ref = std::regex_replace( ref, std::regex( "\\{BEG_ARG_FORWARD\\}" ), cg.arg_types[ i ].starts_with( "const " ) ? "const " : "" );
                 ref = std::regex_replace( ref, std::regex( "\\{ARG_CSTNESS\\}" ), cg.arg_types[ i ].starts_with( "const " ) ? "const " : "" );
                 ref = std::regex_replace( ref, std::regex( "\\{ARG_REFNESS\\}" ), cg.arg_types[ i ].ends_with( "&&" ) && ! cg.arg_types[ i ].ends_with( "&" ) ? "&&" : "&" );
                 ref = std::regex_replace( ref, std::regex( "\\{FINAL_NAME\\}" ), final_name );
