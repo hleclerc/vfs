@@ -9,7 +9,7 @@ template<class... Ptrs>
 class VirtualArgList_ : public VirtualArgList {
 public:
     TT void destroy_ptr( PI index ) {
-        auto *ptr = reinterpret_cast<T *>( key.type_data[ index ].pointer );
+        auto *ptr = reinterpret_cast<T *>( pointers[ index ] );
         ptr->~T();
     }
 

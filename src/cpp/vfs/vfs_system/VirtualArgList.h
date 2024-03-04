@@ -2,6 +2,7 @@
 
 #include "../support/get_compilation_flags_rec.h"
 #include "../support/CompilationFlags.h"
+#include "../support/string/va_string.h"
 #include "../support/type_name.h"
 #include "VfsArg.h"
 
@@ -11,7 +12,7 @@ BEG_VFS_NAMESPACE
 /// onwed pointers => `delete` at the end of the call
 class VirtualArgList {
 public:
-    struct           TypeData             { Vec<Str> final_types, final_refs; Str cast_type, arg_type, key; void *pointer; SI compare( const TypeData &that ) const; };
+    struct           TypeData             { Vec<Str> final_types, final_refs; Str cast_type, arg_type, key; SI compare( const TypeData &that ) const; };
     struct           Key                  { Vec<TypeData> type_data; CompilationFlags cf; SI compare( const Key &that ) const; };
 
     /**/            ~VirtualArgList       ();
@@ -43,18 +44,18 @@ void VirtualArgList::add( auto *arg, bool owned ) {
     using T = DECAYED_TYPE_OF( *arg );
     get_compilation_flags_rec( key.cf, seen_for_cf, CtType<T>() );
 
+
     TypeData *ad = key.type_data.push_back();
     ad->arg_type = VFS_NAMESPACE::type_name<T>();
-    ad->pointer = arg;
-
     if constexpr ( VfsArg<T> ) {
         VfsArgTrait<T>::get_cg_data( key.cf, seen_for_cf, ad->cast_type, ad->final_types, ad->final_refs, *arg );
         ad->key = VfsArgTrait<T>::key( *arg );
     } else {
+        ad->final_refs << va_string( "*reinterpret_cast<$0 *>( {CAST_NAME}.pointers[ $1 ] )", ad->arg_type, pointers.size() );
         ad->final_types << ad->arg_type;
-        ad->final_refs << "{CAST_NAME}";
     }
-    P( ad->final_types );
+
+    pointers << arg;
 }
 
 END_VFS_NAMESPACE

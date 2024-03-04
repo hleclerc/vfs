@@ -147,6 +147,9 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
         cg.add_preliminary( "USING_VFS_NAMESPACE" );
         cg.func_name = function_name;
         cg.return_type = return_type;
+
+        for( const auto &fr : final_refs )
+            cg.nb_final_refs_from_cast << fr.size();
         cg.cast_types = cast_types;
         cg.arg_types = arg_types;
 

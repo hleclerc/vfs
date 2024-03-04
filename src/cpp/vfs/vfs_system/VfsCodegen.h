@@ -73,6 +73,7 @@ public:
     Vec<Str>       parms;
 
     //
+    Vec<PI>        nb_final_refs_from_cast;
     Vec<Str>       final_types;
     Vec<Str>       final_names;
     Vec<Str>       cast_types;

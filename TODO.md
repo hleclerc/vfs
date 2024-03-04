@@ -90,3 +90,8 @@ Pb du destroy: on doit appliquer la méthode au cast, et pas aux final_refs
   C'était d'ailleurs pour le destroy qu'on est partis sur l'idée de faire un cast
   Prop: on fait un nom du genre "_on_cast_"
 
+Rq de la mort: ça serait qd même bien plus standard de passer par le destructeur pour le cast
+  C'est pas grave si c'est juste pour la destruction
+  Le pb c'est qu'on aimerait bien l'utiliser aussi pour reassign... mais en réalité, le reassign ne devrait faire qu'un move, ce qui est bien supporté par les virtuals
+
+Autre prop: 

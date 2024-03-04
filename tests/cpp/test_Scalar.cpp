@@ -21,6 +21,7 @@
 // }
 
 TEST_CASE( "Scalar from arg list", "" ) {
+    // TODO: vérifier reassign
     VirtualArgList val;
     val.add_owned( new int( 17 ) );
     val.add_owned( new int( 18 ) );
