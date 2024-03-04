@@ -5,6 +5,7 @@
 #include <mutex>
 
 BEG_VFS_NAMESPACE
+template<class Value> std::string type_name();
 
 template<class OS,class... ArgValues>
 void __print_with_mutex( OS &os, const DisplayParameters &dp, std::string_view arg_names, ArgValues &&...arg_values ) {
@@ -16,6 +17,11 @@ void __print_with_mutex( OS &os, const DisplayParameters &dp, std::string_view a
     obj->write_to( os, dp );
     os << std::endl;
     m.unlock();
+}
+
+template<class OS,class... ArgValues>
+void __print_types_with_mutex( OS &os, const DisplayParameters &dp, std::string_view arg_names, ArgValues &&...arg_values ) {
+    __print_with_mutex( os, dp, arg_names, type_name<decltype(arg_values)>()... );
 }
 
 //template<class... ArgValues>
@@ -36,6 +42,10 @@ void __print_with_mutex( OS &os, const DisplayParameters &dp, std::string_view a
     // PRINT in cout with options
     #define PO( VALUE, PARAMS ) \
         __print_with_mutex( std::cout, " -> ", ", ", PARAMS, #VALUE, VALUE )
+
+    // PRINT in cout
+    #define PT( ... ) \
+        VFS_NAMESPACE::__print_types_with_mutex( std::cout, VFS_NAMESPACE::DisplayParameters::for_debug_info(), #__VA_ARGS__, __VA_ARGS__ )
 
     // PRINT with .display in cout with options
     #define PD( VALUE, ... ) \

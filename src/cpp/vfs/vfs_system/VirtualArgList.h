@@ -38,12 +38,9 @@ struct VfsArgTrait<VirtualArgList> {
 
 // implementation
 void VirtualArgList::add( auto *arg, bool owned ) {
-    //         if ( owned )
-    //             casts.push_back( Str( "auto &&{ARG} = std::move( *reinterpret_cast<" ) + type_name + " *>( {ARG_DECL}.pointers[ " + n + " ] ) ); RaiiDelete __raii_del_{ARG}( &{ARG} );" );
     Vec<Str> seen_for_cf;
     using T = DECAYED_TYPE_OF( *arg );
     get_compilation_flags_rec( key.cf, seen_for_cf, CtType<T>() );
-
 
     TypeData *ad = key.type_data.push_back();
     ad->arg_type = VFS_NAMESPACE::type_name<T>();
@@ -51,7 +48,8 @@ void VirtualArgList::add( auto *arg, bool owned ) {
         VfsArgTrait<T>::get_cg_data( key.cf, seen_for_cf, ad->cast_type, ad->final_types, ad->final_refs, *arg );
         ad->key = VfsArgTrait<T>::key( *arg );
     } else {
-        ad->final_refs << va_string( "*reinterpret_cast<$0 *>( {CAST_NAME}.pointers[ $1 ] )", ad->arg_type, pointers.size() );
+        Str ptr_type = va_string( owned ? "std::unique_ptr<$0> &" : "$0 *", ad->arg_type );
+        ad->final_refs << va_string( "*reinterpret_cast<$0>( {CAST_NAME}.pointers[ $1 ] )", ptr_type, pointers.size() );
         ad->final_types << ad->arg_type;
     }
 

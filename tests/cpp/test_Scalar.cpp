@@ -25,5 +25,5 @@ TEST_CASE( "Scalar from arg list", "" ) {
     VirtualArgList val;
     val.add_owned( new int( 17 ) );
     val.add_owned( new int( 18 ) );
-    VFS_CALL( P, CtStringList<>, void, std::move( val ) );
+    VFS_CALL( PT, CtStringList<>, void, std::move( val ) );
 }
