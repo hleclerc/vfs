@@ -6,7 +6,7 @@ try:
     importlib.import_module( ".dylibs", 'vfs_python_interface' )
 except ModuleNotFoundError:
     curdir = os.path.dirname( __file__ )
-    srcdir = os.path.dirname( os.path.dirname( curdir ) )
+    srcdir = os.path.dirname( os.path.dirname( os.path.dirname( curdir ) ) )
     dylib = os.path.join( curdir, 'dylibs', 'vfs_python_interface' + sysconfig.get_config_var( 'EXT_SUFFIX' ) )
     source = os.path.join( srcdir, 'cpp', 'vfs', 'python', 'vfs_python_interface.cpp' )
     cp = subprocess.run( [ 'vfs_build', 'lib', '-o' + shlex.quote( dylib ), source ] )

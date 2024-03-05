@@ -78,15 +78,18 @@ static void list_conv( VirtualArgList &ral, PyObject *list ) {
         Str type = _PyType_Name( Py_TYPE( arg ) );
 
         auto iter = python_to_vfs_function_map.find( type );
-        if ( iter == python_to_vfs_function_map.end() )
+        if ( iter == python_to_vfs_function_map.end() ) {
             PyErr_Format( PyExc_TypeError, "There's no registered vfs correspondance for type \"%s\"", type.c_str() );
+            continue;
+        }
 
         iter->second( sub_ral, arg );
     }
 
     Vec<Str> types;
-    for( PI i = 0; i < sub_ral.type_names.size(); ++i )
-        push_back_unique( types, sub_ral.type_names[ i ] );
+    for( PI i = 0; i < sub_ral.key.type_data.size(); ++i )
+        for( const Str &type : sub_ral.key.type_data[ i ].final_types )
+            push_back_unique( types, type );
     std::sort( types.begin(), types.end() );
 
     if ( types.empty() ) {
@@ -97,17 +100,18 @@ static void list_conv( VirtualArgList &ral, PyObject *list ) {
 
     // we assume here that the dependancies and memory layout is going to be the same in the final type
     using ExHA = HeterogeneousArray<CtTypeList<SI64>>;
-    ExHA::get_compilation_flags( ral.cf );
-    ral.cf << sub_ral.cf;
+    ExHA::get_compilation_flags( ral.key.cf );
+    ral.key.cf << sub_ral.key.cf;
 
     Str type = va_string( "HeterogeneousArray<CtTypeList<$0>>", join( types, "," ) );
-    auto *ptr = new HeterogeneousArray<CtTypeList<SI64>>;
+    auto ptr = std::make_unique<HeterogeneousArray<CtTypeList<SI64>>>();
     for( PI i = 0; i < n; ++i ) {
-        ptr->type_numbers.push_back( std::find( types.begin(), types.end(), sub_ral.type_names[ i ] ) - types.begin() );
+        ptr->type_numbers.push_back( std::find( types.begin(), types.end(), sub_ral.key.type_data[ i ].final_types[ 0 ] ) - types.begin() );
         ptr->pointers.push_back( sub_ral.pointers[ i ] );
     }
 
-    ral.add( ptr, /*owned*/true, type, "", /*lcasts*/nullptr );
+    TODO;
+    ral.add( std::move( ptr ), /*owned*/true );
 }
 
 // PythonVfsAnyWrapper ---------------------------------------------------------------------------------------------------------------------

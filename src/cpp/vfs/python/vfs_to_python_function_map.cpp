@@ -16,7 +16,7 @@ ON_INIT {
     VFS_ADD_SURDEF( "vfs_to_python", "obj" ) {
         cg.add_inc_path( "`python3-config --includes`" );
 
-        Str rt( decay( cg.real_type( 0 ) ) );
+        Str rt( cg.final_types[ 0 ] );
         auto p = rt.find( "<" );
         if ( p != rt.npos )
             rt = rt.substr( 0, p );

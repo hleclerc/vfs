@@ -1,4 +1,4 @@
-import vfs 
+from vfs.cpp_link import function 
 
-f = vfs.function( "P" )
+f = function( "P" )
 f( 10 )

@@ -23,6 +23,7 @@ void VfsDtTypeAncestor::register_the_new_types() {
 
 VfsDtTypeAncestor *VfsDtTypeAncestor::type_at_global_index( PI32 index ) {
     register_the_new_types();
+    P( index, all_the_types.size() );
     ASSERT( index < all_the_types.size() );
     return all_the_types[ index ];
 }
