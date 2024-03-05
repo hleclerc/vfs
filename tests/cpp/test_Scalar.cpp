@@ -21,8 +21,11 @@
 // }
 
 TEST_CASE( "Scalar from arg list", "" ) {
-    const int a = 12;
-    Scalar s( FromPointerOnBorrowed(), &a );
-    VFS_CALL( PT, CtStringList<>, void, s );
-    VFS_CALL( PT, CtStringList<>, void, std::move( s ) );
+    int a = 43;
+    Scalar b = 17;
+
+    VirtualArgList va;
+    va.add_owned( &a );
+    va.add_owned( &b );
+    VFS_CALL( PT, CtStringList<>, void, std::move( va ) );
 }

@@ -5,6 +5,7 @@
 #include "../support/string/va_string.h"
 #include "../support/type_name.h"
 #include "VfsArg.h"
+#include <regex>
 
 BEG_VFS_NAMESPACE
 
@@ -52,6 +53,15 @@ void VirtualArgList::add( auto &&ptr, bool owned ) {
     if constexpr ( VfsArg<T> ) {
         VfsArgTrait<T>::get_cg_data( key.cf, seen_for_cf, ad->cast_type, ad->final_types, ad->final_refs, *ptr );
         ad->key = VfsArgTrait<T>::key( *ptr );
+
+        ad->cast_type = va_string( "typename PtrCast<$0,$1>::type", ad->ptr_type, ad->cast_type );
+        key.cf.add_inc_file( "vfs/support/PtrCast.h" );
+
+        for( Str &final_ref : ad->final_refs ) {
+            final_ref = std::regex_replace( final_ref, std::regex( "\\{CAST_NAME\\}" ), va_string( "( *reinterpret_cast<$0 &>( {CAST_NAME}.pointers[ $1 ] ) )", ad->cast_type, pointers.size() ) );
+            if ( owned )
+                final_ref = "{BEG_ARG_FORWARD}" + final_ref + "{END_ARG_FORWARD}";
+        }
     } else {
         ad->final_refs << va_string( "$2*reinterpret_cast<$0 &>( {CAST_NAME}.pointers[ $1 ] )$3", ad->ptr_type, pointers.size(),
             owned ? "{BEG_ARG_FORWARD}" : "",

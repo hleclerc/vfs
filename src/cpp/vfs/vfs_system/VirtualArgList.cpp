@@ -2,7 +2,7 @@
 #include "../support/string/join.h"
 #include "VirtualArgList.h"
 #include "VfsFunc.h"
-//#include <regex>
+#include <regex>
 
 BEG_VFS_NAMESPACE
 
