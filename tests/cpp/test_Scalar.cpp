@@ -20,12 +20,19 @@
 //     //     // P( b );
 // }
 
+// TEST_CASE( "Scalar from arg list", "" ) {
+//     int a = 43;
+//     Scalar b = 17;
+
+//     VirtualArgList va;
+//     va.add_owned( &a );
+//     va.add_owned( &b );
+//     VFS_CALL( PT, CtStringList<>, void, std::move( va ) );
+// }
+
 TEST_CASE( "Scalar from arg list", "" ) {
-    int a = 43;
     Scalar b = 17;
 
-    VirtualArgList va;
-    va.add_owned( &a );
-    va.add_owned( &b );
-    VFS_CALL( PT, CtStringList<>, void, std::move( va ) );
+    VFS_CALL( PT, CtStringList<>, void, b );
+    VFS_CALL( PT, CtStringList<>, void, std::move( b ) );
 }
