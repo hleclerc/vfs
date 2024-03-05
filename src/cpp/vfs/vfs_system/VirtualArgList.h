@@ -12,7 +12,7 @@ BEG_VFS_NAMESPACE
 /// onwed pointers => `delete` at the end of the call
 class VirtualArgList {
 public:
-    struct           TypeData             { Vec<Str> final_types, final_refs; Str cast_type, arg_type, key; bool owned; SI compare( const TypeData &that ) const; };
+    struct           TypeData             { Vec<Str> final_types, final_refs; Str cast_type, key, ptr_type, ref_type; bool owned; SI compare( const TypeData &that ) const; };
     struct           Key                  { Vec<TypeData> type_data; CompilationFlags cf; SI compare( const Key &that ) const; };
 
     /**/            ~VirtualArgList       ();
@@ -21,9 +21,9 @@ public:
     static Str       type_name            ();
     SI               compare              ( const VirtualArgList &that ) const;
 
-    void             add_borrowed         ( auto *arg ) { add( arg, false ); }
-    void             add_owned            ( auto *arg ) { add( arg, true ); }
-    void             add                  ( auto *arg, bool owned );
+    void             add_borrowed         ( auto &&ptr ) { add( FORWARD( ptr ), false ); }
+    void             add_owned            ( auto &&ptr ) { add( FORWARD( ptr ), true ); }
+    void             add                  ( auto &&ptr, bool owned );
 
     Vec<void*>       pointers;
     Key              key;
@@ -37,27 +37,30 @@ struct VfsArgTrait<VirtualArgList> {
 };
 
 // implementation
-void VirtualArgList::add( auto *arg, bool owned ) {
+void VirtualArgList::add( auto &&ptr, bool owned ) {
+    static_assert( sizeof( ptr ) == sizeof( void * ) );
+    using T = DECAYED_TYPE_OF( *ptr );
+    using P = DECAYED_TYPE_OF( ptr );
+
     Vec<Str> seen_for_cf;
-    using T = DECAYED_TYPE_OF( *arg );
-    get_compilation_flags_rec( key.cf, seen_for_cf, CtType<T>() );
+    get_compilation_flags_rec( key.cf, seen_for_cf, CtType<P>() );
 
     TypeData *ad = key.type_data.push_back();
-    ad->arg_type = VFS_NAMESPACE::type_name<T>();
+    ad->ptr_type = VFS_NAMESPACE::type_name<P>();
+    ad->ref_type = VFS_NAMESPACE::type_name<T>();
     ad->owned = owned;
     if constexpr ( VfsArg<T> ) {
-        VfsArgTrait<T>::get_cg_data( key.cf, seen_for_cf, ad->cast_type, ad->final_types, ad->final_refs, *arg );
-        ad->key = VfsArgTrait<T>::key( *arg );
+        VfsArgTrait<T>::get_cg_data( key.cf, seen_for_cf, ad->cast_type, ad->final_types, ad->final_refs, *ptr );
+        ad->key = VfsArgTrait<T>::key( *ptr );
     } else {
-        Str ptr_type = va_string( owned ? "std::unique_ptr<$0> &" : "$0 *", ad->arg_type );
-        ad->final_refs << va_string( "$2*reinterpret_cast<$0>( {CAST_NAME}.pointers[ $1 ] )$3", ptr_type, pointers.size(),
+        ad->final_refs << va_string( "$2*reinterpret_cast<$0 &>( {CAST_NAME}.pointers[ $1 ] )$3", ad->ptr_type, pointers.size(),
             owned ? "{BEG_ARG_FORWARD}" : "",
             owned ? "{END_ARG_FORWARD}" : ""
         );
-        ad->final_types << ad->arg_type;
+        ad->final_types << ad->ref_type;
     }
 
-    pointers << arg;
+    *reinterpret_cast<P *>( pointers.push_back() ) = FORWARD( ptr );
 }
 
 END_VFS_NAMESPACE

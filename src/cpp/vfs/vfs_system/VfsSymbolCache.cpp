@@ -200,14 +200,18 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
 
         // finals
         for( PI i = 0, n = 0; i < final_refs.size(); ++i ) {
+            const bool is_rvalue = cg.arg_types[ i ].ends_with( "&&" );
+            const bool is_const = cg.arg_types[ i ].starts_with( "const " );
+
             for( PI j = 0; j < final_refs[ i ].size(); ++j, ++n ) {
                 Str final_name = cg.final_names[ n ];
 
                 // final_refs
                 Str ref = final_refs[ i ][ j ];
-                ref = std::regex_replace( ref, std::regex( "\\{BEG_ARG_FORWARD\\}" ), cg.arg_types[ i ].starts_with( "const " ) ? "const " : "" );
-                ref = std::regex_replace( ref, std::regex( "\\{ARG_CSTNESS\\}" ), cg.arg_types[ i ].starts_with( "const " ) ? "const " : "" );
-                ref = std::regex_replace( ref, std::regex( "\\{ARG_REFNESS\\}" ), cg.arg_types[ i ].ends_with( "&&" ) && ! cg.arg_types[ i ].ends_with( "&" ) ? "&&" : "&" );
+                ref = std::regex_replace( ref, std::regex( "\\{BEG_ARG_FORWARD\\}" ), is_rvalue ? "std::move( " : "" );
+                ref = std::regex_replace( ref, std::regex( "\\{END_ARG_FORWARD\\}" ), is_rvalue ? " )" : "" );
+                ref = std::regex_replace( ref, std::regex( "\\{ARG_CSTNESS\\}" ), is_const ? "const " : "" );
+                ref = std::regex_replace( ref, std::regex( "\\{ARG_REFNESS\\}" ), is_rvalue ? "&&" : "&" );
                 ref = std::regex_replace( ref, std::regex( "\\{FINAL_NAME\\}" ), final_name );
                 ref = std::regex_replace( ref, std::regex( "\\{CAST_NAME\\}" ), cg.cast_names[ i ] );
                 ref = std::regex_replace( ref, std::regex( "\\{CAST_TYPE\\}" ), cg.cast_types[ i ] );

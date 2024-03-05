@@ -15,6 +15,7 @@ TTA auto template_type_name( CtType<std::function<T(A...)>> ) { return "std::fun
 
 DECL_BASE_TYPE_INFO_T_( std::initializer_list );
 DECL_BASE_TYPE_INFO_A_( CtTypeList            );
+DECL_BASE_TYPE_INFO_T_( UniquePtr             );
 DECL_BASE_TYPE_INFO_T_( CtType                );
 DECL_BASE_TYPE_INFO_A_( Tuple                 );
 DECL_BASE_TYPE_INFO_UV( Pair                  );

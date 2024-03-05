@@ -16,8 +16,8 @@ void VfsArgTrait<VirtualArgList>::get_cg_data( CompilationFlags &cf, Vec<Str> &s
 
     Vec<Str> ptr_types;
     for( const VirtualArgList::TypeData &ad : obj.key.type_data ) {
-        Str cast_type = ad.cast_type.size() ? ad.cast_type : ad.arg_type;
-        ptr_types << va_string( ad.owned ? "std::unique_ptr<$0> &" :  "$0 *", cast_type );
+        Str cast_type = ad.cast_type.size() ? ad.cast_type : ad.ptr_type;
+        ptr_types << cast_type;
         for( const Str &final_type : ad.final_types )
             final_types << final_type;
         for( const Str &final_ref : ad.final_refs )
@@ -44,7 +44,8 @@ SI VirtualArgList::TypeData::compare( const TypeData &that ) const {
         final_types, that.final_types,
         final_refs, that.final_refs,
         cast_type, that.cast_type,
-        arg_type, that.arg_type,
+        ptr_type, that.ptr_type,
+        ref_type, that.ref_type,
         owned, that.owned,
         key, that.key
     );

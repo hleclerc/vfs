@@ -37,6 +37,7 @@ DECL_TYPE_NAME( void );
 DECL_TYPE_NAME( Str  );
 #undef DECL_DECL_TYPE_NAME
 
+
 // special cases
 template<class T,class... A> Str type_name( CtType<std::function<T(A...)>> ) {
     Str res;
@@ -45,8 +46,8 @@ template<class T,class... A> Str type_name( CtType<std::function<T(A...)>> ) {
 }
 
 // helpers for the generic version
-TT auto CtType<T>::to_string() { return type_name( CtType<CtType<value>>{} ); }
-TT auto *CtType<T>::display( auto &ds ) { return ds.string( to_string() ); }
+TT auto CtType<T>::to_string() { return type_name( CtType<T>() ); }
+TT auto *CtType<T>::display( auto &ds ) { return ds.string( Str( "CtType<" ) + to_string() + ">" ); }
 
 // generic version
 TT Str type_name( CtType<T> ) {

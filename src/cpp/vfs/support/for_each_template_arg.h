@@ -15,6 +15,7 @@ TTA void for_each_template_arg( CtType<std::function<T(A...)>>, auto &&f ) { f( 
 
 DECL_BASE_TYPE_INFO_T_( std::initializer_list );
 DECL_BASE_TYPE_INFO_A_( CtTypeList            );
+DECL_BASE_TYPE_INFO_T_( UniquePtr             );
 DECL_BASE_TYPE_INFO_T_( CtType                );
 DECL_BASE_TYPE_INFO_A_( Tuple                 );
 DECL_BASE_TYPE_INFO_UV( Pair                  );

@@ -8,9 +8,9 @@ BEG_VFS_NAMESPACE
 template<class... Ptrs>
 class VirtualArgList_ : public VirtualArgList {
 public:
-    TT void destroy_ptr( PI index ) {
-        auto *ptr = reinterpret_cast<T *>( pointers[ index ] );
-        ptr->~T();
+    template<class Ptr> void destroy_ptr( PI index ) {
+        auto &ptr = reinterpret_cast<Ptr &>( pointers[ index ] );
+        ptr.~Ptr();
     }
 
     void destroy() {

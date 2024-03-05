@@ -22,8 +22,10 @@
 
 TEST_CASE( "Scalar from arg list", "" ) {
     // TODO: vérifier reassign
+    int a = 43;
     VirtualArgList val;
-    val.add_owned( new int( 17 ) );
-    val.add_owned( new int( 18 ) );
-    VFS_CALL( PT, CtStringList<>, void, std::move( val ) );
+    val.add_borrowed( &a );
+    val.add_owned( std::make_unique<int>( 18 ) );
+    VFS_CALL( PT, CtStringList<>, void, val );
+    VFS_CALL( P, CtStringList<>, void, std::move( val ) );
 }

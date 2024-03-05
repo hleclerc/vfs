@@ -3,6 +3,7 @@
 #include "common_macros.h"
 #include <string_view>
 #include <cstdint>
+#include <memory>
 #include <string>
 
 BEG_VFS_NAMESPACE
@@ -30,6 +31,7 @@ using       FP64                       = double;
 using       FP32                       = float;
 
 // common std types
+TT using    UniquePtr                  = std::unique_ptr<T>;
 using       StrView                    = std::string_view;
 TA using    Tuple                      = std::tuple<A...>;
 TUV using   Pair                       = std::pair<U,V>;
