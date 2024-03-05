@@ -21,11 +21,8 @@
 // }
 
 TEST_CASE( "Scalar from arg list", "" ) {
-    // TODO: vérifier reassign
-    int a = 43;
-    VirtualArgList val;
-    val.add_borrowed( &a );
-    val.add_owned( std::make_unique<int>( 18 ) );
-    VFS_CALL( PT, CtStringList<>, void, val );
-    VFS_CALL( P, CtStringList<>, void, std::move( val ) );
+    const int a = 12;
+    Scalar s( FromPointerOnBorrowed(), &a );
+    VFS_CALL( PT, CtStringList<>, void, s );
+    VFS_CALL( PT, CtStringList<>, void, std::move( s ) );
 }

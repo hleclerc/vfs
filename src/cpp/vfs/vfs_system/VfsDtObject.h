@@ -1,8 +1,8 @@
 #pragma once
 
 // #include "../support/type_promote.h" // IWYU pragma: export
-#include "VfsRefAccessDirect.h"
-#include "VfsRefAccessDeref.h"
+#include "VfsRefAccessDirect.h" // IWYU pragma: export
+#include "VfsRefAccessDeref.h" // IWYU pragma: export
 #include "VfsArgTrait.h"
 #include "VfsDtWrap.h" // IWYU pragma: export
 #include "VfsDtType.h" // IWYU pragma: export
@@ -69,13 +69,14 @@ struct VfsArgTrait<Obj> {
     static auto          type_name            () { return #NAME; } \
     \
     /**/                 NAME                 ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, static_cast<VfsDtObject<_vdo_inline_data_size,_vdo_inline_data_alig> &>( *this ), CtTypeList<VfsRefAccessDirect>(), CtType<NAME>(), FORWARD( ct_type ), FORWARD( args )... ); } \
-    /**/                 NAME                 ( FromPointer, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, static_cast<VfsDtObject<_vdo_inline_data_size,_vdo_inline_data_alig> &>( *this ), CtTypeList<VfsRefAccessDeref<VfsRefAccessDirect,true>>(), CtType<NAME>(), CT_DECAYED_TYPE_OF( pointer ), FORWARD( pointer ) ); } \
+    /**/                 NAME                 ( FromPointerOnBorrowed, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, static_cast<VfsDtObject<_vdo_inline_data_size,_vdo_inline_data_alig> &>( *this ), CtTypeList<VfsRefAccessDeref<VfsRefAccessDirect,true>>(), CtType<NAME>(), CT_DECAYED_TYPE_OF( pointer ), FORWARD( pointer ) ); } \
+    /**/                 NAME                 ( FromPointerOnOwned, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, CtStringList<>, void, static_cast<VfsDtObject<_vdo_inline_data_size,_vdo_inline_data_alig> &>( *this ), CtTypeList<VfsRefAccessDeref<VfsRefAccessDirect,false>>(), CtType<NAME>(), CT_DECAYED_TYPE_OF( pointer ), FORWARD( pointer ) ); } \
     /**/                 NAME                 ( FromValue, auto &&value ) : NAME( FromTypeAndCtorArguments(), CT_DECAYED_TYPE_OF( value ), FORWARD( value ) ) {} \
     /**/                 NAME                 ( const NAME &that ) : NAME( FromValue(), that ) {} \
     /**/                 NAME                 ( NAME &&that ) : NAME( FromValue(), std::move( that ) ) {} \
     /**/                 NAME                 ( auto &&...args ) requires requires { vfs_dt_impl_type( CtType<NAME>(), args... ); } : NAME( FromTypeAndCtorArguments(), vfs_dt_impl_type( CtType<NAME>(), args... ), FORWARD( args )... ) {} \
     \
-    /**/                ~NAME                 () { VFS_CALL( destroy, CtStringList<>, void, *this ); } \
+    /**/                ~NAME                 () { VFS_CALL_CAST_METHOD( destroy, CtStringList<>, void, *this ); } \
     \
     NAME&                operator=            ( const NAME &that ) { VFS_CALL( vfs_td_reassign, CtStringList<>, void, *this, that ); return *this; } \
     NAME&                operator=            ( NAME &&that ) { VFS_CALL( vfs_td_reassign, CtStringList<>, void, *this, std::move( that ) ); return *this; } \
