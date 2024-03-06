@@ -39,9 +39,12 @@ PyObject *function( PyObject *self, PyObject *args, PyObject *kwargs ) {
     if ( name.empty() )
         return PyErr_Format( PyExc_TypeError, "Please specify at least the name of the function" );
 
+    P( "name" );
+
     auto *res = PyObject_NEW( PythonVfsAnyWrapper, &pytype_PythonVfsAnyWrapper );
     new ( &res->obj ) Any( VirtualFunction{ .name = name, .cf = cf } );
     Py_IncRef( (PyObject *)res );
+    P( res->obj );
     return (PyObject *)res;
 }
 
@@ -57,7 +60,7 @@ PyObject *add_global_cpp_flag( PyObject *self, PyObject *args, PyObject *kwargs 
 }
 
 PyMethodDef funcs[] = {
-    { "function", (PyCFunction)function, METH_VARARGS | METH_KEYWORDS, "Load a function by using name + optionnal list of include directories." },
+    { "function", (PyCFunction)function, METH_VARARGS | METH_KEYWORDS, "Load a function by using name + optionnal list of compilation flags." },
     { "add_global_cpp_flag", (PyCFunction)add_global_cpp_flag, METH_VARARGS, "Add a global cpp flag for compilation of generated files." },
     { NULL }
 };

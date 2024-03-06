@@ -30,8 +30,10 @@ static PyObject *__call__( PythonVfsAnyWrapper *self, PyObject *args, PyObject *
 
     // arguments
     PI nb_args = PyTuple_GET_SIZE( args );
-    VirtualArgList ral;
 
+    P( nb_args );
+
+    VirtualArgList ral;
     for( PI i = 0; i < nb_args; ++i ) {
         // get type correspondance
         PyObject *arg = PyTuple_GetItem( args, i );
