@@ -32,12 +32,7 @@
 // }
 
 TEST_CASE( "Scalar from arg list", "" ) {
-    Scalar a;
-    // Any b = a;
+    Scalar a = 17;
+    a = a + 2;
     P( a );
-    // P( b );
-
-    // P( b );
-    // VFS_CALL( PT, CtStringList<>, void, b );
-    // VFS_CALL( PT, CtStringList<>, void, std::move( b ) );
 }

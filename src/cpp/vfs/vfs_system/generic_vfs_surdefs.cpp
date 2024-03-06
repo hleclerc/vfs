@@ -1,3 +1,4 @@
+#include "../support/string/decay.h"
 #include "VfsSymbolCache.h"
 
 BEG_VFS_NAMESPACE
@@ -72,7 +73,8 @@ ON_INIT {
             return cg.valid();
         }
 
-        cg.add_line( "self_decl = FORWARD( that_decl );" );
+        cg.add_line( "self_decl.~$0();", decay( cg.arg_types[ 0 ] ) );
+        cg.add_line( "new ( &self_decl ) $0( FORWARD( that ) );", decay( cg.arg_types[ 0 ] ) );
         return cg.valid();
     };
 

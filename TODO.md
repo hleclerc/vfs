@@ -96,3 +96,8 @@ Rq de la mort: ça serait qd même bien plus standard de passer par le destructe
 
 Pourquoi on ne trouve pas tous les surdefs alors qu'on a vfs_to_python_function_map au complet ?
   
+Si on fait
+  *  Scalar + Scalar => 
+  *  Scalar + Vector
+
+

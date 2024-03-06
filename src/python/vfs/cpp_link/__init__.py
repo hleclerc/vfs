@@ -3,8 +3,8 @@ sys.setdlopenflags( os.RTLD_GLOBAL | os.RTLD_LAZY )
 
 # make cpp module if necessary ------------------------------------------------------------------------
 try:
-    raise ModuleNotFoundError
-    # from .dylibs import vfs_python_interface
+    # raise ModuleNotFoundError
+    from .dylibs import vfs_python_interface
 except ( ModuleNotFoundError, ImportError ):
     curdir = os.path.dirname( __file__ )
     srcdir = os.path.dirname( os.path.dirname( os.path.dirname( curdir ) ) )
@@ -14,9 +14,11 @@ except ( ModuleNotFoundError, ImportError ):
     cp = subprocess.run( args )
     if cp.returncode:
         sys.exit( cp.returncode )
+    from .dylibs import vfs_python_interface
 
 # import the cpp module -------------------------------------------------------------------------------
-from .dylibs.vfs_python_interface import function, add_global_cpp_flag
+add_global_cpp_flag = vfs_python_interface.add_global_cpp_flag
+function = vfs_python_interface.function
 
 # pure python -----------------------------------------------------------------------------------------
 def method( name, comp_flags = None ):

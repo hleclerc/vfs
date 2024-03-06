@@ -4,7 +4,7 @@
 
 BEG_VFS_NAMESPACE
 
-class Scalar {
+class Scalar : public WithDefaultOperators {
 public:
     VfsDtObject_STD_METHODS( Scalar, "vfs", sizeof( void * ), alignof( void * ) );
 };

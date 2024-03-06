@@ -14,7 +14,7 @@ struct CtInt : public WithDefaultOperators {
     static auto           template_type_name    () { return "CtInt"; }
     static constexpr bool always_equal          ( int v ) { return v == i; }
     static auto           to_string             () { return std::to_string( value ); }
-    static constexpr int  ct_value              () { return value; }
+    static constexpr int  ct_value              () { return value; } // used in default_operators
 
     static auto           apply_ct              ( int v, auto &&func, auto &&...args ) {
         if constexpr ( i == 0 )
