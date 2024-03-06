@@ -5,19 +5,19 @@ BEG_VFS_NAMESPACE
 ON_INIT {
     // generic forwarders -------------------------------------------------------------------------------------------------------------------------------------------------
     // forward call
-    VFS_ADD_SURDEF( ".*" ) {
+    VFS_ADD_SURDEF( "*" ) {
         cg.add_line( "return $0( $1 );", cg.func_name, join( cg.forwarded_args() ) );
         return cg.valid( { -1e6 } );
     };
 
     // forward method call
-    VFS_ADD_SURDEF( ".*__method" ) {
+    VFS_ADD_SURDEF( "*__method" ) {
         cg.add_line( "return $0.$1( $2 );", cg.final_names[ 0 ], cg.func_name.substr( 0, cg.func_name.size() - 8 ), join( cg.forwarded_args_from( 1 ) ) );
         return cg.valid( { -1e6 + 1 } );
     };
 
     // forward method call with _cast instead of final_ref
-    VFS_ADD_SURDEF( ".*__cast_method" ) {
+    VFS_ADD_SURDEF( "*__cast_method" ) {
         cg.add_line( "return $0.$1( $2 );", cg.cast_names[ 0 ], cg.func_name.substr( 0, cg.func_name.size() - 13 ), join( cg.forwarded_args_from( cg.nb_final_refs_from_cast[ 0 ] ) ) );
         return cg.valid( { -1e6 + 1 } );
     };
@@ -39,6 +39,27 @@ ON_INIT {
         // forward args
         //cg.add_line( "return __apply( CtInt<std::is_same_v<void,decltype( func( $0 ) )>>{}, $1 );", join( cg.forwarded_args_from( 1 ) ), join( cg.forwarded_args() ) );
         cg.add_line( "return func( $0 );", join( cg.forwarded_args_from( 1 ) ) );
+        return cg.valid();
+    };
+
+    // call_to_Void_if_void( func, args... ) => return a Void() if func does not return anything. Else, return what func gives to us
+    VFS_ADD_SURDEF( "call_to_Void_if_void", "func" ) {
+        // intermediate function to replace an inline `if constexpr ( std::is_same_v<void,...> )` that does not work as expected (at least for g++-13.2)
+        cg.add_prel_block( [&]( VfsCodegen &cg ) {
+            cg.add_line( "auto __apply( CtInt<0>, auto &&func, auto &&...args ) {" );
+            cg.add_line( "return func( FORWARD( args )... );" );
+            cg.add_line( "}" );
+            cg.add_line( "" );
+            cg.add_line( "auto __apply( CtInt<1>, auto &&func, auto &&...args ) {" );
+            cg.add_line( "func( FORWARD( args )... );" );
+            cg.add_line( "return Void{};" );
+            cg.add_line( "}" );
+        } );
+
+        // forward args
+        cg.add_line( "using Ret = DECAYED_TYPE_OF( func( $0 ) );", join( cg.forwarded_args_from( 1 ) ) );
+        cg.add_line( "constexpr bool ret_void = std::is_same_v<Ret,void>;" );
+        cg.add_line( "return __apply( CtInt<ret_void>(), FORWARD( func ), $0 );", join( cg.forwarded_args_from( 1 ) ) );
         return cg.valid();
     };
 

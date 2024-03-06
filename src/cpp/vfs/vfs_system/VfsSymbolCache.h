@@ -6,7 +6,6 @@
 #include "VfsCodegen.h"
 #include <filesystem>
 #include <functional>
-#include <regex>
 #include <map>
 
 BEG_VFS_NAMESPACE
@@ -22,13 +21,13 @@ public:
     /**/            VfsSymbolCache         ();
     
     void            register_func          ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types, void *symbol );
-    SurdefFunc&     add_surdef             ( const Str &file, int line, const std::regex &name, const Vec<Str> &arg_names = {} );
+    SurdefFunc&     add_surdef             ( const Str &file, int line, const Str &name, const Vec<Str> &arg_names = {} );
     void*           find_func              ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types );
     
     static Vec<Str> global_cpp_flags;
 
 private:
-    struct          Surdef                 { Str file; int line; std::regex name; Vec<Str> arg_names; SurdefFunc f; Str arg_name( PI i ) const; };
+    struct          Surdef                 { Str file; int line; Str name; Vec<Str> arg_names; SurdefFunc f; Str arg_name( PI i ) const; };
 
     Str             make_tmp_file          ( PI64 base );
     void*           load_lib_for           ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types );
@@ -46,7 +45,7 @@ private:
 extern std::filesystem::path vfs_symbol_source_directory;
 extern VfsSymbolCache vfs_symbol_cache;
 
-#define VFS_ADD_SURDEF( REGEX, ... ) \
-    vfs_symbol_cache.add_surdef( __FILE__, __LINE__, std::regex( REGEX ), { __VA_ARGS__ } ) = [&]( VfsCodegen &cg ) -> VfsSurdefStage
+#define VFS_ADD_SURDEF( PATTERN, ... ) \
+    vfs_symbol_cache.add_surdef( __FILE__, __LINE__, PATTERN, { __VA_ARGS__ } ) = [&]( VfsCodegen &cg ) -> VfsSurdefStage
 
 END_VFS_NAMESPACE

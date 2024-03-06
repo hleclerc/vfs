@@ -1,3 +1,5 @@
+#include "../support/string/string_simple_match.h"
+#include "../support/string/string_replace.h"
 #include "../support/string/va_string.h"
 #include "../support/string/read_file.h"
 #include "../support/string/ctor_for.h"
@@ -32,7 +34,7 @@ void VfsSymbolCache::register_func( const Str &name, const Str &return_type, con
     loaded_symbols[ key ] = symbol;
 }
 
-VfsSymbolCache::SurdefFunc &VfsSymbolCache::add_surdef( const Str &file, int line, const std::regex &name, const Vec<Str> &arg_names ) {
+VfsSymbolCache::SurdefFunc &VfsSymbolCache::add_surdef( const Str &file, int line, const Str &name, const Vec<Str> &arg_names ) {
     PI size = surdefs.size();
     surdefs.push_back( Surdef{ file, line, name, arg_names } );
     return surdefs[ size ].f;
@@ -208,14 +210,14 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
 
                 // final_refs
                 Str ref = final_refs[ i ][ j ];
-                ref = std::regex_replace( ref, std::regex( "\\{BEG_ARG_FORWARD\\}" ), is_rvalue ? "std::move( " : "" );
-                ref = std::regex_replace( ref, std::regex( "\\{END_ARG_FORWARD\\}" ), is_rvalue ? " )" : "" );
-                ref = std::regex_replace( ref, std::regex( "\\{ARG_CSTNESS\\}" ), is_const ? "const " : "" );
-                ref = std::regex_replace( ref, std::regex( "\\{ARG_REFNESS\\}" ), is_rvalue ? "&&" : "&" );
-                ref = std::regex_replace( ref, std::regex( "\\{FINAL_NAME\\}" ), final_name );
-                ref = std::regex_replace( ref, std::regex( "\\{CAST_NAME\\}" ), cg.cast_names[ i ] );
-                ref = std::regex_replace( ref, std::regex( "\\{CAST_TYPE\\}" ), cg.cast_types[ i ] );
-                ref = std::regex_replace( ref, std::regex( "\\{ARG_NAME\\}" ), cg.arg_names[ i ] );
+                ref = string_replace( ref, "{BEG_ARG_FORWARD}", is_rvalue ? "std::move( " : "" );
+                ref = string_replace( ref, "{END_ARG_FORWARD}", is_rvalue ? " )" : "" );
+                ref = string_replace( ref, "{ARG_CSTNESS}", is_const ? "const " : "" );
+                ref = string_replace( ref, "{ARG_REFNESS}", is_rvalue ? "&&" : "&" );
+                ref = string_replace( ref, "{FINAL_NAME}", final_name );
+                ref = string_replace( ref, "{CAST_NAME}", cg.cast_names[ i ] );
+                ref = string_replace( ref, "{CAST_TYPE}", cg.cast_types[ i ] );
+                ref = string_replace( ref, "{ARG_NAME}", cg.arg_names[ i ] );
 
                 cg.add_line( "auto &&$0 = $1;", final_name, ref.size() ? ref : cg.cast_names[ i ] );
             }
@@ -237,8 +239,10 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
     // find surdef
     Vec<SurdefTrial> surdef_trials;
     Vec<double> best_pertinence{ std::numeric_limits<double>::lowest() };
+    P( function_name, "-------------------------" );
     for( const Surdef &surdef : surdefs ) {
-        if ( ! std::regex_search( function_name, surdef.name ) )
+        P( surdef.name );
+        if ( ! string_simple_match( function_name, surdef.name ) )
             continue;
 
         SurdefTrial surdef_trial = try_surdef( surdef );

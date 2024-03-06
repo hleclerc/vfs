@@ -2,10 +2,7 @@
 #include "python_to_vfs_function_map.h"
 #include "PythonVfsAnyWrapper.h"
 
-// because we will need surdefs
-//// nsmake obj_name vfs_to_python_function_map.cpp
-//// nsmake obj_name ../Type.cpp
-#include "vfs_to_python_function_map.h"
+#include "vfs_to_python_function_map.h" // IWYU pragma: export
 #include <vfs/Type.h>
 
 BEG_VFS_NAMESPACE
@@ -31,8 +28,6 @@ static PyObject *__call__( PythonVfsAnyWrapper *self, PyObject *args, PyObject *
     // arguments
     PI nb_args = PyTuple_GET_SIZE( args );
 
-    P( nb_args );
-
     VirtualArgList ral;
     for( PI i = 0; i < nb_args; ++i ) {
         // get type correspondance
@@ -50,9 +45,11 @@ static PyObject *__call__( PythonVfsAnyWrapper *self, PyObject *args, PyObject *
     }
 
     // call func, with return data in an `Any` vfs object
-    Any ares = VFS_CALL( call, CtStringList<>, Any, self->obj, ral );
+    Any ares = VFS_CALL( call_to_Void_if_void, CtStringList<>, Any, self->obj, ral );
 
     // conversion to a python object
+    for( const auto &p : vfs_to_python_function_map )
+        P( p.first );
     return VFS_CALL( vfs_to_python, CtStringList<>, PyObject *, std::move( ares ) );
 }
 

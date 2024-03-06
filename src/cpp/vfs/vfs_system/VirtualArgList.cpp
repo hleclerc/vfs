@@ -2,12 +2,11 @@
 #include "../support/string/join.h"
 #include "VirtualArgList.h"
 #include "VfsFunc.h"
-#include <regex>
 
 BEG_VFS_NAMESPACE
 
 VirtualArgList::~VirtualArgList() {
-    VFS_CALL_CAST_METHOD( destroy, CtStringList<>, void, *this );
+    VFS_CALL_CAST_METHOD( destroy, void, *this );
 }
 
 void VfsArgTrait<VirtualArgList>::get_cg_data( CompilationFlags &cf, Vec<Str> &seen_for_cf, Str &cast_type, Vec<Str> &final_types, Vec<Str> &final_refs, const VirtualArgList &obj ) {

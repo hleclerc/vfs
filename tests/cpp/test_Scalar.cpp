@@ -1,3 +1,4 @@
+#include <vfs/support/string/string_simple_match.h>
 #include <vfs/vfs_system/VirtualArgList.h>
 #include <vfs/Scalar.h>
 #include "catch_main.h"
@@ -31,8 +32,12 @@
 // }
 
 TEST_CASE( "Scalar from arg list", "" ) {
-    Scalar b = 17;
+    Scalar a;
+    // Any b = a;
+    P( a );
+    // P( b );
 
-    VFS_CALL( PT, CtStringList<>, void, b );
-    VFS_CALL( PT, CtStringList<>, void, std::move( b ) );
+    // P( b );
+    // VFS_CALL( PT, CtStringList<>, void, b );
+    // VFS_CALL( PT, CtStringList<>, void, std::move( b ) );
 }

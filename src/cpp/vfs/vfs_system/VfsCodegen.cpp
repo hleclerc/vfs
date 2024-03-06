@@ -1,5 +1,6 @@
-#include "../support/push_back_unique.h"
+#include "../support/string/string_replace.h"
 #include "../support/string/read_file.h"
+#include "../support/push_back_unique.h"
 #include "../support/check_dir.h"
 #include "VfsSymbolCache.h"
 #include "VfsCodegen.h"
@@ -123,7 +124,7 @@ void VfsCodegen::_write_inline_inc( std::ostream &os, const Str &str ) {
     for( auto hh = str_hasher( str ); ; ++hh ) {
         Str bn = std::to_string( hh ) + ".h";
         Str fn = vfs_symbol_source_directory / bn;
-        Str cn = std::regex_replace( str, std::regex( "\\{INCLUDE_PATH\\}" ), "./" + bn );
+        Str cn = string_replace( str, "{INCLUDE_PATH}", "./" + bn );
 
         Opt<Str> cc = read_file( fn );
         if ( ! cc ) {

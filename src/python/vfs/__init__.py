@@ -8,6 +8,6 @@ def vfs_build_config( options ):
     options.add_option( "write-used-flags" )
 
     options.add_lib_flag( '-rdynamic' )
-    options.add_cpp_flag( '-fpic' )
+    # options.add_cpp_flag( '-fpic' )
     
 

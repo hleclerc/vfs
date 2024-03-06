@@ -1,11 +1,11 @@
 #pragma once
 
 #include "../support/get_compilation_flags_rec.h"
+#include "../support/string/string_replace.h"
 #include "../support/StaticStorage.h"
 #include "../support/type_name.h"
 #include "VfsDtTypeAncestor.h"
 #include "VfsDtTypeTable.h"
-#include <regex>
 
 BEG_VFS_NAMESPACE
 
@@ -46,7 +46,7 @@ DTP Vec<Str> UTP::final_types() const {
 }
 
 DTP Vec<Str> UTP::final_refs() const {
-    Str code = std::regex_replace( RefAccess::code(), std::regex( "\\{CONTENT\\}" ), "{BEG_ARG_FORWARD}{CAST_NAME}.data.content{END_ARG_FORWARD}" );
+    Str code = string_replace( RefAccess::code(), "{CONTENT}", "{BEG_ARG_FORWARD}{CAST_NAME}.data.content{END_ARG_FORWARD}" );
     return { code };
 }
 

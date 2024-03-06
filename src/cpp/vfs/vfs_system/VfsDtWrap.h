@@ -9,7 +9,7 @@ BEG_VFS_NAMESPACE
 template<class Object,class Content,class RefAccess>
 struct VfsDtWrap {
     /// inline storage
-    struct alignas( Object::_vdo_inline_data_alig ) DataDirect {
+    struct alignas( Object ) DataDirect {
         /**/                     DataDirect( auto &&...ctor_args ) : content( FORWARD( ctor_args )... ) {}
         auto*                    ptr       () const { return &content; }
 
@@ -19,7 +19,7 @@ struct VfsDtWrap {
     };
 
     /// indirect storage
-    struct alignas( Object::_vdo_inline_data_alig ) DataHeap {
+    struct alignas( Object ) DataHeap {
         /**/                     DataHeap  ( auto &&...ctor_args ) : content( std::make_unique<Content>( FORWARD( ctor_args )... ) ) {}
         auto*                    ptr       () const { return content.get(); }
 
@@ -28,7 +28,7 @@ struct VfsDtWrap {
         std::unique_ptr<Content> content;                 ///<
     };
 
-    using        Data      = std::conditional_t< ( alignof( Content ) > Object::_vdo_inline_data_alig || sizeof( DataDirect ) > sizeof( Object ) ), DataHeap, DataDirect >;
+    using        Data      = std::conditional_t< ( alignof( DataDirect ) > alignof( Object ) || sizeof( DataDirect ) > sizeof( Object ) ), DataHeap, DataDirect >;
 
     /**/         VfsDtWrap( auto &&...args ) : data( FORWARD( args )... ) {
         const auto &type = StaticStorage<VfsDtType<Object,Content,RefAccess>>::value;

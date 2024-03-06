@@ -6,9 +6,9 @@
 BEG_VFS_NAMESPACE
 
 ///
-class Type : public VfsDtObject<> {
+class Type {
 public:
-    VfsDtObject_STD_METHODS( Type, "vfs" );
+    VfsDtObject_STD_METHODS( Type, "vfs", sizeof( void * ), alignof( void * ) );
 
     /**/ Type( auto &&name, auto &&compilation_flags, auto &&...template_parameters ); ///< template_parameters are automatically transformed to ct_value to be used as real template args
     /**/ Type( auto name ) : Type( name, CompilationFlags() ) {}
