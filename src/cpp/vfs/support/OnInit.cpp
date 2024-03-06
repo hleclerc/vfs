@@ -12,8 +12,11 @@ OnInit::OnInit( Func *func ) : func( func ) {
 }
 
 void OnInit::update() {
-    for( ; last_OnInit; last_OnInit = last_OnInit->prev )
-        last_OnInit->func();
+    while ( OnInit *loi = last_OnInit ) {
+        last_OnInit = nullptr;
+        for( ; loi; loi = loi->prev )
+            loi->func();
+    }
 }
 
 END_VFS_NAMESPACE

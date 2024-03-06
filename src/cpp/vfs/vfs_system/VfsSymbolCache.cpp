@@ -48,6 +48,10 @@ void *VfsSymbolCache::find_func( const Str &name, const Str &return_type, const 
     return iter->second;
 }
 
+DisplayItem *VfsSymbolCache::display( Displayer &ds ) const {
+    return DS_OBJECT( VfsSymbolCache, surdefs );
+}
+
 Str VfsSymbolCache::make_tmp_file( PI64 base ) {
     check_dir( vfs_symbol_source_directory / "tmp" );
     for( ; ++base; ) {
@@ -239,9 +243,7 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
     // find surdef
     Vec<SurdefTrial> surdef_trials;
     Vec<double> best_pertinence{ std::numeric_limits<double>::lowest() };
-    P( function_name, "-------------------------" );
     for( const Surdef &surdef : surdefs ) {
-        P( surdef.name );
         if ( ! string_simple_match( function_name, surdef.name ) )
             continue;
 
@@ -315,6 +317,10 @@ Str VfsSymbolCache::Surdef::arg_name( PI i ) const {
     if ( i < arg_names.size() )
         return arg_names[ i ];
     return va_string( "__arg_$0", i );
+}
+
+DisplayItem *VfsSymbolCache::Surdef::display( Displayer &ds ) const {
+    return DS_OBJECT( Surdef, file, line, name );
 }
 
 END_VFS_NAMESPACE

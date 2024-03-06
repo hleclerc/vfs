@@ -94,4 +94,5 @@ Rq de la mort: ça serait qd même bien plus standard de passer par le destructe
   C'est pas grave si c'est juste pour la destruction
   Le pb c'est qu'on aimerait bien l'utiliser aussi pour reassign... mais en réalité, le reassign ne devrait faire qu'un move, ce qui est bien supporté par les virtuals
 
-Pourquoi on ne trouve pas tous les symboles 
+Pourquoi on ne trouve pas tous les surdefs alors qu'on a vfs_to_python_function_map au complet ?
+  

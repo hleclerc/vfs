@@ -5,6 +5,8 @@
 #include "vfs_to_python_function_map.h" // IWYU pragma: export
 #include <vfs/Type.h>
 
+#include <vfs/vfs_system/VfsSymbolCache.h>
+
 BEG_VFS_NAMESPACE
 
 static PyObject *__str__( PythonVfsAnyWrapper *self ) {
@@ -48,8 +50,6 @@ static PyObject *__call__( PythonVfsAnyWrapper *self, PyObject *args, PyObject *
     Any ares = VFS_CALL( call_to_Void_if_void, CtStringList<>, Any, self->obj, ral );
 
     // conversion to a python object
-    for( const auto &p : vfs_to_python_function_map )
-        P( p.first );
     return VFS_CALL( vfs_to_python, CtStringList<>, PyObject *, std::move( ares ) );
 }
 

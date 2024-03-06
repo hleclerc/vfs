@@ -1,5 +1,5 @@
 import subprocess, importlib, sysconfig, shlex, sys, os
-sys.setdlopenflags( os.RTLD_GLOBAL | os.RTLD_NOW )
+sys.setdlopenflags( os.RTLD_GLOBAL | os.RTLD_LAZY )
 
 # make cpp module if necessary ------------------------------------------------------------------------
 try:
@@ -10,8 +10,7 @@ except ( ModuleNotFoundError, ImportError ):
     srcdir = os.path.dirname( os.path.dirname( os.path.dirname( curdir ) ) )
     dylib = os.path.join( curdir, 'dylibs', 'vfs_python_interface' + sysconfig.get_config_var( 'EXT_SUFFIX' ) )
     source = os.path.join( srcdir, 'cpp', 'vfs', 'python', 'vfs_python_interface.cpp' )
-    args = [ 'vfs_build', "--verbose=3", "--cpp-flag=-g3", 'lib', '-o' + shlex.quote( dylib ), source ]
-    print( args )
+    args = [ 'vfs_build', '--write-used-sources', "--cpp-flag=-g3", 'lib', '-o' + shlex.quote( dylib ), source ] # , "--verbose=3"
     cp = subprocess.run( args )
     if cp.returncode:
         sys.exit( cp.returncode )

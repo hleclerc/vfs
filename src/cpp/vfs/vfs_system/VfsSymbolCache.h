@@ -23,11 +23,12 @@ public:
     void            register_func          ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types, void *symbol );
     SurdefFunc&     add_surdef             ( const Str &file, int line, const Str &name, const Vec<Str> &arg_names = {} );
     void*           find_func              ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types );
+    DisplayItem*    display                ( Displayer &ds ) const;
     
     static Vec<Str> global_cpp_flags;
 
 private:
-    struct          Surdef                 { Str file; int line; Str name; Vec<Str> arg_names; SurdefFunc f; Str arg_name( PI i ) const; };
+    struct          Surdef                 { Str file; int line; Str name; Vec<Str> arg_names; SurdefFunc f; Str arg_name( PI i ) const; DisplayItem *display( Displayer &ds ) const; };
 
     Str             make_tmp_file          ( PI64 base );
     void*           load_lib_for           ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types );

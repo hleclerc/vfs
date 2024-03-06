@@ -1,6 +1,4 @@
 #include <vfs/vfs_system/VfsSymbolCache.h>
-#include <vfs/support/string/decay.h>
-
 #include "vfs_to_python_function_map.h"
 
 BEG_VFS_NAMESPACE
