@@ -16,7 +16,8 @@ DTP UTP::VfsFuncArray( Callable *init ) : init( init ) {
 }
 
 DTP Callable** UTP::operator()( auto &&...keys ) {
-    Key key { FORWARD( keys )... };
+    P( keys... );
+    Key key{ FORWARD( keys )... };
     auto iter = func_map.find( key );
     if ( iter == func_map.end() )
         iter = func_map.insert( iter, { std::move( key ), init } );

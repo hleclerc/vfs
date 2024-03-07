@@ -2,6 +2,7 @@
 
 #include "../string/read_arg_name.h"
 #include "Displayer.h"
+#include <sstream>
 
 BEG_VFS_NAMESPACE
 
@@ -71,6 +72,12 @@ auto display( Ds &ds, const T &value ) {
         if ( value )
             return display( ds, *value );
         return ds.string( "NULL" );
+    }
+    // os << ...
+    else if constexpr( requires ( std::ostream &os ) { os << value; } ) {
+        std::ostringstream ss;
+        ss << value;
+        return ds.string( ss.str() );
     }
     // T::template_type_name() (for empty structures)
     else if constexpr( requires { T::template_type_name(); } ) {

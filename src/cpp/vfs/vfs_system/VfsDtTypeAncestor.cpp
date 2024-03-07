@@ -4,7 +4,7 @@ BEG_VFS_NAMESPACE
 
 static Vec<VfsDtTypeAncestor *> all_the_types( FromSize(), 1024 );
 static VfsDtTypeAncestor *last_new_type = nullptr;
-static PI total_nb_types = 0;
+PI32 VfsDtTypeAncestor::total_nb_types = 0;
 
 VfsDtTypeAncestor::VfsDtTypeAncestor() {
     global_type_index = total_nb_types++;

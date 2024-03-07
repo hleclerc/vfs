@@ -79,9 +79,13 @@ DTP Return UTP::init( Args ...args ) {
     bool made_key_update = false;
     auto tst_need_update = [&]( const auto &vfs_object ) {
         using Obj = DECAYED_TYPE_OF( vfs_object );
-        if constexpr ( requires { VfsArgTrait<Obj>::key_update( vfs_object ); } )
-            if ( VfsArgTrait<Obj>::key_update( vfs_object ) )
+        if constexpr ( requires { VfsArgTrait<Obj>::key_update( vfs_object ); } ) {
+            bool ku = VfsArgTrait<Obj>::key_update( vfs_object );
+            P( name, ku );
+            if ( ku ) {
                 made_key_update = true;
+            }
+        }
     };
     ( tst_need_update( args ), ... );
 
