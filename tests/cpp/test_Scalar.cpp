@@ -1,6 +1,3 @@
-#include <vfs/support/string/string_simple_match.h>
-#include <vfs/vfs_system/VirtualArgList.h>
-#include <vfs/support/Rational.h>
 #include <vfs/Scalar.h>
 #include "catch_main.h"
 
@@ -33,6 +30,9 @@
 // }
 
 TEST_CASE( "Scalar from arg list", "" ) {
+    // auto a = std::make_tuple( 0 );
+    // auto b = std::make_tuple( 0 );
+    // P( compare( a, b ) );
     Scalar a = 17;
     Scalar b = 17.6;
     // Scalar c = a / 2;

@@ -99,8 +99,11 @@ DTP Return UTP::init( Args ...args ) {
 
     // register it
     Callable **ptr = apply_on_keys_of_vfs_objects( [&]( const auto &...keys ) {
+        P( "register with ", keys... );
         return vfs_func.array( keys... );
     }, Tuple<>{}, args... );
+
+    P( vfs_func.array.func_map.size() );
 
     *ptr = callable;
 

@@ -35,7 +35,7 @@ SI compare( const auto &a, const auto &b ) {
     // tuple like
     if constexpr ( requires { std::tuple_size<std::decay_t<decltype(a)>>{}; std::tuple_size<std::decay_t<decltype(b)>>{}; } ) {
         constexpr PI sa = std::tuple_size<std::decay_t<decltype(a)>>{};
-        constexpr PI sb = std::tuple_size<std::decay_t<decltype(a)>>{};
+        constexpr PI sb = std::tuple_size<std::decay_t<decltype(b)>>{};
         if constexpr ( constexpr SI d = sa - sb )
             return d;
         else
