@@ -27,7 +27,7 @@ constexpr auto type_promote( CtString<op> o, CtType<T_A> a, CtType<T_B> b ) {
     } else
 
     // tensor_order( a ) > tensor_order( b ), both arrays
-        if constexpr ( tensor_order( a ).value > tensor_order( b ).value ) {
+    if constexpr ( tensor_order( a ).value > tensor_order( b ).value ) {
         return array_like_with_item_type( a, type_promote( o, item_type( a ), item_type( b ) ) );
     } else
 

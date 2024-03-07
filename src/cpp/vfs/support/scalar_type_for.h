@@ -6,7 +6,7 @@
 BEG_VFS_NAMESPACE
 
 template<int scalar_class, int has_sign_bit, int nb_bits_mantissa>
-constexpr auto scalar_type_for( CtInt<0> _virtual, CtInt<scalar_class>, CtInt<has_sign_bit>, CtInt<nb_bits_mantissa> ) requires ( scalar_class <= 2 && nb_bits_mantissa <= 64 ) {
+constexpr auto scalar_type_for( PrimitiveCtInt<0> _virtual, PrimitiveCtInt<scalar_class>, PrimitiveCtInt<has_sign_bit>, PrimitiveCtInt<nb_bits_mantissa> ) requires ( scalar_class <= 2 && nb_bits_mantissa <= 64 ) {
     // floating point
     if constexpr ( scalar_class == 2 ) {
         if      constexpr ( nb_bits_mantissa <= 25 ) return CtType<FP32>();

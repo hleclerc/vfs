@@ -1,8 +1,10 @@
 #pragma once
 
 #include "STATIC_ASSERT_IN_IF_CONSTEXPR.h"
-#include "call_by_name.h"
+#include "../vfs_system/VfsArg.h" // IWYU pragma: export
 #include "tensor_order.h"
+#include "call_by_name.h"
+#include "type_promote.h"
 #include "CtType.h"
 #include <cmath>
 
@@ -21,12 +23,9 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
     } else \
     \
     /* virtual */ \
-    if constexpr( requires { a.template _real_type_call<#NAME>( FORWARD( a ), FORWARD( b ) ); } ) { \
-        return a.template _real_type_call<#NAME>( FORWARD( a ), FORWARD( b ) ); \
-    } else \
-    \
-    if constexpr( requires { b.template _real_type_call<#NAME>( FORWARD( a ), FORWARD( b ) ); } ) { \
-        return b.template _real_type_call<#NAME>( FORWARD( a ), FORWARD( b ) ); \
+    if constexpr( VfsArg<DECAYED_TYPE_OF( a )> || VfsArg<DECAYED_TYPE_OF( b )> ) { \
+        using Ret = VALUE_IN_DECAYED_TYPE_OF( type_promote( CtString<#NAME>(), CT_DECAYED_TYPE_OF( a ), CT_DECAYED_TYPE_OF( b ) ) ); \
+        return vfs_call< #NAME, CtStringList<>, Ret >( FORWARD( a ), FORWARD( b ) ); \
     } else \
     \
     /* ct value */ \

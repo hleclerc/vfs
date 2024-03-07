@@ -91,6 +91,7 @@ END_VFS_NAMESPACE
 
 #include "conv.h" // IWYU pragma: export
 
+#include "PrimitiveCtInt.h" // IWYU pragma: export
 #include "CtStringList.h" // IWYU pragma: export
 #include "CtTypeList.h" // IWYU pragma: export
 #include "CtIntList.h" // IWYU pragma: export
