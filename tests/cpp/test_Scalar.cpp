@@ -30,28 +30,10 @@
 // }
 
 TEST_CASE( "Scalar from arg list", "" ) {
-    // auto a = std::make_tuple( 0 );
-    // auto b = std::make_tuple( 0 );
-    // P( compare( a, b ) );
     Scalar a = 17;
     Scalar b = 17.6;
-    // Scalar c = a / 2;
-    P( a.__vfs_dt_attributes.global_type_index );
-    P( b.__vfs_dt_attributes.global_type_index );
-    P( a.__vfs_dt_attributes.instantiated_type_index );
-    P( b.__vfs_dt_attributes.instantiated_type_index );
+    Scalar c = a / 2;
     P( a );
     P( b );
-    P( a.__vfs_dt_attributes.instantiated_type_index );
-    P( b.__vfs_dt_attributes.instantiated_type_index );
-    // P( c );
-    // P( c.__vfs_dt_attributes.instantiated_type_index );
-    // P( c.__vfs_dt_attributes.global_type_index );
-
-    // P( a / 2 );
-
-    // P( a.__vfs_dt_attributes.global_type_index );
-    // P( b.__vfs_dt_attributes.global_type_index );
-    // P( c.__vfs_dt_attributes.global_type_index );
-    // P( a );
+    P( c );
 }

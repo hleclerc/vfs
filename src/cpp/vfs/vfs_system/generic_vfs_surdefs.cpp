@@ -60,10 +60,11 @@ ON_INIT {
                        type == "PI8"  || type == "PI16" || type == "PI32" || type == "PI64" ;
             };
             if ( cg.final_types.size() == 3 && integral_type( cg.final_types[ 1 ] ) && integral_type( cg.final_types[ 2 ] ) ) {
-                cg.add_inc_file( "vfs/support/Rational.h" );
+                cg.add_inc_file( "vfs/support/RationalGmp.h" );
                 cg.add_lib_name( "gmpxx" );
                 cg.add_lib_name( "gmp" );
-                cg.add_line( "return Rational( a, b );" );
+
+                cg.add_line( "return RationalGmp( a, b );" );
                 return cg.valid();
             }
         }

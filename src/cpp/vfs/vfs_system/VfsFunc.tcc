@@ -79,13 +79,9 @@ DTP Return UTP::init( Args ...args ) {
     bool made_key_update = false;
     auto tst_need_update = [&]( const auto &vfs_object ) {
         using Obj = DECAYED_TYPE_OF( vfs_object );
-        if constexpr ( requires { VfsArgTrait<Obj>::key_update( vfs_object ); } ) {
-            bool ku = VfsArgTrait<Obj>::key_update( vfs_object );
-            P( name, ku );
-            if ( ku ) {
+        if constexpr ( requires { VfsArgTrait<Obj>::key_update( vfs_object ); } )
+            if ( VfsArgTrait<Obj>::key_update( vfs_object ) )
                 made_key_update = true;
-            }
-        }
     };
     ( tst_need_update( args ), ... );
 
@@ -99,11 +95,8 @@ DTP Return UTP::init( Args ...args ) {
 
     // register it
     Callable **ptr = apply_on_keys_of_vfs_objects( [&]( const auto &...keys ) {
-        P( "register with ", keys... );
         return vfs_func.array( keys... );
     }, Tuple<>{}, args... );
-
-    P( vfs_func.array.func_map.size() );
 
     *ptr = callable;
 

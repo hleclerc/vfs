@@ -43,7 +43,7 @@ SI compare( const auto &a, const auto &b ) {
     } else
 
     // by default (BEWARE: does not work for float, ...)
-    return a - b;
+    return SI( a ) - SI( b );
 }
 
 Tij constexpr SI compare_tuple( const auto &a, const auto &b, CtInt<i>, CtInt<j> ) {

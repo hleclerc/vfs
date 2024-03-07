@@ -36,7 +36,7 @@ struct VfsDtWrap {
         data.global_type_index = type.global_type_index;
     }
 
-    void         destroy() { P( type_name<Content>() ); data.~Data(); P( "yo" ); }
+    void         destroy() { data.~Data(); }
 
     Data         data;    ///<
 };
