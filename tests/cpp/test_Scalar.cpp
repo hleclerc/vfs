@@ -33,6 +33,6 @@
 
 TEST_CASE( "Scalar from arg list", "" ) {
     Scalar a = 17;
-    a = a + 2;
-    P( a );
+    P( a / 2 );
+    // P( a );
 }

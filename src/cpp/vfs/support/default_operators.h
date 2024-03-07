@@ -25,7 +25,7 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
     /* virtual */ \
     if constexpr( VfsArg<DECAYED_TYPE_OF( a )> || VfsArg<DECAYED_TYPE_OF( b )> ) { \
         using Ret = VALUE_IN_DECAYED_TYPE_OF( type_promote( CtString<#NAME>(), CT_DECAYED_TYPE_OF( a ), CT_DECAYED_TYPE_OF( b ) ) ); \
-        return vfs_call< #NAME, CtStringList<>, Ret >( FORWARD( a ), FORWARD( b ) ); \
+        return vfs_call< "call_by_name", CtStringList<>, Ret >( CtString<#NAME>(), FORWARD( a ), FORWARD( b ) ); \
     } else \
     \
     /* ct value */ \

@@ -35,10 +35,12 @@ private:
     Str             cpp_for                ( const Str &name, const Str &return_type, const Vec<Str> &arg_types, const CompilationFlags &compilation_flags, const Vec<Vec<Str>> &final_types, const Vec<Vec<Str>> &final_refs, const Vec<Str> &cast_types );
 
     void            check_build_config_file();
+    void            load_ext_lib           ( const Str &lib_name, const Vec<Str> &lib_paths = {} );
     void            load_lib               ( const std::filesystem::path &so_filename );
     int             run                    ( const Vec<Str> &cmd );
 
     LoadedSymbols   loaded_symbols;
+    Vec<Str>        ext_libs;
     Vec<Surdef>     surdefs;
     Vec<void*>      libs;
 };

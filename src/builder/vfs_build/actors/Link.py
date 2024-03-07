@@ -134,9 +134,21 @@ class Link( Actor ):
         fout.write( info_type + ":" + info_data + "\n" )
 
     def on_link( self ):
+        lib_names = []
+        lib_paths = []
+        for option in self.options.all_the_options():
+            if option[ 0 ] == 'lib-path':
+                lib_paths.append( option[ 1 ] )
+                continue
+            if option[ 0 ] == 'lib-name':
+                lib_names.append( option[ 1 ] )
+                continue
+
         self.on_end(
             out_name = self.output_filename,
             cpp_deps = self.seen_sources[ 1: ],
+            lib_names = lib_names,
+            lib_paths = lib_paths,
         )
 
     def options_to_remove( self ):

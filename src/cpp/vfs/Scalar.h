@@ -6,7 +6,7 @@ BEG_VFS_NAMESPACE
 
 class Scalar : public WithDefaultOperators {
 public:
-    VfsDtObject_STD_METHODS( Scalar, "vfs", sizeof( void * ), alignof( void * ) );
+    VfsDtObject_STD_METHODS( Scalar, "vfs", 4 * sizeof( void * ), alignof( void * ) );
 };
 
 // types for ctors --------------------------------------------------------------------------

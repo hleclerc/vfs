@@ -277,6 +277,8 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const Str &return_type, c
     // compile( surdef_trials[ 0 ].file );
     std::ostringstream ss;
     surdef_trials[ 0 ].cg.write_cpp_to( ss );
+    for( const Str &lib_name : surdef_trials[ 0 ].cg.lib_names )
+        load_ext_lib( lib_name, surdef_trials[ 0 ].cg.lib_paths );
     return ss.str();
 }
 
@@ -297,6 +299,19 @@ void VfsSymbolCache::check_build_config_file() {
         fout << "import vfs\n";
         fout << "def config( options ):\n";
         fout << "    vfs.vfs_build_config( options )\n";
+    }
+}
+
+void VfsSymbolCache::load_ext_lib( const Str &lib_name, const Vec<Str> &lib_paths ) {
+    if ( ext_libs.contains( lib_name ) )
+        return;
+    ext_libs.push_back( lib_name );
+
+    Str str = "lib" + lib_name + ".so";
+    void *dl = dlopen( str.c_str(), RTLD_NOW | RTLD_GLOBAL );
+    if ( ! dl ) {
+        std::cerr << "while dlopening " << dlerror() << std::endl;
+        assert( 0 );
     }
 }
 

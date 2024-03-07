@@ -1,5 +1,6 @@
 #include "../support/string/decay.h"
 #include "VfsSymbolCache.h"
+#include "gmpxx.h"
 
 BEG_VFS_NAMESPACE
 
@@ -25,20 +26,7 @@ ON_INIT {
 
     // call( func, args... )
     VFS_ADD_SURDEF( "call", "func" ) {
-        // intermediate function to replace an inline `if constexpr ( std::is_same_v<void,...> )` that does not work as expected (at least for g++-13.2)
-        // cg.add_prel_block( [&]( VfsCodegen &cg ) {
-        //     cg.add_line( "auto __apply( CtInt<0>, const auto &func, auto &&...args ) {" );
-        //     cg.add_line( "return func( FORWARD( args )... );" );
-        //     cg.add_line( "}" );
-        //     cg.add_line( "" );
-        //     cg.add_line( "auto __apply( CtInt<1>, const auto &func, auto &&...args ) {" );
-        //     cg.add_line( "func( FORWARD( args )... );" );
-        //     cg.add_line( "return Void{};" );
-        //     cg.add_line( "}" );
-        // } );
-
         // forward args
-        //cg.add_line( "return __apply( CtInt<std::is_same_v<void,decltype( func( $0 ) )>>{}, $1 );", join( cg.forwarded_args_from( 1 ) ), join( cg.forwarded_args() ) );
         cg.add_line( "return func( $0 );", join( cg.forwarded_args_from( 1 ) ) );
         return cg.valid();
     };
@@ -63,6 +51,26 @@ ON_INIT {
         cg.add_line( "return __apply( CtInt<ret_void>(), FORWARD( func ), $0 );", join( cg.forwarded_args_from( 1 ) ) );
         return cg.valid();
     };
+
+    //
+    VFS_ADD_SURDEF( "call_by_name", "name", "a", "b" ) {
+        if ( cg.final_types[ 0 ] == "CtString<\"div\">" ) {
+            auto integral_type = []( const Str &type ) {
+                return type == "SI8"  || type == "SI16" || type == "SI32" || type == "SI64" ||
+                       type == "PI8"  || type == "PI16" || type == "PI32" || type == "PI64" ;
+            };
+            if ( cg.final_types.size() == 3 && integral_type( cg.final_types[ 1 ] ) && integral_type( cg.final_types[ 2 ] ) ) {
+                cg.add_inc_file( "vfs/support/Rational.h" );
+                cg.add_lib_name( "gmpxx" );
+                cg.add_lib_name( "gmp" );
+                cg.add_line( "return Rational( a, b );" );
+                return cg.valid();
+            }
+        }
+
+        return cg.invalid();
+    };
+
 
     // vfs td handling ----------------------------------------------------------------------------------------------------------------------------------------------------
     // vfs_td_reassign
