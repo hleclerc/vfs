@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vfs_system/VfsDtObject.h"
+#include "Type.h"
 
 BEG_VFS_NAMESPACE
 

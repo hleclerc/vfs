@@ -3,9 +3,10 @@
 #include "VirtualCtString.h"
 #include "VirtualCtInt.h"
 
-#include "../Any.h"
+// #include "../Any.h"
 
 BEG_VFS_NAMESPACE
+class Any;
 
 // common surdefs
 TS auto ct_value( CtString<S> v ) { return v; }

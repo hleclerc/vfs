@@ -100,4 +100,7 @@ Si on fait
   *  Scalar + Scalar => 
   *  Scalar + Vector
 
+Comment fonctionne la création de tableaux ?
+  => on contruit un type et on appelle ensuite le construct avec un VFS_CALL_DINK
+  Actuellement, 
 

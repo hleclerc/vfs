@@ -4,11 +4,14 @@
 
 BEG_VFS_NAMESPACE
 
-class Int { VFS_DT_OBJECT_ATTRIBUTES( Int, "vfs" );
+class Int {
 public:
-    /**/ Int( ScalarLike auto &&value ) : Int( FromValue(), FORWARD( value ) ) {}
-    /**/ Int() : Int( CtInt<0>() ) {}
+    VfsDtObject_STD_METHODS( Int, "vfs", sizeof( void * ), alignof( void * ) );
 };
+
+// types for ctors --------------------------------------------------------------------------
+inline auto vfs_dt_impl_type( CtType<Int>, const ScalarLike auto &value ) { return CT_DECAYED_TYPE_OF( value ); }
+inline auto vfs_dt_impl_type( CtType<Int> ) { return CtType<CtInt<0>>(); }
 
 // -------------------------------------------------------------------------------------------
 // type info

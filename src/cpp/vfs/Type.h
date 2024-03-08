@@ -1,6 +1,7 @@
 #pragma once
 
-#include "vfs_system/ct_value.h"
+#include "vfs_system/VfsDtObject.h"
+#include "vfs_system/ct_value.h" // IWYU pragma: export
 #include "support/ct_known.h" // IWYU pragma: export
 
 BEG_VFS_NAMESPACE

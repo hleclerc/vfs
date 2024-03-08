@@ -84,18 +84,16 @@ struct VfsArgTrait<Obj> {
     NAME&                  operator=            ( const NAME &that ) { VFS_CALL( vfs_td_reassign, CtStringList<>, void, *this, that ); return *this; } \
     NAME&                  operator=            ( NAME &&that ) { VFS_CALL( vfs_td_reassign, CtStringList<>, void, *this, std::move( that ) ); return *this; } \
     \
-    template               <CtStringValue       func> \
-    static auto            _real_type_call      ( auto &&...args ) { using Result = VALUE_IN_DECAYED_TYPE_OF( type_promote( CtString<func>(), CT_DECAYED_TYPE_OF( args )... ) ); return vfs_call<func,CtStringList<>,Result>( FORWARD( args )... ); }; \
-    \
     DisplayItem*           display              ( auto &ds ) const { return VFS_CALL( display, CtStringList<>, DisplayItem *, ds, *this ); } \
+    Type                   type                 () const; \
     \
     static constexpr PI    __vfs_dt_data_size   = SIZE; \
     static constexpr PI    __vfs_dt_data_alig   = ALIG; \
     VfsDtObject<SIZE,ALIG> __vfs_dt_attributes;
 
-#define VfsDtObject_STD_METHODS_TT( NAME, PATH, TEMPLATE_ARG_0, TEMPLATE_ARG_1 ) \
+#define VfsDtObject_STD_METHODS_TT( NAME, TEMPLATE_ARG_0, TEMPLATE_ARG_1, PATH, SIZE, ALIG ) \
     static void          for_each_template_arg( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); f( CtType<TEMPLATE_ARG_1>() ); } \
-    VfsDtObject_STD_METHODS( NAME, PATH );
+    VfsDtObject_STD_METHODS( NAME, PATH, SIZE, ALIG );
 
 
 END_VFS_NAMESPACE
