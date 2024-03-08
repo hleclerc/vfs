@@ -46,7 +46,7 @@ DTP Vec<Str> UTP::final_types() const {
 }
 
 DTP Vec<Str> UTP::final_refs() const {
-    Str code = string_replace( RefAccess::code(), "{CONTENT}", "{BEG_ARG_FORWARD}{CAST_NAME}.data.content{END_ARG_FORWARD}" );
+    Str code = string_replace( RefAccess::code(), "{CONTENT}", "{BEG_ARG_FORWARD}{CAST_NAME}.data.ref(){END_ARG_FORWARD}" );
     return { code };
 }
 

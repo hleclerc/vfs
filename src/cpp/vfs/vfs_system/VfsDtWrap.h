@@ -11,6 +11,8 @@ struct VfsDtWrap {
     /// inline storage
     struct alignas( Object ) DataDirect {
         /**/                     DataDirect( auto &&...ctor_args ) : content( FORWARD( ctor_args )... ) {}
+        const auto&              ref       () const { return content; }
+        auto&                    ref       () { return content; }
         auto*                    ptr       () const { return &content; }
 
         mutable PI32             instantiated_type_index; ///<
@@ -21,6 +23,8 @@ struct VfsDtWrap {
     /// indirect storage
     struct alignas( Object ) DataHeap {
         /**/                     DataHeap  ( auto &&...ctor_args ) : content( std::make_unique<Content>( FORWARD( ctor_args )... ) ) {}
+        const auto&              ref       () const { return *content; }
+        auto&                    ref       () { return *content; }
         auto*                    ptr       () const { return content.get(); }
 
         mutable PI32             instantiated_type_index; ///<
