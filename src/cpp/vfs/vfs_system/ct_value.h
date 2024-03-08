@@ -9,6 +9,7 @@ BEG_VFS_NAMESPACE
 class Any;
 
 // common surdefs
+TSs auto ct_value( CtStringList<S...> v ) { return v; }
 TS auto ct_value( CtString<S> v ) { return v; }
 TT auto ct_value( CtType<T> v ) { return v; }
 Ti auto ct_value( CtInt<i> v ) { return v; }

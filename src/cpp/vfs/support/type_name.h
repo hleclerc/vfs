@@ -47,7 +47,7 @@ template<class T,class... A> Str type_name( CtType<std::function<T(A...)>> ) {
 
 // helpers for the generic version
 TT auto CtType<T>::to_string() { return type_name( CtType<T>() ); }
-TT auto *CtType<T>::display( auto &ds ) { return ds.string( Str( "CtType<" ) + to_string() + ">" ); }
+TT auto *CtType<T>::display( auto &ds ) { return ds.string( to_string() ); }
 
 // generic version
 TT Str type_name( CtType<T> ) {

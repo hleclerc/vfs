@@ -19,6 +19,7 @@ public:
     static constexpr int _vdo_inline_data_alig    = inline_data_alig;
     static constexpr int data_size                = ( 2 * sizeof( PI32 ) + inline_data_alig - 1 ) / inline_data_alig * inline_data_alig - 2 * sizeof( PI32 ) + inline_data_size;
 
+    static void          get_compilation_flags    ( CompilationFlags &cn ) { cn.add_inc_file( "vfs/vfs_system/VfsDtObject.h" ); }
     static void          for_each_template_arg    ( auto &&f ) { f( CtInt<inline_data_size>() ); f( CtInt<inline_data_alig>() ); }
     static auto          template_type_name       () { return "VfsDtObject"; }
 
@@ -67,9 +68,8 @@ struct VfsArgTrait<Obj> {
     }
 };
 
-#define VfsDtObject_STD_METHODS( NAME, INCLUDE_PATH, SIZE, ALIG ) public: \
+#define VfsDtObject_STD_METHODS__BASE( NAME, INCLUDE_PATH, SIZE, ALIG ) public: \
     static void            get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( INCLUDE_PATH "/" #NAME ".h" ); } \
-    static auto            type_name            () { return #NAME; } \
     \
     /**/                   NAME                 ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_dt_attributes, CtType<NAME>(), FromTypeAndCtorArguments(), FORWARD( ct_type ), FORWARD( args )... ); } \
     /**/                   NAME                 ( FromPointerOnBorrowed, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_dt_attributes, CtType<NAME>(), FromPointerOnBorrowed(), FORWARD( pointer ) ); } \
@@ -85,15 +85,20 @@ struct VfsArgTrait<Obj> {
     NAME&                  operator=            ( NAME &&that ) { VFS_CALL( vfs_td_reassign, CtStringList<>, void, *this, std::move( that ) ); return *this; } \
     \
     DisplayItem*           display              ( auto &ds ) const { return VFS_CALL( display, CtStringList<>, DisplayItem *, ds, *this ); } \
-    Type                   type                 () const; \
+    Type                   type                 () const { return VFS_CALL( actual_type_of, CtStringList<>, Type, *this ); } \
     \
     static constexpr PI    __vfs_dt_data_size   = SIZE; \
     static constexpr PI    __vfs_dt_data_alig   = ALIG; \
     VfsDtObject<SIZE,ALIG> __vfs_dt_attributes;
 
+#define VfsDtObject_STD_METHODS( NAME, PATH, SIZE, ALIG ) \
+    static auto            type_name            () { return #NAME; } \
+    VfsDtObject_STD_METHODS__BASE( NAME, PATH, SIZE, ALIG );
+
 #define VfsDtObject_STD_METHODS_TT( NAME, TEMPLATE_ARG_0, TEMPLATE_ARG_1, PATH, SIZE, ALIG ) \
-    static void          for_each_template_arg( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); f( CtType<TEMPLATE_ARG_1>() ); } \
-    VfsDtObject_STD_METHODS( NAME, PATH, SIZE, ALIG );
+    static void            for_each_template_arg( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); f( CtType<TEMPLATE_ARG_1>() ); } \
+    static auto            template_type_name   () { return #NAME; } \
+    VfsDtObject_STD_METHODS__BASE( NAME, PATH, SIZE, ALIG );
 
 
 END_VFS_NAMESPACE

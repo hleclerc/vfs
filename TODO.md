@@ -101,6 +101,6 @@ Si on fait
   *  Scalar + Vector
 
 Comment fonctionne la création de tableaux ?
+  Actuellement, on passe par un vfs_dt_impl_type pour sortir un type et ensuite appeler le construct
+    On pourrait sortir un VirtualCtType
   => on contruit un type et on appelle ensuite le construct avec un VFS_CALL_DINK
-  Actuellement, 
-

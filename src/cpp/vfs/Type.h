@@ -18,15 +18,13 @@ public:
 };
 
 // to get the Type of a VfsObject
-auto actual_type_of( const VfsArg auto &v ) { return VFS_CALL( type_of, CtStringList<>, Type, v ); }
+auto actual_type_of( const VfsArg auto &v ) { return VFS_CALL( actual_type_of, CtStringList<>, Type, v ); }
 
 inline const auto &ct_value( const Type &v ) { return v; }
 
-
 // impl ----------------------------------------------------------------------------------------------------------------------------------
 Type::Type( auto &&name, auto &&compilation_flags, auto &&...template_parameters ) {
-    // VFS_CALL_DINK( construct_Type, CtStringList<>, void, _vfs_object_rt_data, ct_value( name ), ct_value( compilation_flags ), ct_value( template_parameters )... );
-    TODO;
+    VFS_CALL( construct_Type, CtStringList<>, void, __vfs_dt_attributes, ct_value( name ), ct_value( compilation_flags ), ct_value( template_parameters )... );
 }
 
 ///

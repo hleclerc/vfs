@@ -11,7 +11,8 @@ void VirtualCtString::get_compilation_flags( CompilationFlags &cn ) {
 
 Str VirtualCtString::final_type_name_to_content( StrView str ) {
     auto i = str.find( "CtString<" );
-    return ctor_of_string_to_string( str.substr( i + 9, str.size() - ( i + 9 + 4 ) ) );
+    ASSERT( i != StrView::npos );
+    return ctor_of_string_to_string( str.substr( i + 9, str.size() - ( i + 9 + 1 ) ) );
 }
 
 Str VirtualCtString::type_name() {

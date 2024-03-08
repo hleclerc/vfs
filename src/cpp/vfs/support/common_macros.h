@@ -14,6 +14,7 @@
 #define     TUV                           template<class U,class V>
 #define     TiA                           template<int i,class... A>
 #define     Tij                           template<int i,int j>
+#define     TSs                           template<CtStringValue... S>
 #define     TS                            template<CtStringValue S>
 #define     TA                            template<class... A>
 #define     TT                            template<class T>

@@ -52,9 +52,9 @@ TUV auto vfs_dt_impl_type( CtType<Array<U,V>>, const HasSizeAndAccess auto &that
             // template<class Item,int static_size=-1,int local_size=0,int alignment=0,bool allow_heap=true>
             // static size
             if ( ArrayTagListAnalyzer::want_ct_size_for_dim( V(), CtInt<0>() ) )
-                return Type( "Vec", "inc_file:vfs/containers/Vec.h", sub_item_type, sizes[ 0 ], CtInt<0>(), CtInt<0>(), CtInt<0>() );
+                return Type( CtString<"Vec">(), CtStringList<"inc_file:vfs/containers/Vec.h">(), sub_item_type, sizes[ 0 ], CtInt<0>(), CtInt<0>(), CtInt<0>() );
             // dynamic size
-            return Type( "Vec", "inc_file:vfs/containers/Vec.h", sub_item_type, CtInt<-1>(), CtInt<0>(), CtInt<0>(), CtInt<1>() );
+            return Type( CtString<"Vec">(), CtStringList<"inc_file:vfs/containers/Vec.h">(), sub_item_type, CtInt<-1>(), CtInt<0>(), CtInt<0>(), CtInt<1>() );
         }
 
         // size >= 2
