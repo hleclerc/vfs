@@ -1,6 +1,5 @@
 #include "../support/string/decay.h"
 #include "VfsSymbolCache.h"
-#include "gmpxx.h"
 
 BEG_VFS_NAMESPACE
 
@@ -8,26 +7,26 @@ ON_INIT {
     // generic forwarders -------------------------------------------------------------------------------------------------------------------------------------------------
     // forward call
     VFS_ADD_SURDEF( "*" ) {
-        cg.add_line( "return $0( $1 );", cg.func_name, join( cg.forwarded_args() ) );
+        cg.add_line( "$0$1( $2 );", cg.return_type == "void" ? "" : "return ", cg.func_name, join( cg.forwarded_args() ) );
         return cg.valid( { -1e6 } );
     };
 
     // forward method call
     VFS_ADD_SURDEF( "*__method" ) {
-        cg.add_line( "return $0.$1( $2 );", cg.final_names[ 0 ], cg.func_name.substr( 0, cg.func_name.size() - 8 ), join( cg.forwarded_args_from( 1 ) ) );
+        cg.add_line( "$0$1.$2( $3 );", cg.return_type == "void" ? "" : "return ", cg.final_names[ 0 ], cg.func_name.substr( 0, cg.func_name.size() - 8 ), join( cg.forwarded_args_from( 1 ) ) );
         return cg.valid( { -1e6 + 1 } );
     };
 
     // forward method call with _cast instead of final_ref
     VFS_ADD_SURDEF( "*__cast_method" ) {
-        cg.add_line( "return $0.$1( $2 );", cg.cast_names[ 0 ], cg.func_name.substr( 0, cg.func_name.size() - 13 ), join( cg.forwarded_args_from( cg.nb_final_refs_from_cast[ 0 ] ) ) );
+        cg.add_line( "$0$1.$2( $3 );", cg.return_type == "void" ? "" : "return ", cg.cast_names[ 0 ], cg.func_name.substr( 0, cg.func_name.size() - 13 ), join( cg.forwarded_args_from( cg.nb_final_refs_from_cast[ 0 ] ) ) );
         return cg.valid( { -1e6 + 1 } );
     };
 
     // call( func, args... )
     VFS_ADD_SURDEF( "call", "func" ) {
         // forward args
-        cg.add_line( "return func( $0 );", join( cg.forwarded_args_from( 1 ) ) );
+        cg.add_line( "$0func( $1 );", cg.return_type == "void" ? "" : "return ", join( cg.forwarded_args_from( 1 ) ) );
         return cg.valid();
     };
 

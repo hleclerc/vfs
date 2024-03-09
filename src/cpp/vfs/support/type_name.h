@@ -6,8 +6,11 @@
 BEG_VFS_NAMESPACE
 
 // qualifiers
-TTi inline auto type_name( CtType<const T(&)[i]> ) { return type_name( CtType<const T *>() ); } // send the size ??
-TTi inline auto type_name( CtType<T(&)[i]> ) { return type_name( CtType<T *>() ); } // send the size ??
+TTI inline auto type_name( CtType<const T(&)[i]> ) { return type_name( CtType<const T *>() ); } // send the size ??
+TTI inline auto type_name( CtType<T(&)[i]> ) { return type_name( CtType<T *>() ); } // send the size ??
+
+TTI inline auto type_name( CtType<const T[i]> ) { return type_name( CtType<const T *>() ); } // send the size ??
+TTI inline auto type_name( CtType<T[i]> ) { return type_name( CtType<T *>() ); } // send the size ??
 
 TT  inline auto type_name( CtType<const T> ) { return Str( "const " ) + type_name( CtType<T>() ); }
 TT  inline auto type_name( CtType<T &&> ) { return Str( type_name( CtType<T>() ) ) + " &&"; }
@@ -32,11 +35,12 @@ DECL_TYPE_NAME( Byte );
 DECL_TYPE_NAME( FP64 );
 DECL_TYPE_NAME( FP32 );
 
+DECL_TYPE_NAME( char );
+
 DECL_TYPE_NAME( void );
 
 DECL_TYPE_NAME( Str  );
 #undef DECL_DECL_TYPE_NAME
-
 
 // special cases
 template<class T,class... A> Str type_name( CtType<std::function<T(A...)>> ) {

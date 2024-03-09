@@ -1,5 +1,6 @@
 #include "../support/string/string_simple_match.h"
 #include "../support/string/string_replace.h"
+#include "../support/string/symbol_for.h"
 #include "../support/string/va_string.h"
 #include "../support/string/read_file.h"
 #include "../support/string/ctor_for.h"
@@ -77,7 +78,7 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
     check_dir( vfs_symbol_source_directory );
     for( PI64 h = hash( cpp_content ); ; ++h ) {
         // find a place to write the .cpp file (the same name may be used for another content)
-        Str base_name = name + "_" + std::to_string( h );
+        Str base_name = symbol_for( name ) + "_" + std::to_string( h );
         Path cpp_filename = vfs_symbol_source_directory / ( base_name + ".cpp" );
         Opt<Str> cur_content = read_file( cpp_filename.string() );
         if ( ! cur_content || *cur_content == cpp_content ) {

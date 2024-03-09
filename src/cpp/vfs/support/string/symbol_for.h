@@ -20,6 +20,11 @@ inline Str symbol_for( const Str &str ) {
         if ( c == '*' ) { res += "_M"; continue; }
         if ( c == '/' ) { res += "_D"; continue; }
         if ( c == '%' ) { res += "_O"; continue; }
+
+        if ( c == '<' ) { res += "_l"; continue; }
+        if ( c == '>' ) { res += "_g"; continue; }
+
+        P( c );
         TODO;
     }
     return res;
