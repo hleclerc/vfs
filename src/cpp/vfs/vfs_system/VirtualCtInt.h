@@ -28,4 +28,7 @@ struct VfsArgTrait<VirtualCtInt> {
     }
 };
 
+inline VirtualCtInt make_ct_value( int i ) { return { i }; }
+inline VirtualCtInt make_ct_value( PI i ) { return { int( i ) }; }
+
 END_VFS_NAMESPACE

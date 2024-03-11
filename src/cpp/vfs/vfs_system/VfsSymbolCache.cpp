@@ -96,7 +96,8 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
                 Str output_info_name = make_tmp_file( h );
                 Vec<Str> args{ "vfs_build", "lib", cpp_to_compile,
                     "--write-output-info-to=" + output_info_name,
-                    "--do-not-link-deps" //, "-v10"
+                    "--do-not-link-deps"
+                    // "-v10"
                 };
                 for( const Str &flag : global_cpp_flags )
                     push_back_unique( args, flag );
@@ -131,8 +132,10 @@ void *VfsSymbolCache::load_lib_for( const Str &name, const Str &return_type, con
             }
 
             // load libs
-            while ( libs_to_load.size() )
-                load_lib( libs_to_load.pop_back_val() );
+            while ( libs_to_load.size() ) {
+                Str l = libs_to_load.pop_back_val();
+                load_lib( l );
+            }
 
             // look again in loaded_symbols
             Key key{ name, return_type, arg_types, compilation_flags, final_types, final_refs, cast_types };
@@ -309,7 +312,7 @@ void VfsSymbolCache::load_ext_lib( const Str &lib_name, const Vec<Str> &lib_path
     ext_libs.push_back( lib_name );
 
     Str str = "lib" + lib_name + ".so";
-    void *dl = dlopen( str.c_str(), RTLD_NOW | RTLD_GLOBAL );
+    void *dl = dlopen( str.c_str(), RTLD_LAZY | RTLD_GLOBAL );
     if ( ! dl ) {
         std::cerr << "while dlopening " << dlerror() << std::endl;
         assert( 0 );
@@ -318,7 +321,7 @@ void VfsSymbolCache::load_ext_lib( const Str &lib_name, const Vec<Str> &lib_path
 
 
 void VfsSymbolCache::load_lib( const std::filesystem::path &so_filename ) {
-    void *dl = dlopen( so_filename.c_str(), RTLD_NOW | RTLD_GLOBAL );
+    void *dl = dlopen( so_filename.c_str(), RTLD_LAZY | RTLD_GLOBAL );
     if ( ! dl ) {
         std::cerr << "while dlopening " << dlerror() << std::endl;
         assert( 0 );

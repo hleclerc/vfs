@@ -32,6 +32,9 @@ class Link( Actor ):
             return 
         self.seen_sources.append( source )
 
+        # get flag + deps
+        self.add_source_dep( source )
+
         # launch compilation (--do-not-link-deps => we compile and link only the first .cpp file)
         if not self.options[ "do-not-link-deps" ] or len( self.seen_sources ) == 1:
             self.nb_sources_to_compile += 1
@@ -116,7 +119,7 @@ class Link( Actor ):
         self.output_filename = self.make_output_filename( sub_dirs = [ 'obj' ], ext = ext, stem = Path( self.seen_sources[ 0 ] ).stem )
 
         # cmd
-        if self.options.verbosity():
+        if self.options.verbosity() > 0:
             self.info( f"Link of { self.relative_name( self.output_filename ) } using { self.seen_sources }" )
         else:
             self.info( f"Link of { self.relative_name( self.output_filename ) }" )

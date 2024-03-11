@@ -38,8 +38,11 @@ struct CtInt : public WithDefaultOperators {
     constexpr operator    bool                  () const { return value; }
 };
 
+template<int i> constexpr auto make_ct_value( CtInt<i> ) { return CtInt<i>(); }
+
 template<int i> constexpr auto ct_value_wrapper_for() { return CtInt<i>(); }
 auto constexpr tensor_order( auto ) { return CtInt<0>(); }
+
 
 template<int i,int j> constexpr bool always_equal( CtInt<i>, CtInt<j> ) { return i == j; }
 template<int i> constexpr bool always_equal( CtInt<i>, int v ) { return v == i; }

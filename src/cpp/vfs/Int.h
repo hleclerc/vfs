@@ -22,4 +22,7 @@ constexpr inline auto has_sign_bit    ( CtType<Int> ) { return PrimitiveCtInt<1>
 // scalar_type_for (when creating "virtual" objects from "real" values)
 auto scalar_type_for( PrimitiveCtInt<1> /*virtual*/, CtInt<0> /*scalar class*/, auto, auto ) { return CtType<Int>(); }
 
+// ensure i is a compile time known value
+inline Int make_ct_value( const Int &i ) { return VFS_CALL( make_ct_value, CtStringList<>, Int, i ); }
+
 END_VFS_NAMESPACE

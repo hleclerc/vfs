@@ -12,14 +12,16 @@ public:
     VfsDtObject_STD_METHODS_TT( Array, Item, Tags, "vfs", 3 * sizeof( void * ), alignof( void * ) );
 
     // additional ctors to allow construction using {} lists
-    TT     Array     ( const std::initializer_list<std::initializer_list<std::initializer_list<T>>> &values );
-    TT     Array     ( const std::initializer_list<std::initializer_list<T>> &values );
-    TT     Array     ( const std::initializer_list<T> &values );
+    TT           Array     ( const std::initializer_list<std::initializer_list<std::initializer_list<T>>> &values );
+    TT           Array     ( const std::initializer_list<std::initializer_list<T>> &values );
+    TT           Array     ( const std::initializer_list<T> &values );
 
-    Int    size      () const;
+    Int          size      () const;
 
-    Array& operator<<( const Item &item ) { VFS_CALL_METHOD( operator<<, void, *this, item ); return *this; }
-    Array& operator<<( Item &&item ) { VFS_CALL_METHOD( operator<<, void, *this, std::move( item ) ); return *this; }
+    Array&       operator<<( const Item &item ) { VFS_CALL_METHOD( operator<<, void, *this, item ); return *this; }
+    Array&       operator<<( Item &&item ) { VFS_CALL_METHOD( operator<<, void, *this, std::move( item ) ); return *this; }
+
+    static Array fill      ( const Array<Int> &sizes, const Item &value );
 };
 
 // types for ctors --------------------------------------------------------------------------

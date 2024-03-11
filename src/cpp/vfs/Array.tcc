@@ -23,18 +23,19 @@ DTP Int UTP::size() const {
     return VFS_CALL_METHOD( size, Int, *this );
 }
 
-#undef DTP
-#undef UTP
+DTP UTP UTP::fill( const Array<Int> &sizes, const Item &value ) {
+    return VFS_CALL_DINK( make_FilledArray, CtStringList<"inc_file:vfs/containers/FilledArray.h">, UTP, sizes, value, make_ct_value( sizes.size() ) );
+}
 
-TUV auto vfs_dt_impl_type( CtType<Array<U,V>>, const HasSizeAndAccess auto &that ) {
-    constexpr auto wanted_nb_dims = ArrayTagListAnalyzer::want_nb_dims( V{} );
+DTP auto vfs_dt_impl_type( CtType<UTP>, const HasSizeAndAccess auto &that ) {
+    constexpr auto wanted_nb_dims = ArrayTagListAnalyzer::want_nb_dims( Tags{} );
 
     /// If it's empty, we're not going to have sample items...
     if ( that.size() == 0 )
         return Type( "EmptyArrayImpl", "vfs/containers/EmptyArrayImpl.h", wanted_nb_dims );
 
     // scalar
-    auto sub_item_type = vfs_dt_impl_type( CtType<U>(), item_sample( that, wanted_nb_dims ) );
+    auto sub_item_type = vfs_dt_impl_type( CtType<Item>(), item_sample( that, wanted_nb_dims ) );
     if ( wanted_nb_dims == 0 )
         return Type( sub_item_type );
 
@@ -51,7 +52,7 @@ TUV auto vfs_dt_impl_type( CtType<Array<U,V>>, const HasSizeAndAccess auto &that
         if ( wanted_nb_dims == 1 ) {
             // template<class Item,int static_size=-1,int local_size=0,int alignment=0,bool allow_heap=true>
             // static size
-            if ( ArrayTagListAnalyzer::want_ct_size_for_dim( V(), CtInt<0>() ) )
+            if ( ArrayTagListAnalyzer::want_ct_size_for_dim( Tags{}, CtInt<0>() ) )
                 return Type( CtString<"Vec">(), CtStringList<"inc_file:vfs/containers/Vec.h">(), sub_item_type, sizes[ 0 ], CtInt<0>(), CtInt<0>(), CtInt<0>() );
             // dynamic size
             return Type( CtString<"Vec">(), CtStringList<"inc_file:vfs/containers/Vec.h">(), sub_item_type, CtInt<-1>(), CtInt<0>(), CtInt<0>(), CtInt<1>() );
@@ -63,8 +64,11 @@ TUV auto vfs_dt_impl_type( CtType<Array<U,V>>, const HasSizeAndAccess auto &that
     } );
 }
 
-TUV auto vfs_dt_impl_type( CtType<Array<U,V>> ) {
+DTP auto vfs_dt_impl_type( CtType<UTP> ) {
     return CtType<EmptyArrayImpl<1>>();
 }
+
+#undef DTP
+#undef UTP
 
 END_VFS_NAMESPACE

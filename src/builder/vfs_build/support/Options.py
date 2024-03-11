@@ -59,6 +59,11 @@ class Options:
                     res.append( option )
         return list( reversed( res ) )
 
+    def add_global_option( self, name: str, value: str = '', unique = False ):
+        if self.parent:
+            return self.parent.add_global_option( name, value, unique )
+        self.add_option( name, value, unique )
+
     def add_option( self, name: str, value: str = '', unique = False ):
         if unique:
             for option in self.all_the_options():
