@@ -23,8 +23,8 @@ DTP Int UTP::size() const {
     return VFS_CALL_METHOD( size, Int, *this );
 }
 
-DTP UTP UTP::fill( const Array<Int> &sizes, const Item &value ) {
-    return VFS_CALL_DINK( make_FilledArray, CtStringList<"inc_file:vfs/containers/FilledArray.h">, UTP, sizes, value, make_ct_value( sizes.size() ) );
+DTP UTP UTP::fill( const Sizes &sizes, const Item &value ) {
+    return VFS_CALL_DINK( make_FilledArray, CtStringList<"inc_file:vfs/containers/FilledArray.h">, UTP, CtType<UTP>{}, sizes, value, sizes.size() );
 }
 
 DTP auto vfs_dt_impl_type( CtType<UTP>, const HasSizeAndAccess auto &that ) {

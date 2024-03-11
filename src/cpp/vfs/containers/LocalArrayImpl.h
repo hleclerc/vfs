@@ -29,8 +29,8 @@ template<class Memory>
 class GenericArray<Memory> {
 public:
     static void for_each_template_arg( auto &&f ) { f( CtType<Memory>() ); }
-    static auto template_type_name   () { return "GenericArray"; }
     static auto get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( "vfs/support/containers/GenericArray.h" ); }
+    static auto template_type_name   () { return "GenericArray"; }
 };
 
 TT concept IsA_GenericArray = IsSpecializationOf<GenericArray,T>::value;

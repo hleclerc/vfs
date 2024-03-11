@@ -10,6 +10,7 @@ template<class Item,class Tags=ArrayTagList<>>
 class Array {
 public:
     VfsDtObject_STD_METHODS_TT( Array, Item, Tags, "vfs", 3 * sizeof( void * ), alignof( void * ) );
+    using        Sizes     = Array<Int,ArrayTagList<ArrayTag::ForceNbDimsTo<1>,ArrayTag::WantCtSizeInAllDims>>;
 
     // additional ctors to allow construction using {} lists
     TT           Array     ( const std::initializer_list<std::initializer_list<std::initializer_list<T>>> &values );
@@ -21,7 +22,7 @@ public:
     Array&       operator<<( const Item &item ) { VFS_CALL_METHOD( operator<<, void, *this, item ); return *this; }
     Array&       operator<<( Item &&item ) { VFS_CALL_METHOD( operator<<, void, *this, std::move( item ) ); return *this; }
 
-    static Array fill      ( const Array<Int> &sizes, const Item &value );
+    static Array fill      ( const Sizes &sizes, const Item &value );
 };
 
 // types for ctors --------------------------------------------------------------------------
