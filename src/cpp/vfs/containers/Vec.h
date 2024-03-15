@@ -1,6 +1,8 @@
 #pragma once
 
+#include "../support/type_promote.h"
 #include "../support/TypeConfig.h"
+#include "../support/reassign.h"
 #include "Memory/Memory_Cpu.h"
 
 BEG_VFS_NAMESPACE
@@ -104,6 +106,17 @@ public:
     void                clear       ();
 
     void                copy_data_to( void *data ) const;
+    TUV void            set_item    ( CtType<U> array_type, CtType<V> item_type, auto &&value, const auto &index ) {
+        if ( ! reassign( operator[]( index ), FORWARD( value ) ) ) {
+            using Dst = VALUE_IN_DECAYED_TYPE_OF( type_promote( CtString<"reassign">(),
+                vfs_dt_impl_type( item_type, FORWARD( value ) ),
+                CtType<Item>()
+            ) );
+            P( type_name( CT_DECAYED_TYPE_OF( value ) ), type_name<Dst>() );
+            throw typename U::template TypeException<Vec<Dst>,Vec>{ std::move( *this ) };
+        }
+    }
+    const Item&         get_item    ( const auto &index ) const { return operator[]( index ); }
 
     static Item*        allocate    ( PI nb_items );
 

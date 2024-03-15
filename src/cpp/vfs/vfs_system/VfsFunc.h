@@ -2,6 +2,7 @@
 
 #include "types_of_keys_of_vfs_objects.h"
 #include "../support/CtStringList.h" // IWYU pragma: export
+#include "VfsTypeException.h"
 #include "VfsFuncArray.h"
 #include "VfsArg.h" // IWYU pragma: export
 
@@ -48,7 +49,7 @@ auto vfs_call( Args&&... args );
             return vfs_call<#FUNC,COMP_FLAGS,RETURN>( std::forward<Args>( args )... ); \
         else \
             return FUNC( std::forward<Args>( args )... ); \
-    } )( __VA_ARGS__ );
+    } )( __VA_ARGS__ )
 
 /// if args do not generate any ct_key (vfs_object_ct_key), make a direct method call. Else, use a vfs_call
 #define VFS_CALL_METHOD_DINK( FUNC, RETURN, SELF, ... ) \
@@ -57,7 +58,21 @@ auto vfs_call( Args&&... args );
             return vfs_call<#FUNC "__method",CtStringList<>,RETURN>( std::forward<Self>( self ), std::forward<Args>( args )... ); \
         else \
             return self.FUNC( std::forward<Args>( args )... ); \
-    } )( SELF, __VA_ARGS__ );
+    } )( SELF, __VA_ARGS__ )
+
+
+///
+#define VFS_CALL_METHOD_WITH_CATCH( FUNC, RETURN, SELF, ... ) \
+    ( [&]<class Self,class... Args>( Self &&self, Args&&...args ) { \
+        for( PI i = 0; i < 10; ++i ) { \
+            try { \
+                return vfs_call<#FUNC "__method",CtStringList<>,RETURN>( std::forward<Self>( self ), std::forward<Args>( args )... ); \
+            } catch ( const VFS_NAMESPACE::VfsTypeException &e ) { \
+                e.change_type_of( &self ); \
+            } \
+        } \
+        ERROR( "no stable target type" ); \
+    } )( SELF, __VA_ARGS__ )
 
 END_VFS_NAMESPACE
 

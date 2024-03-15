@@ -15,10 +15,20 @@ public:
 
     PI           size                 () const { return sizes[ 0 ]; }
 
-    const auto& operator[]            ( PI i ) const;
+    const auto&  operator()           ( PI i, auto... j ) const { return operator[]( i )( j... ); }
+    const auto&  operator()           ( PI i ) const { return operator[]( i ); }
+    const auto&  operator[]           ( PI i ) const;
 
-    Vec<PI,dim> sizes;
-    Item        value;
+    Item         get_item             ( const auto &...indices ) const { return operator()( indices... ); }
+    TUV void     set_item             ( CtType<U> array_type, CtType<V> item_type, auto &&value, const auto &...indices ) {
+        if ( this->value != value ) {
+            using Dst = VALUE_IN_DECAYED_TYPE_OF( vfs_dt_impl_type( item_type, FORWARD( value ) ) );
+            throw typename U::template TypeException<Vec<Dst>,FilledArray>{ std::move( *this ) };
+        }
+    }
+
+    Vec<PI,dim>  sizes;
+    Item         value;
 };
 
 #define DTP template<class Item,int dim>

@@ -22,6 +22,10 @@ public:
     Array&       operator<<( const Item &item ) { VFS_CALL_METHOD( operator<<, void, *this, item ); return *this; }
     Array&       operator<<( Item &&item ) { VFS_CALL_METHOD( operator<<, void, *this, std::move( item ) ); return *this; }
 
+    auto         operator()( auto &&...indices ); ///< return a SelectArray that take a this as a non-owning pointer
+    void         set_item  ( auto &&value, auto &&...indices ); ///<
+    Item         get_item  ( auto &&...indices ) const ; ///<
+
     static Array fill      ( const Sizes &sizes, const Item &value );
 };
 

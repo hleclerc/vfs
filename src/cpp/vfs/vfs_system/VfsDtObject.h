@@ -1,6 +1,7 @@
 #pragma once
 
 // #include "../support/type_promote.h" // IWYU pragma: export
+#include "VfsTypeException_Dt.h" // IWYU pragma: export
 #include "VfsRefAccessDirect.h" // IWYU pragma: export
 #include "VfsRefAccessDeref.h" // IWYU pragma: export
 #include "VfsArgTrait.h"
@@ -70,6 +71,7 @@ struct VfsArgTrait<Obj> {
 
 #define VfsDtObject_STD_METHODS__BASE( NAME, INCLUDE_PATH, SIZE, ALIG ) public: \
     static void            get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( INCLUDE_PATH "/" #NAME ".h" ); } \
+    TUV using              TypeException        = VfsTypeException_Dt<NAME,U,V>; \
     \
     /**/                   NAME                 ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_dt_attributes, CtType<NAME>(), FromTypeAndCtorArguments(), FORWARD( ct_type ), FORWARD( args )... ); } \
     /**/                   NAME                 ( FromPointerOnBorrowed, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_dt_attributes, CtType<NAME>(), FromPointerOnBorrowed(), FORWARD( pointer ) ); } \

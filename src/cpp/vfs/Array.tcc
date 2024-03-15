@@ -1,6 +1,7 @@
 #pragma once
 
 #include "containers/EmptyArrayImpl.h"
+#include "containers/SelectArray.h"
 #include "support/item_sample.h"
 #include "support/with_sizes.h"
 #include "Array.h"
@@ -21,6 +22,19 @@ DTP TT UTP::Array( const std::initializer_list<T> &values ) : Array( FromTypeAnd
 
 DTP Int UTP::size() const {
     return VFS_CALL_METHOD( size, Int, *this );
+}
+
+DTP auto UTP::operator()( auto &&...indices ) {
+    auto tup = std::make_tuple( FORWARD( indices )... );
+    return SelectArray<Array *,Item,decltype(tup)>{ this, std::move( tup ) };
+}
+
+DTP void UTP::set_item( auto &&value, auto &&...indices ) {
+    return VFS_CALL_METHOD_WITH_CATCH( set_item, void, *this, CtType<Array>(), CtType<Item>(), FORWARD( value ), FORWARD( indices )... );
+}
+
+DTP Item UTP::get_item( auto &&...indices ) const {
+    return VFS_CALL_METHOD( get_item, Item, *this, FORWARD( indices )... );
 }
 
 DTP UTP UTP::fill( const Sizes &sizes, const Item &value ) {
