@@ -16,4 +16,7 @@ struct PrimitiveCtInt {
 template<int a,int b>
 constexpr auto max( PrimitiveCtInt<a>, PrimitiveCtInt<b> ) { return PrimitiveCtInt<( a >= b ? a : b )>(); }
 
+template<int a,int b>
+constexpr bool operator>=( PrimitiveCtInt<a>, PrimitiveCtInt<b> ) { return a >= b; }
+
 END_VFS_NAMESPACE

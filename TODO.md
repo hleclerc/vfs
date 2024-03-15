@@ -117,3 +117,16 @@ L'idéal serait de savoir si les fonctions ont besoin d'une valeur ou d'une réf
 
 Prop: si on ne peut pas rentrer une valeur dans un type, on peut générer une exception.
   Prop: VFS_CALL_METHOD_WITH_EXCEPTION permet de prendre
+
+Pb de l'extraction de sous tableau 
+  => pour faire quelque chose de général, on pourrait faire une classe avec un pointeur sur l'original + un offset en octets
+  Le soucis, c'est qu'il sera interdit de modifier 
+
+Size => as a tuple
+
+
+
+
+
+
+

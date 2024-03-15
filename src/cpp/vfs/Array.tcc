@@ -5,6 +5,7 @@
 #include "support/item_sample.h"
 #include "support/with_sizes.h"
 #include "Array.h"
+#include "Any.h"
 
 BEG_VFS_NAMESPACE
 
@@ -26,7 +27,7 @@ DTP Int UTP::size() const {
 
 DTP auto UTP::operator()( auto &&...indices ) {
     auto tup = std::make_tuple( FORWARD( indices )... );
-    return SelectArray<Array *,Item,decltype(tup)>{ this, std::move( tup ) };
+    return SelectArray<Array *,decltype(tup)>{ this, std::move( tup ) };
 }
 
 DTP void UTP::set_item( auto &&value, auto &&...indices ) {
@@ -34,11 +35,25 @@ DTP void UTP::set_item( auto &&value, auto &&...indices ) {
 }
 
 DTP Item UTP::get_item( auto &&...indices ) const {
+    // Pb: le type de sortie n'est pas le même en fonction de la dimension
+    // Prop: on fait ce qu'on peut
     return VFS_CALL_METHOD( get_item, Item, *this, FORWARD( indices )... );
 }
 
 DTP UTP UTP::fill( const Sizes &sizes, const Item &value ) {
     return VFS_CALL_DINK( make_FilledArray, CtStringList<"inc_file:vfs/containers/FilledArray.h">, UTP, CtType<UTP>{}, sizes, value, sizes.size() );
+}
+
+DTP auto UTP::type_select( const auto &...indices ) {
+    constexpr auto wanted_nb_dims = ArrayTagListAnalyzer::want_nb_dims( Tags{} );
+    if constexpr ( sizeof...( indices ) == 0 )
+        return CtType<Array>();
+    else if constexpr ( wanted_nb_dims < 0 )
+        return CtType<Any>();
+    else if constexpr ( sizeof...( indices ) == wanted_nb_dims )
+        return CtType<Item>();
+    else
+        return CtType<Array<Item,decltype(ArrayTagListAnalyzer::with_dim_sub( CtInt<sizeof...( indices )>(), Tags{} ))>>();
 }
 
 DTP auto vfs_dt_impl_type( CtType<UTP>, const HasSizeAndAccess auto &that ) {

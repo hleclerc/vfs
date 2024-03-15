@@ -18,15 +18,14 @@ TEST_CASE( "Array", "" ) {
     // P( c );
 
     using Vol = Array<Scalar>;
-    Vol vol = Vol::fill( { 2 }, 0.0 );
+
+    Vol vol = Vol::fill( { 3 }, 5 );
     P( vol( 0 ) );
-    P( vol );
+    // vol( 0 ) = 10;
+    // P( vol );
 
-    vol( 0 ) = 10;
-    P( vol );
-
-    vol( 1 ) = 1.5;
-    P( vol );
+    // vol( 1 ) = 1.5;
+    // P( vol );
 
     // P( type_promote( CtString<"">(), CtType<SI32>(), CtType<FP32>() ) );
 }

@@ -94,12 +94,12 @@ struct VfsArgTrait<Obj> {
     VfsDtObject<SIZE,ALIG> __vfs_dt_attributes;
 
 #define VfsDtObject_STD_METHODS( NAME, PATH, SIZE, ALIG ) \
-    static auto            type_name            () { return #NAME; } \
+    static auto            type_name            () { return "VFS_NAMESPACE::" #NAME; } \
     VfsDtObject_STD_METHODS__BASE( NAME, PATH, SIZE, ALIG );
 
 #define VfsDtObject_STD_METHODS_TT( NAME, TEMPLATE_ARG_0, TEMPLATE_ARG_1, PATH, SIZE, ALIG ) \
     static void            for_each_template_arg( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); f( CtType<TEMPLATE_ARG_1>() ); } \
-    static auto            template_type_name   () { return #NAME; } \
+    static auto            template_type_name   () { return "VFS_NAMESPACE::" #NAME; } \
     VfsDtObject_STD_METHODS__BASE( NAME, PATH, SIZE, ALIG );
 
 

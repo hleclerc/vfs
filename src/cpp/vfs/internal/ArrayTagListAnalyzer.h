@@ -38,6 +38,15 @@ TiA constexpr auto want_nb_dims                ( ArrayTagList<ArrayTag::ForceNbD
 TTA constexpr auto want_nb_dims                ( ArrayTagList<T,A...> ) { return want_nb_dims( ArrayTagList<A...>() ); }
 constexpr auto     want_nb_dims                ( ArrayTagList<> ) { return CtInt<-1>(); }
 
+// with_decreased_dim
+TiA constexpr auto with_dim_sub                ( auto sub, ArrayTagList<ArrayTag::ForceNbDimsTo<i>,A...>, auto... new_tags );
+TTA constexpr auto with_dim_sub                ( auto sub, ArrayTagList<T,A...>, auto... new_tags );
+constexpr auto     with_dim_sub                ( auto sub, ArrayTagList<>, auto... new_tags );
+
+TiA constexpr auto with_dim_sub                ( auto sub, ArrayTagList<ArrayTag::ForceNbDimsTo<i>,A...>, auto... new_tags ) { return with_dim_sub( sub, ArrayTagList<A...>(), ArrayTag::ForceNbDimsTo<i-sub>(), new_tags... ); }
+TTA constexpr auto with_dim_sub                ( auto sub, ArrayTagList<T,A...>, auto... new_tags ) { return with_dim_sub( sub, ArrayTagList<A...>(), T(), new_tags... ); }
+constexpr auto     with_dim_sub                ( auto sub, ArrayTagList<>, auto... new_tags ) { return ArrayTagList<decltype( new_tags )...>(); }
+
 } // namespace ArrayTagListAnalyzer
 
 END_VFS_NAMESPACE

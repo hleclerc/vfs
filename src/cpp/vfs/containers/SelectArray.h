@@ -4,11 +4,11 @@
 
 BEG_VFS_NAMESPACE
 
-template<class ArrayPtr,class Item,class Indices>
+template<class ArrayPtr,class Indices>
 class SelectArray {
 public:
     static auto  get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( "vfs/containers/SelectArray.h" ); }
-    static void  for_each_template_arg( auto &&f ) { f( CtType<ArrayPtr>() ); f( CtType<Item>() ); f( CtType<Indices>() ); }
+    static void  for_each_template_arg( auto &&f ) { f( CtType<ArrayPtr>() ); f( CtType<Indices>() ); }
     static auto  template_type_name   () { return "SelectArray"; }
 
     TT           operator T           () const { return value(); }
@@ -21,9 +21,9 @@ public:
     Indices      indices;
 };
 
-template<class Item>
-Item make_SelectArray( CtType<Item>, auto *array_ptr, auto&&...indices ) {
-    return { FromValue(), SelectArray<DECAYED_TYPE_OF( array_ptr ),DECAYED_TYPE_OF( indices )...>{ FORWARD( array_ptr ), { FORWARD( indices )... } } };
-}
+// template<class Item>
+// Item make_SelectArray( CtType<Item>, auto *array_ptr, auto&&...indices ) {
+//     return { FromValue(), SelectArray<DECAYED_TYPE_OF( array_ptr ),DECAYED_TYPE_OF( indices )...>{ FORWARD( array_ptr ), { FORWARD( indices )... } } };
+// }
 
 END_VFS_NAMESPACE

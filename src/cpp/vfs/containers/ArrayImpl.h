@@ -2,42 +2,44 @@
 
 #include "../support/is_specialization_of.h"
 #include "../support/CompilationFlags.h"
-#include "ArrayBlockImpl.h"
-#include "VecImpl.h"
-//#include "ArrayLike.h"
+#include "SelectArray.h"
+#include "Vec.h"
 
 BEG_VFS_NAMESPACE
 
 /// Set of array blocks that form an array of potentially different types, alignments, ...
 template<
-    class BlockTypes = CtTypeList<VecImpl<ArrayBlockImpl<double>,1>>,
-    class CtSizes = CtIntList<-1>,
+    class Item,
+    class Sizes = Tuple<PI>,
+    class Strides = Tuple<PI>,
     class Memory = Memory_Cpu,
-    class DefaultValue = void
+    PI    alignment_in_bytes = 0,
+    bool  need_row_alignment = true
 >
-class ArrayImpl;
+class ArrayImpl {
+public:
 
-#define DTP template<class BlockTypes,class CtSizes,class Memory,class DefaultValue>
-#define UTP ArrayImpl<BlockTypes,CtSizes,Memory,DefaultValue>
 
-DTP void for_each_template_arg( CtType<UTP>, auto &&f ) { f( CtType<BlockTypes>() ); f( CtType<CtSizes>() ); f( CtType<Memory>() ); f( CtType<DefaultValue>() ); }
+
+    Item*   data;
+    Sizes   sizes;
+    Strides strides;
+    Memory  memory;
+};
+
+#define DTP template<class Item,class Sizes,class Strides,class Memory,PI alignment_in_bytes,bool need_row_alignment>
+#define UTP ArrayImpl<Item,Sizes,Strides,Memory,alignment_in_bytes,need_row_alignment>
+
+DTP void for_each_template_arg( CtType<UTP>, auto &&f ) { f( CtType<Item>() ); f( CtType<Sizes>() ); f( CtType<Strides>() ); f( CtType<Memory>() ); f( CtInt<alignment_in_bytes>() ); f( CtInt<need_row_alignment>() ); }
 DTP void get_compilation_flags( CompilationFlags &cn, CtType<UTP> ) { cn.add_inc_file( "vfs/support/containers/ArrayImpl.h" ); }
 DTP auto template_type_name( CtType<UTP> ) { return "ArrayImpl"; }
-DTP auto block_types_of( CtType<UTP> ) { return BlockTypes{}; }
-DTP auto ct_sizes_of( CtType<UTP> ) { return CtSizes{}; }
+// DTP auto ct_sizes_of( CtType<UTP> ) { return CtSizes{}; }
 DTP auto memory_of( const UTP &a ) { return a.memory; }
 
 #undef DTP
 #undef UTP
 
-TT concept IsA_ArrayImpl = IsSpecializationOf<ArrayImpl,T>::value;
-
-// with exactly 1 block -------------------------------------------------------------------------------
-template<class BlockType,class CtSizes>
-class ArrayImpl<CtTypeList<VecImpl<BlockType,1>>,CtSizes,Memory_Cpu,void> : public WithDefaultOperators {
-public:
-};
-
+// TT concept IsA_ArrayImpl = IsSpecializationOf<ArrayImpl,T>::value;
 
 
 // /// homogeneous dynamic vector ---------------------------------------------------------------------
@@ -144,7 +146,5 @@ public:
 
 // auto operator/( const IsA_ArrayImpl auto &a, const IsA_ArrayImpl auto &b ) { auto res = a; for( PI i = 0; i < a.size(); ++i ) res[ i ] /= b[ i ]; return res; }
 // auto operator/( const IsA_ArrayImpl auto &a, const NotArrayLike auto &b ) { auto res = a; for( PI i = 0; i < a.size(); ++i ) res[ i ] /= b; return res; }
-
-}
 
 #include "ArrayImpl.tcc" // IWYU pragma: export

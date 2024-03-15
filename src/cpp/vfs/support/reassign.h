@@ -12,8 +12,10 @@ TT CtInt<1> reassign( T &dst, T &&src ) { dst = std::move( src ); return {}; }
 
 /// generic case => make a conversion
 bool reassign( auto &dst, auto &&src ) {
-    if ( scalar_class( CT_DECAYED_TYPE_OF( dst ) ).value >= scalar_class( CT_DECAYED_TYPE_OF( src ) ).value )
+    if constexpr ( scalar_class( CT_DECAYED_TYPE_OF( dst ) ) >= scalar_class( CT_DECAYED_TYPE_OF( src ) ) ) {
+        dst = src;
         return true;
+    }
     return dst == src;
 }
 
