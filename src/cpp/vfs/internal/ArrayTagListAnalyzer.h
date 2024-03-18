@@ -2,19 +2,27 @@
 
 #include "../containers/Vec.h"
 #include "../Type.h"
-#include "ArrayTagList.h"
+#include "ArrayTag.h"
 
 BEG_VFS_NAMESPACE
 
 /// struct to analyze array tags ----------------------------------------------------------------------------------------------------------------------------------------------
 template<class Item,class... Tags>
-struct ArrayTagListAnalyzer;
+struct ArrayTagListAnalyzer {
+    static auto requested_nb_dims() {
+        if constexpr ( sizeof...( Tags ) ) {
+            if constexpr ( FIRST_TYPE_IS_A_SPECIALIZATION_OF( Tags, ForceNbDimsTo ) )
+                return CtInt<HeadTag::value>();
+            else
+                return ArrayTagListAnalyzer<Item,TailTags...>::requested_nb_dims();
+        } else
+            return CtInt<-1>();
+    }
+
+};
 
 template<class Item,class HeadTag,class... TailTags>
 struct ArrayTagListAnalyzer<Item,HeadTag,TailTags...> {
-    static auto requested_nb_dims( auto ) { return ArrayTagListAnalyzer<Item,TailTags...>::requested_nb_dims(); }
-    Ti static auto requested_nb_dims( ArrayTag::ForceNbDimsTo<i> ) { return CtInt<i>(); }
-    static auto requested_nb_dims() { return requested_nb_dims( HeadTag() ); }
 };
 
 template<class Item>

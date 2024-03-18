@@ -26,3 +26,6 @@
 #define     CT_DECAYED_TYPE_OF( v )       VFS_NAMESPACE::CtType<std::decay_t<decltype( v )>>()
 #define     DECAYED_TYPE_OF( v )          std::decay_t<decltype( v )>
 #define     FORWARD( v )                  std::forward<decltype( v )>( v )
+
+#define     FIRST_TYPE_IS_A_SPECIALIZATION_OF( TYPE_LIST, P ) ( []( auto &t, const auto &... ){ return CtInt<requires { t.~P(); }>(); } )( TYPE_LIST(), ... )
+#define     IS_A_SPECIALIZATION_OF( S, P )                    requires ( S &t ) { t.~P(); }
