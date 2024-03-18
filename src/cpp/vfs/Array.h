@@ -6,11 +6,11 @@
 BEG_VFS_NAMESPACE
 
 ///
-template<class Item,class Tags=ArrayTagList<>>
+template<class Item,class... Tags>
 class Array {
 public:
-    VfsDtObject_STD_METHODS_TT( Array, Item, Tags, "vfs", 3 * sizeof( void * ), alignof( void * ) );
-    using        Sizes      = Array<Int,ArrayTagList<ArrayTag::ForceNbDimsTo<1>,ArrayTag::WantCtSizeInAllDims>>;
+    VfsDtObject_STD_METHODS_TA( Array, Item, Tags, "vfs", 3 * sizeof( void * ), alignof( void * ) );
+    using        Sizes      = Array<Int,ArrayTag::ForceNbDimsTo<1>>;
 
     // additional ctors to allow construction using {} lists
     TT           Array      ( const std::initializer_list<std::initializer_list<std::initializer_list<T>>> &values );
@@ -19,10 +19,10 @@ public:
 
     Int          size       () const;
 
-    Array&       operator<< ( const Item &item ) { VFS_CALL_METHOD( operator<<, void, *this, item ); return *this; }
-    Array&       operator<< ( Item &&item ) { VFS_CALL_METHOD( operator<<, void, *this, std::move( item ) ); return *this; }
+    Array&       operator<< ( const Item &item ) { VFS_CALL_METHOD( push_back_if_possible, void, *this, FORWARD( item ) ); return *this; }
+    Array&       operator<< ( Item &&item ) { VFS_CALL_METHOD( push_back_if_possible, void, *this, FORWARD( item ) ); return *this; }
 
-    auto         operator() ( auto &&...indices ); ///< return a SelectArray that take a this as a non-owning pointer
+    auto         operator() ( auto &&...indices ); ///< return a temporary SelectArray instance. this is taken a non-owning pointer
     void         set_item   ( auto &&value, auto &&...indices ); ///<
     Item         get_item   ( auto &&...indices ) const ; ///<
 
@@ -33,12 +33,12 @@ public:
 };
 
 // types for ctors --------------------------------------------------------------------------
-TUV auto vfs_dt_impl_type( CtType<Array<U,V>>, const HasSizeAndAccess auto &that );
-TUV auto vfs_dt_impl_type( CtType<Array<U,V>> );
+TTA auto vfs_dt_impl_type( CtType<Array<T,A...>>, const HasSizeAndAccess auto &that );
+TTA auto vfs_dt_impl_type( CtType<Array<T,A...>> );
 
 // type info -------------------------------------------------------------------------------------------
-TUV auto constexpr tensor_order( CtType<Array<U,V>> ) { return ArrayTagListAnalyzer::want_nb_dims( V() ); }
-TUV auto constexpr item_type( CtType<Array<U,V>> ) { return CtType<U>(); }
+TTA auto constexpr tensor_order( CtType<Array<T,A...>> ) { return ArrayTagListAnalyzer<T,A...>::requested_nb_dims(); }
+TTA auto constexpr item_type( CtType<Array<T,A...>> ) { return CtType<T>(); }
 
 END_VFS_NAMESPACE
 

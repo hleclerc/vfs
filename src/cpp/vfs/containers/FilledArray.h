@@ -3,6 +3,7 @@
 #include "../support/CompilationFlags.h"
 #include "../support/tuple_from_item.h"
 #include "ArrayImpl.h"
+#include "../Array.h"
 
 BEG_VFS_NAMESPACE
 
@@ -63,7 +64,8 @@ DTP constexpr auto &item_sample( const UTP &that, CtInt<-1> ) {
 
 template<class ArrayType,class Item,int dim>
 ArrayType make_FilledArray( CtType<ArrayType>, auto &&sizes, Item &&value ) {
-    return { FromValue{}, FilledArray<std::decay_t<Item>,dim>{ FORWARD( sizes ), FORWARD( value ) } };
+    using Sizes = VALUE_IN_DECAYED_TYPE_OF( vfs_dt_impl_type( CtType<Array<Int,ArrayTagList<ArrayTag::ForceNbDimsTo<1>>>>(), sizes ) );
+    return { FromValue{}, FilledArray<std::decay_t<Item>,Sizes>{ FORWARD( sizes ), FORWARD( value ) } };
 }
 
 #undef DTP

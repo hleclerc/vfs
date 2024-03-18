@@ -102,5 +102,10 @@ struct VfsArgTrait<Obj> {
     static auto            template_type_name   () { return "VFS_NAMESPACE::" #NAME; } \
     VfsDtObject_STD_METHODS__BASE( NAME, PATH, SIZE, ALIG );
 
+#define VfsDtObject_STD_METHODS_TA( NAME, TEMPLATE_ARG_0, TEMPLATE_ARG_1, PATH, SIZE, ALIG ) \
+    static void            for_each_template_arg( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); ( f( CtType<TEMPLATE_ARG_1>() ), ... ); } \
+    static auto            template_type_name   () { return "VFS_NAMESPACE::" #NAME; } \
+    VfsDtObject_STD_METHODS__BASE( NAME, PATH, SIZE, ALIG );
+
 
 END_VFS_NAMESPACE
