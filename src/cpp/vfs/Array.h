@@ -37,7 +37,7 @@ TTA auto vfs_dt_impl_type( CtType<Array<T,A...>>, const HasSizeAndAccess auto &t
 TTA auto vfs_dt_impl_type( CtType<Array<T,A...>> );
 
 // type info -------------------------------------------------------------------------------------------
-TTA auto constexpr tensor_order( CtType<Array<T,A...>> ) { return ArrayTagListAnalyzer<T,A...>::requested_nb_dims(); }
+TTA auto constexpr tensor_order( CtType<Array<T,A...>> ) { return ArrayTagListAnalyzer::requested_nb_dims( A()... ); }
 TTA auto constexpr item_type( CtType<Array<T,A...>> ) { return CtType<T>(); }
 
 END_VFS_NAMESPACE

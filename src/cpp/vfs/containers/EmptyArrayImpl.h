@@ -4,6 +4,7 @@
 
 BEG_VFS_NAMESPACE
 
+/// nb_dim = -1 => undefined
 template<int nb_dims_>
 struct EmptyArrayImpl {
     static void           get_compilation_flags( CompilationFlags &cn ) { cn.add_inc_file( "vfs/containers/EmptyArrayImpl.h" ); }

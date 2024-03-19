@@ -7,21 +7,14 @@
 BEG_VFS_NAMESPACE
 
 /// struct to analyze array tags ----------------------------------------------------------------------------------------------------------------------------------------------
-template<class Item,class... Tags>
-struct ArrayTagListAnalyzer;
+struct ArrayTagListAnalyzer {
+    Ti   static constexpr auto requested_nb_dims   ( ArrayTag::ForceNbDimsTo<i>, auto ...tail ) { return CtInt<i>(); }
+    /**/ static constexpr auto requested_nb_dims   ( auto head, auto ...tail ) { return requested_nb_dims( tail... ); }
+    /**/ static constexpr auto requested_nb_dims   () { return CtInt<-1>(); }
 
-template<class Item,class HeadTag,class... TailTags>
-struct ArrayTagListAnalyzer<Item,HeadTag,TailTags...> {
-    static auto requested_nb_dims( auto ) { return ArrayTagListAnalyzer<Item,TailTags...>::requested_nb_dims(); }
-    Ti static auto requested_nb_dims( ArrayTag::ForceNbDimsTo<i> ) { return CtInt<i>(); }
-    static auto requested_nb_dims() { return requested_nb_dims( HeadTag() ); }
-};
-
-template<class Item>
-struct ArrayTagListAnalyzer<Item> {
-    auto requested_nb_dims() {
-        return CtInt<-1>();
-    }
+    Ti   static constexpr auto want_ct_size_for_dim( CtInt<i> dim, ArrayTag::WantCtSizeInAllDims, auto ...tail ) { return CtInt<1>(); }
+    Ti   static constexpr auto want_ct_size_for_dim( CtInt<i> dim, auto head, auto ...tail ) { return want_ct_size_for_dim( dim, tail... ); }
+    Ti   static constexpr auto want_ct_size_for_dim( CtInt<i> dim ) { return CtInt<0>(); }
 };
 
 // auto array_type_for_ctor_args( auto sub_obj_type, auto tags, const HasSizeAndAccess auto &v );
@@ -40,9 +33,6 @@ struct ArrayTagListAnalyzer<Item> {
 // TTA constexpr auto want_ct_size_for_dim        ( ArrayTagList<T,A...>, auto dim );
 // constexpr auto     want_ct_size_for_dim        ( ArrayTagList<>, auto dim );
 
-// TA constexpr auto  want_ct_size_for_dim        ( ArrayTagList<ArrayTag::WantCtSizeInAllDims,A...>, auto dim ) { return CtInt<1>(); }
-// TTA constexpr auto want_ct_size_for_dim        ( ArrayTagList<T,A...>, auto dim ) { return want_ct_size_for_dim( ArrayTagList<A...>(), dim ); }
-// constexpr auto     want_ct_size_for_dim        ( ArrayTagList<>, auto dim ) { return CtInt<0>(); }
 
 // // want_nb_dims
 // TiA constexpr auto want_nb_dims                ( ArrayTagList<ArrayTag::ForceNbDimsTo<i>,A...> );

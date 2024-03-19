@@ -8,6 +8,7 @@ ON_INIT {
     VFS_ADD_SURDEF( "construct_Type", "vfs_td", "name", "compilation_flags" ) {
         Str name = VirtualCtString::final_type_name_to_content( cg.final_types[ 1 ] );
 
+        P( cg.final_types[ 2 ] );
         CompilationFlags cn = VirtualCtStringList::final_type_name_to_content( cg.final_types[ 2 ] );
         cn.add_inc_file( "vfs/Type.h" );
         cn.add_flags_to( cg );

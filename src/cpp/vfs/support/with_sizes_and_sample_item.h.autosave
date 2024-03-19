@@ -7,7 +7,7 @@ BEG_VFS_NAMESPACE
 /**
   Pb: on ne peut pas obtenir les tailles en se basant uniquement sur les échantillons
 
-
+  Prop: 
 */
 /// call func( sizes, &a_sample_item_or_nullptr_if_not_possible )
 constexpr auto with_sample_item_and_sizes( const auto &that, CtInt<0>, auto &&func, const auto &...sizes_so_far ) {

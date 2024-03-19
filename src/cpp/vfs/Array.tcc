@@ -3,14 +3,14 @@
 #include "containers/EmptyArrayImpl.h"
 #include "containers/SelectArray.h"
 #include "support/item_sample.h"
-#include "support/with_sizes.h"
+#include "support/with_sizes_and_sample_item.h"
 #include "Array.h"
 #include "Any.h"
 
 BEG_VFS_NAMESPACE
 
-#define DTP template<class Item,class Tags>
-#define UTP Array<Item,Tags>
+#define DTP template<class Item,class... Tags>
+#define UTP Array<Item,Tags...>
 
 DTP TT UTP::Array( const std::initializer_list<std::initializer_list<std::initializer_list<T>>> &values ) : Array( FromTypeAndCtorArguments(), vfs_dt_impl_type( CtType<Array>(), values ), values ) {
 }
@@ -45,7 +45,7 @@ DTP UTP UTP::fill( const Sizes &sizes, const Item &value ) {
 }
 
 DTP auto UTP::type_select( const auto &...indices ) {
-    constexpr auto wanted_nb_dims = ArrayTagListAnalyzer::want_nb_dims( Tags{} );
+    constexpr auto wanted_nb_dims = ArrayTagListAnalyzer::requested_nb_dims( Tags{}... ).value;
     if constexpr ( sizeof...( indices ) == 0 )
         return CtType<Array>();
     else if constexpr ( wanted_nb_dims < 0 )
@@ -53,48 +53,70 @@ DTP auto UTP::type_select( const auto &...indices ) {
     else if constexpr ( sizeof...( indices ) == wanted_nb_dims )
         return CtType<Item>();
     else
-        return CtType<Array<Item,decltype(ArrayTagListAnalyzer::with_dim_sub( CtInt<sizeof...( indices )>(), Tags{} ))>>();
+        TODO; //return CtType<Array<Item,decltype(ArrayTagListAnalyzer::with_dim_sub( CtInt<sizeof...( indices )>(), Tags{} ))>>();
 }
 
-DTP auto vfs_dt_impl_type( CtType<UTP>, const HasSizeAndAccess auto &that ) {
-    constexpr auto wanted_nb_dims = ArrayTagListAnalyzer::want_nb_dims( Tags{} );
+DTP auto vfs_dt_impl_type_array_has_size_and_access( CtType<UTP>, const auto &that ) {
+    constexpr auto requested_nb_dims = ArrayTagListAnalyzer::requested_nb_dims( Tags{}... );
 
-    /// If it's empty, we're not going to have sample items...
-    if ( that.size() == 0 )
-        return Type( "EmptyArrayImpl", "vfs/containers/EmptyArrayImpl.h", wanted_nb_dims );
+    // get the sizes of that
+    return with_sizes_and_sample_item( that, requested_nb_dims, [&]( const auto &sizes, const auto *sample_item, const auto &remaining_dims ) {
 
-    // scalar
-    auto sub_item_type = vfs_dt_impl_type( CtType<Item>(), item_sample( that, wanted_nb_dims ) );
-    if ( wanted_nb_dims == 0 )
-        return Type( sub_item_type );
 
-    // nb_dims >= 1
-    return with_sizes( that, [&]( const auto &sizes ) {
-        // runtime size
-        if ( wanted_nb_dims == -1 ) {
-            // find nb dims in ctor args
-            TODO;
-            return Type( sub_item_type );
+        // dynamic nb dims => we take nb dims of that
+        if constexpr ( requested_nb_dims < 0 ) {
+            // Prop: si that est vide, on ne crée pas de tableau typé
+            auto sub_item_type = vfs_dt_impl_type( CtType<Item>(), *sample_item );
+            return Type( "ArrayImpl", "vfs/containers/EmptyArrayImpl.h", requested_nb_dims );
+        } else {
         }
-
-        // vector
-        if ( wanted_nb_dims == 1 ) {
-            // template<class Item,int static_size=-1,int local_size=0,int alignment=0,bool allow_heap=true>
-            // static size
-            if ( ArrayTagListAnalyzer::want_ct_size_for_dim( Tags{}, CtInt<0>() ) )
-                return Type( CtString<"Vec">(), CtStringList<"inc_file:vfs/containers/Vec.h">(), sub_item_type, sizes[ 0 ], CtInt<0>(), CtInt<0>(), CtInt<0>() );
-            // dynamic size
-            return Type( CtString<"Vec">(), CtStringList<"inc_file:vfs/containers/Vec.h">(), sub_item_type, CtInt<-1>(), CtInt<0>(), CtInt<0>(), CtInt<1>() );
-        }
-
-        // size >= 2
-        TODO;
-        return Type( sub_item_type );
     } );
 }
 
+DTP auto vfs_dt_impl_type( CtType<UTP>, const HasSizeAndAccess auto &that ) {
+    return VSF_CALL_DINK( vfs_dt_impl_type_array_has_size_and_access, CtType<UTP>(), that );
+
+
+
+    // /// If it's empty, we're not going to have sample items...
+    // /// TODO: test if that.size() is constexpr-able
+    // if ( that.size() == 0 ) {
+    //     if ( requested_nb_dims >= 0 )
+    //         return Type( "EmptyArrayImpl", "vfs/containers/EmptyArrayImpl.h", requested_nb_dims );
+    // }
+
+    // // scalar
+    // auto sub_item_type = vfs_dt_impl_type( CtType<Item>(), item_sample( that, requested_nb_dims ) );
+    // if ( requested_nb_dims == 0 )
+    //     return Type( sub_item_type );
+
+    // // nb_dims >= 1
+    // return with_sizes( that, [&]( const auto &sizes ) {
+    //     // runtime size
+    //     if ( requested_nb_dims == -1 ) {
+    //         // find nb dims in ctor args
+    //         TODO;
+    //         return Type( sub_item_type );
+    //     }
+
+    //     // vector
+    //     if ( requested_nb_dims == 1 ) {
+    //         // template<class Item,int static_size=-1,int local_size=0,int alignment=0,bool allow_heap=true>
+    //         // static size
+    //         if ( ArrayTagListAnalyzer::want_ct_size_for_dim( CtInt<0>(), Tags{}... ) )
+    //             return Type( CtString<"Vec">(), CtStringList<"inc_file:vfs/containers/Vec.h">(), sub_item_type, sizes[ 0 ], CtInt<0>(), CtInt<0>(), CtInt<0>() );
+    //         // dynamic size
+    //         return Type( CtString<"Vec">(), CtStringList<"inc_file:vfs/containers/Vec.h">(), sub_item_type, CtInt<-1>(), CtInt<0>(), CtInt<0>(), CtInt<1>() );
+    //     }
+
+    //     // size >= 2
+    //     TODO;
+    //     return Type( sub_item_type );
+    // } );
+}
+
 DTP auto vfs_dt_impl_type( CtType<UTP> ) {
-    return CtType<EmptyArrayImpl<1>>();
+    return CtType<EmptyArrayImpl<-1>>();
 }
 
 #undef DTP
