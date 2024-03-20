@@ -1,7 +1,6 @@
 #pragma once
 
 #include "vfs_namespace.h"
-#include <cstdint>
 #include <utility>
 
 BEG_VFS_NAMESPACE
@@ -30,7 +29,7 @@ public:
     void        clear          ();
     void        free           ();
 
-    static auto include_for    () { return "vfs/support/BumpPointerPool.h"; }
+    static auto include_path   () { return "vfs/support/BumpPointerPool.h"; }
     static auto type_name      () { return "BumpPointerPool"; }
 
 private:

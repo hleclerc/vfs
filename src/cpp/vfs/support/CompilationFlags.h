@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../vfs_system/VirtualCtStringList.h"
+#include "Vec.h"
 
 BEG_VFS_NAMESPACE
 class VfsCodegen;

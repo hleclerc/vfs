@@ -149,9 +149,11 @@ Rq: on pourrait utiliser Vec pour tous les Array de dim 1... mais est-ce qu'on v
         Ça veut dire qu'on ne peut plus avoir l'idée qu'il y a deux mondes séparés (par 1 VFS_CALL)
     * on pourrait se fixer sur les DtObject et oublier les clés génériques.
       Rq: on peut imaginer des maps statiques string/autre => int associées à tel ou tel type
-
+    * que fait-on pour les listes d'arguments ?
+      => on pourrait faire un apply avec tuple
 
 
 Qu'est ce que ça donnerait en Tl ? 
 
 
+On pourrait surdéfinir Add et autres pour les types les plus courants, mais ça veut dire 

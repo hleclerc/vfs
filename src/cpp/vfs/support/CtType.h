@@ -1,6 +1,5 @@
 #pragma once
 
-// #include "IsSpecializationOf.h" // IWYU pragma: export
 #include "common_macros.h"
 #include <type_traits>
 
@@ -20,10 +19,11 @@ struct CtType {
     auto*         cast                 ( auto *v ) const { return reinterpret_cast<value *>( v ); }
 };
 
+/// concept to test if a type is a CtType of something
 template<class U>
 concept IsA_CtType = std::is_same_v<std::decay_t<U>,CtType<typename std::decay_t<U>::value>>;
 
 /// make an instance of CtType<type of v> if v is known.
-auto actual_type_of( const auto &v ) { return CT_DECAYED_TYPE_OF( v ); }
+// auto actual_type_of( const auto &v ) { return CT_DECAYED_TYPE_OF( v ); }
 
 END_VFS_NAMESPACE

@@ -3,6 +3,7 @@
 #include "../string/read_arg_name.h"
 #include "Displayer.h"
 #include <sstream>
+#include <cstdint>
 
 BEG_VFS_NAMESPACE
 
