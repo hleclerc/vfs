@@ -22,7 +22,7 @@ public:
     Array&       operator<< ( const Item &item ) { VFS_CALL_METHOD( push_back_if_possible, void, *this, FORWARD( item ) ); return *this; }
     Array&       operator<< ( Item &&item ) { VFS_CALL_METHOD( push_back_if_possible, void, *this, FORWARD( item ) ); return *this; }
 
-    auto         operator() ( auto &&...indices ); ///< return a temporary SelectArray instance. this is taken a non-owning pointer
+    auto         operator() ( auto &&...indices ); ///< return a temporary SelectArray instance. `this` is taken as a non-owning pointer
     void         set_item   ( auto &&value, auto &&...indices ); ///<
     Item         get_item   ( auto &&...indices ) const ; ///<
 

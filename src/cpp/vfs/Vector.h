@@ -5,6 +5,6 @@
 
 BEG_VFS_NAMESPACE
 
-using Vector = Array<Scalar,ArrayTagList<ArrayTag::ForceNbDimsTo<1>>>;
+using Vector = Array<Scalar,ArrayTag::ForceNbDimsTo<1>>;
 
 END_VFS_NAMESPACE

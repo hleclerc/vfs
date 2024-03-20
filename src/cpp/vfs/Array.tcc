@@ -1,9 +1,8 @@
 #pragma once
 
+#include "support/with_sizes_and_sample_item_ptr.h"
 #include "containers/EmptyArrayImpl.h"
 #include "containers/SelectArray.h"
-#include "support/item_sample.h"
-#include "support/with_sizes_and_sample_item.h"
 #include "Array.h"
 #include "Any.h"
 
@@ -57,26 +56,28 @@ DTP auto UTP::type_select( const auto &...indices ) {
 }
 
 DTP auto vfs_dt_impl_type_array_has_size_and_access( CtType<UTP>, const auto &that ) {
-    constexpr auto requested_nb_dims = ArrayTagListAnalyzer::requested_nb_dims( Tags{}... );
+    return with_sizes_and_sample_item_ptr( that, [&]( const auto &sizes, const auto &sample_item_ptr ) {
+        constexpr auto requested_nb_dims = ArrayTagListAnalyzer::requested_nb_dims( Tags{}... );
+        constexpr auto that_nb_dims = sizes.size();
+        if ( requested_nb_dims >= 0 )
+            static_assert( requested_nb_dims == that_nb_dims );
 
-    // get the sizes of that
-    return with_sizes_and_sample_item( that, requested_nb_dims, [&]( const auto &sizes, const auto *sample_item, const auto &remaining_dims ) {
+        if (  ) {
 
-
-        // dynamic nb dims => we take nb dims of that
-        if constexpr ( requested_nb_dims < 0 ) {
-            // Prop: si that est vide, on ne crée pas de tableau typé
-            auto sub_item_type = vfs_dt_impl_type( CtType<Item>(), *sample_item );
-            return Type( "ArrayImpl", "vfs/containers/EmptyArrayImpl.h", requested_nb_dims );
-        } else {
         }
+        auto ItemStorage = vfs_dt_impl_type( CtType<Item>(), *sample_item_ptr );
+        auto SizesStorage = vfs_dt_impl_type( CtType<Array<Int>>(), sizes );
+        auto StridesStorage = SizesStorage;
+        auto Memory = Memory_Cpu();
+        auto alignment_in_bytes = CtInt<1>();
+        auto need_row_alignment = CtInt<1>();
+        return Type( CtString<"ArrayImpl">(), CtStringList<"vfs/containers/ArrayImpl.h">(), ItemStorage, SizesStorage, StridesStorage, Memory, alignment_in_bytes, need_row_alignment );
     } );
 }
 
 DTP auto vfs_dt_impl_type( CtType<UTP>, const HasSizeAndAccess auto &that ) {
-    return VSF_CALL_DINK( vfs_dt_impl_type_array_has_size_and_access, CtType<UTP>(), that );
-
-
+    // call vfs_dt_impl_type_array_has_size_and_access with the exact type + alignment info
+    return VFS_CALL_DINK( vfs_dt_impl_type_array_has_size_and_access, CtStringList<>, Type, CtType<UTP>(), that );
 
     // /// If it's empty, we're not going to have sample items...
     // /// TODO: test if that.size() is constexpr-able

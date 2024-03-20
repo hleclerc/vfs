@@ -5,6 +5,6 @@
 
 BEG_VFS_NAMESPACE
 
-using Point = Array<Scalar,ArrayTagList<ArrayTag::ForceNbDimsTo<1>,ArrayTag::WantCtSizeInAllDims>>;
+using Point = Array<Scalar,ArrayTag::ForceNbDimsTo<1>,ArrayTag::WantCtSizeInAllDims>;
 
 END_VFS_NAMESPACE

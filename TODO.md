@@ -124,6 +124,34 @@ Pb de l'extraction de sous tableau
 
 Size => as a tuple
 
+On serait tentés de faire tous les tableaux avec ArrayImpl, mais à ce moment là, il faudra faire des surdefinitions pour éviter les récursions infinies, en particulier parce qu'on a besoin de stocker la taille et 
 
+Rq: on pourrait utiliser Vec pour tous les Array de dim 1... mais est-ce qu'on veut en faire la même chose ? 
+  En particulier, est-ce qu'on pourrait faire un COW pour les Array ?
+  On pourrait notamment imaginer que les Array aient la possibilité de s'auto changer
+  De façon générale, on pourrait imaginer que les objets wrappé par DT contiennent en fait le type.
+  Rq: ça veut dire qu'on assume que tous les appels de fonction doivent être faits de l'extérieur pour ne pas avoir de surprise lors d'un changement de type
+  Du coup, le type pour le stockage ne sera pas le type DT
+  Il faudra avoir un moyen de dire comment un type d'objet doit être stocké ET par ailleurs quel type il faut utiliser pour DT
+  Rq: si on wrap un entier par exemple, on va se trimbaler les infos pour les types dans les appels
+  Autre questions:
+    * est-ce qu'on met de l'héritage, par exemple DtArray<> : Array ? Bof
+    * est-ce que c'est un moyen de gérer les COW par exemple en changeant le type si nécessaire ?
+    * est-ce qu'on pourrait donner les infos de ce qui est modifié dans les arguments
+    * est-ce qu'on généralise à tous les objets wrappés ? On pourrait imaginer que le format soit la clé + les autres données
+      Par exemple on a des VirtualCtType qui ont une clé Str. 
+    * comment se passent par exemple les opérations sur les PowerDiagram ?
+      => vraisemblablement, il faudrait travailler avec des VFS_CALL partout.
+        A priori, c'est transparent tant qu'on travaille sur des objets fondamentaux comme les tableaux, etc...
+        En gros, il faut qu'on fasse du calcul symbolique à fond, avec parallélisation automatique, etc...
+      => les WeightedPointSet pourraient simplement être virtual ?? Bof: on a besoin du multiple dispatch
+        Mais en même temps, une fois le type connu, on aimerait bien faire des VFS_CALL.
+        Ça veut dire qu'on ne peut plus avoir l'idée qu'il y a deux mondes séparés (par 1 VFS_CALL)
+    * on pourrait se fixer sur les DtObject et oublier les clés génériques.
+      Rq: on peut imaginer des maps statiques string/autre => int associées à tel ou tel type
+
+
+
+Qu'est ce que ça donnerait en Tl ? 
 
 

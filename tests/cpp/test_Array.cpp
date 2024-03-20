@@ -1,12 +1,18 @@
-// #include <vfs/Vector.h>
-// #include <vfs/Point.h>
-// #include <vfs/List.h>
+#include <vfs/Vector.h>
+#include <vfs/Point.h>
+#include <vfs/List.h>
 
 #include "catch_main.h"
 
-TEST_CASE( "Empty array", "" ) {
-    Vector b;
-    P( b );
+// TEST_CASE( "Empty array", "" ) {
+//     Vector b;
+//     P( b );
+// }
+
+TEST_CASE( "Rt dim array", "" ) {
+    using Vol = Array<Scalar>;
+    Vol v{ 1, 2, 3, 4 };
+    P( v );
 }
 
 // TEST_CASE( "Array", "" ) {
