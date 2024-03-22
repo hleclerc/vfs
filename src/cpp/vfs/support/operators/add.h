@@ -4,6 +4,10 @@
 
 BEG_VFS_NAMESPACE
 
+struct Functor_add {
+    auto operator()( auto &&a, auto &&b ) const { return FORWARD( a ) + FORWARD( b ); }
+};
+
 constexpr auto add( auto &&a, auto &&b ) {
     // 0 + ..., ... + 0
     if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( a ) ) ) {
@@ -26,12 +30,10 @@ constexpr auto add( auto &&a, auto &&b ) {
         return res;
     } else
 
-    DEFAULT_BIN_OPERATOR_CODE( add )
+    // default behavior
+    DEFAULT_BIN_OPERATOR_CODE_SIGN( add, + )
 
     STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "found no way to call add" );
 }
-
-constexpr auto add( auto &&a, auto &&b );
-
 
 END_VFS_NAMESPACE

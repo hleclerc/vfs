@@ -155,5 +155,16 @@ Rq: on pourrait utiliser Vec pour tous les Array de dim 1... mais est-ce qu'on v
 
 Qu'est ce que ça donnerait en Tl ? 
 
+Février => get lucky, jessy j, , ils ont choisi et personnalisé, battle de voix.
+  Stage plaisir
+  2 
+  Manu à l'écoute des enfants
 
-On pourrait surdéfinir Add et autres pour les types les plus courants, mais ça veut dire 
+
+Make_array_bin_op
+=================
+  => on a besoin essentiellement de trouver le type, et on pourrait envisager ensuite d'appeler le ctor
+  
+
+
+

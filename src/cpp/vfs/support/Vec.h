@@ -1,6 +1,6 @@
 #pragma once
 
-// #include "../support/type_promote.h"
+#include "WithDefaultOperators.h"
 #include "TypeConfig.h"
 #include "CtInt.h"
 // #include "../support/reassign.h"
@@ -14,9 +14,9 @@ BEG_VFS_NAMESPACE
 ///
 /// This specialization is for static vectors
 template<class Item,int static_size=-1>
-class Vec {
+class Vec : public WithDefaultOperators {
 public:
-        // static auto         with_item_type( auto item_type ) { return CtType< Vec<typename VALUE_IN_DECAYED_TYPE_OF(item_type),static_size> >{}; }
+    // static auto         with_item_type( auto item_type ) { return CtType< Vec<typename VALUE_IN_DECAYED_TYPE_OF(item_type),static_size> >{}; }
 
     /**/                Vec           ( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, auto &&...operands );
     /**/                Vec           ( FromItemValues, auto &&...values );
@@ -60,7 +60,7 @@ template<class Item>
 class Vec<Item,-1> : public WithDefaultOperators {
 public:
     /**/                Vec         ( FromSizeAndInitFunctionOnIndex, PI size, auto &&func );
-    /**/                Vec         ( FromOperationOnItemsOf, auto &&a, auto &&operation );
+    /**/                Vec         ( FromOperationOnItemsOf, auto &&functor, auto nb_inds_to_take, auto &&...lists );
     /**/                Vec         ( FromSizeAndItemValue, PI size, auto &&...ctor_args );
     /**/                Vec         ( FromReservationSize, PI capa, PI raw_size = 0 );
     /**/                Vec         ( FromItemValues, auto &&...values );
@@ -134,6 +134,10 @@ DTP auto           get_compilation_flags( auto &cn, CtType<UTP> ) { cn.add_inc_f
 DTP void           for_each_template_arg( CtType<UTP>, auto &&f ) { f( CtType<Item>() ); f( CtInt<static_size>() ); }
 DTP auto           template_type_name   ( CtType<UTP> ) { return "Vec"; }
 DTP constexpr auto tensor_order         ( CtType<UTP> ) { return CtInt<1>(); }
+
+DTP struct         StaticSizesOf<UTP> { using value = PrimitiveCtIntList<static_size>; };
+DTP struct         ItemTypeOf<UTP> { using value = Item; };
+
 // DTP constexpr auto ct_sizes_of( CtType<UTP> ) { return CtIntList<static_size>(); }
 // DTP auto memory_of( const UTP &a ) { return Memory_Cpu(); }
 
@@ -147,7 +151,9 @@ END_VFS_NAMESPACE
 #undef DTP
 #undef UTP
 
-#include "Vec.tcc" // IWYU pragma: export
+template<class ItemType,int static_size>
+struct ArrayTypeFor<ItemType,PrimitiveCtIntList<static_size>,1> {
+    using value = Vec<ItemType,static_size>;
+};
 
-// #include "make_ArrayImpl_from_unary_operations.h" // IWYU pragma: export
-// #include "make_ArrayImpl_from_binary_operations.h" // IWYU pragma: export
+#include "Vec.tcc" // IWYU pragma: export

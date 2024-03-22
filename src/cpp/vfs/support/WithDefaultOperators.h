@@ -1,6 +1,19 @@
 #pragma once
 
-#include "default_operators.h"
+#include "operators/add.h"
+#include "operators/sub.h"
+#include "operators/mul.h"
+#include "operators/div.h"
+#include "operators/mod.h"
+
+#include "operators/inf.h"
+#include "operators/sup.h"
+#include "operators/leq.h"
+#include "operators/geq.h"
+#include "operators/equ.h"
+#include "operators/neq.h"
+
+#include "operators/neg.h"
 
 BEG_VFS_NAMESPACE
 

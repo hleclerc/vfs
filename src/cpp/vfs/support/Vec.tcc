@@ -151,7 +151,7 @@ DTP UTP::Vec( FromSize, PI size ) : Vec( FromReservationSize(), size, size ) {
         new ( data_ + index ) Item;
 }
 
-DTP UTP::Vec( FromOperationOnItemsOf, auto &&a, auto &&operation ) : Vec( FromReservationSize(), a.size(), a.size() ) {
+DTP UTP::Vec( FromOperationOnItemsOf, auto &&functor, auto nb_inds_to_take, auto &&...lists ) : Vec( FromReservationSize(), a.size(), a.size() ) {
     constexpr bool move = std::is_rvalue_reference_v<decltype(a)>;
     for( PI index = 0; index < a.size(); ++index )
         new ( data_ + index ) Item( operation( move ? std::move( a[ index ] ) : a[ index ] ) );

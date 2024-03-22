@@ -4,5 +4,6 @@
 TEST_CASE( "CtInt", "" ) {
     CtInt<12> a;
     P( a + a );
+    P( a * 10 );
     // P( a + 10 );
 }
