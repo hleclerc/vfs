@@ -15,6 +15,7 @@
 #define     TiA                           template<int i,class... A>
 #define     Tij                           template<int i,int j>
 #define     TSs                           template<CtStringValue... S>
+#define     Tis                           template<int... i>
 #define     TS                            template<CtStringValue S>
 #define     TA                            template<class... A>
 #define     TT                            template<class T>

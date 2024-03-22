@@ -2,7 +2,7 @@
 #pragma once
 
 #include "type_promote_scalar.h"
-#include "tensor_order.h"
+#include "TensorOrder.h"
 #include "item_type.h"
 
 BEG_VFS_NAMESPACE

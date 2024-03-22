@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../is_always_zero.h"
+#include "../IsAlwaysZero.h"
 #include "default_operators.h"
 
 BEG_VFS_NAMESPACE

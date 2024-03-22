@@ -4,6 +4,10 @@
 
 BEG_VFS_NAMESPACE
 
-auto constexpr tensor_order( auto ); // defined in CtInt.h
+/// to be surdefined
+template<class T>
+struct TensorOrder {
+    enum { value = 0 };
+};
 
 END_VFS_NAMESPACE

@@ -18,7 +18,7 @@ class Vec : public WithDefaultOperators {
 public:
     // static auto         with_item_type( auto item_type ) { return CtType< Vec<typename VALUE_IN_DECAYED_TYPE_OF(item_type),static_size> >{}; }
 
-    /**/                Vec           ( FromOperationOnItemsOf, auto op_name, auto nb_indices_to_take, auto &&...operands );
+    Tis                 Vec           ( FromOperationOnItemsOf, auto &&functor, PrimitiveCtIntList<i...>, auto &&...lists );
     /**/                Vec           ( FromItemValues, auto &&...values );
     /**/                Vec           ( FromItemValue, auto &&...ctor_args );
     /**/                Vec           ( FromIterator, auto iter );
@@ -60,7 +60,7 @@ template<class Item>
 class Vec<Item,-1> : public WithDefaultOperators {
 public:
     /**/                Vec         ( FromSizeAndInitFunctionOnIndex, PI size, auto &&func );
-    /**/                Vec         ( FromOperationOnItemsOf, auto &&functor, auto nb_inds_to_take, auto &&...lists );
+    Tis                 Vec         ( FromOperationOnItemsOf, auto &&functor, PrimitiveCtIntList<i...>, auto &&...lists );
     /**/                Vec         ( FromSizeAndItemValue, PI size, auto &&...ctor_args );
     /**/                Vec         ( FromReservationSize, PI capa, PI raw_size = 0 );
     /**/                Vec         ( FromItemValues, auto &&...values );
@@ -136,6 +136,7 @@ DTP auto           template_type_name   ( CtType<UTP> ) { return "Vec"; }
 DTP constexpr auto tensor_order         ( CtType<UTP> ) { return CtInt<1>(); }
 
 DTP struct         StaticSizesOf<UTP> { using value = PrimitiveCtIntList<static_size>; };
+DTP struct         TensorOrder<UTP> { enum { value = 1 }; };
 DTP struct         ItemTypeOf<UTP> { using value = Item; };
 
 // DTP constexpr auto ct_sizes_of( CtType<UTP> ) { return CtIntList<static_size>(); }
