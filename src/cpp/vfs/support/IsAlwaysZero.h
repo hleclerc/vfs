@@ -11,7 +11,7 @@ struct IsAlwaysZero {
 };
 
 // ::ct_value
-template<class T> requires ( T::ct_value() && T::ct_value() == 0 )
+template<class T> requires ( requires { T::ct_value(); } && T::ct_value() == 0 )
 struct IsAlwaysZero<T>  {
     enum { value = true };
 };

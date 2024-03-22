@@ -1,6 +1,7 @@
 #pragma once
 
 #include "default_operators.h"
+#include "../IsAlwaysZero.h"
 
 BEG_VFS_NAMESPACE
 
@@ -10,7 +11,7 @@ struct Functor_div {
 
 constexpr auto div( auto &&a, auto &&b ) {
     // 0 / b
-    if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( a ) ) ) {
+    if constexpr( IsAlwaysZero<DECAYED_TYPE_OF( a )>::value ) {
         return FORWARD( a );
     } else
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "display/display.h"
+#include "type_name.h"
 #include <iostream>
 #include <mutex>
 

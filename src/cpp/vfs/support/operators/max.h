@@ -12,7 +12,7 @@ constexpr auto max( auto &&a, auto &&b ) {
 }
 
 /// seq max
-auto max( auto &&a ) requires ( tensor_order( CT_DECAYED_TYPE_OF( a ) ).always_equal( 1 ) ) {
+auto max( auto &&a ) requires ( TensorOrder<DECAYED_TYPE_OF( a )>::value == 1 ) {
     using std::max;
     auto res = a[ 0 ];
     for( std::size_t i = 1; i < a.size(); ++i )

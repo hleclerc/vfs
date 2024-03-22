@@ -1,12 +1,10 @@
 #pragma once
 
-#include "IsAlwaysZero.h"
+#include "TensorOrder.h"
 
 BEG_VFS_NAMESPACE
 
 template<class T>
-struct IsScalar {
-    enum { value = IsAlwaysZero<T>::value };
-};
+concept IsScalar = TensorOrder<T>::value == 0;
 
 END_VFS_NAMESPACE

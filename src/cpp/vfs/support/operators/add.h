@@ -1,6 +1,7 @@
 #pragma once
 
 #include "default_operators.h"
+#include "../IsAlwaysZero.h"
 
 BEG_VFS_NAMESPACE
 
@@ -10,11 +11,11 @@ struct Functor_add {
 
 constexpr auto add( auto &&a, auto &&b ) {
     // 0 + ..., ... + 0
-    if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( a ) ) ) {
+    if constexpr( IsAlwaysZero<DECAYED_TYPE_OF( a )>::value ) {
         return FORWARD( b );
     } else
 
-    if constexpr( is_always_zero( CT_DECAYED_TYPE_OF( b ) ) ) {
+    if constexpr( IsAlwaysZero<DECAYED_TYPE_OF( b )>::value ) {
         return FORWARD( a );
     } else
 

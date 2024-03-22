@@ -1,4 +1,3 @@
-#include <vfs/support/type_name.h>
 #include <vfs/support/Vec.h>
 #include "catch_main.h"
 
