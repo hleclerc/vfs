@@ -7,7 +7,7 @@ BEG_VFS_NAMESPACE
 ///
 class Type {
 public:
-    STD_METHODS_VFS_WRAPPER( Type, "VFS_NAMESPACE", "vfs", sizeof( void * ), alignof( void * ) );
+    STD_METHODS_FOR_VFS_WRAPPER( Type, "VFS_NAMESPACE", "vfs", sizeof( void * ), alignof( void * ) );
 
     // /**/ Type( auto &&name, auto &&compilation_flags, auto &&...template_parameters ); ///< template_parameters are automatically transformed to ct_value to be used as real template args
     // /**/ Type( auto name ) : Type( name, CompilationFlags() ) {}

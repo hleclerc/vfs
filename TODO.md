@@ -161,10 +161,14 @@ Février => get lucky, jessy j, , ils ont choisi et personnalisé, battle de voi
   Manu à l'écoute des enfants
 
 
-Make_array_bin_op
-=================
-  => on a besoin essentiellement de trouver le type, et on pourrait envisager ensuite d'appeler le ctor
-  
+VfsObject
+=========
+
+La nouvelle approche proposée consiste à faire des objets avec vfs_attrs
+On pourrait faire un CRDT
+
+VfsObject_StdInteger<...>
+VfsObject_StdScalar<...>
 
 
 
