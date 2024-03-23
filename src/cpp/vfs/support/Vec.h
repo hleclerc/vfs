@@ -3,8 +3,6 @@
 #include "WithDefaultOperators.h"
 #include "TypeConfig.h"
 #include "CtInt.h"
-// #include "../support/reassign.h"
-// #include "Memory/Memory_Cpu.h"
 
 BEG_VFS_NAMESPACE
 
@@ -16,7 +14,7 @@ BEG_VFS_NAMESPACE
 template<class Item,int static_size=-1>
 class Vec : public WithDefaultOperators {
 public:
-    // static auto         with_item_type( auto item_type ) { return CtType< Vec<typename VALUE_IN_DECAYED_TYPE_OF(item_type),static_size> >{}; }
+    // static auto      with_item_type( auto item_type ) { return CtType< Vec<typename VALUE_IN_DECAYED_TYPE_OF(item_type),static_size> >{}; }
 
     Tis                 Vec           ( FromOperationOnItemsOf, auto &&functor, PrimitiveCtIntList<i...>, auto &&...lists );
     /**/                Vec           ( FromItemValues, auto &&...values );

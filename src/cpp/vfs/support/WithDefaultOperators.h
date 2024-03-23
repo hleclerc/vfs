@@ -15,6 +15,9 @@
 
 #include "operators/neg.h"
 
+#include "operators/max.h" // IWYU pragma: export
+#include "operators/min.h" // IWYU pragma: export
+
 BEG_VFS_NAMESPACE
 
 /// base class that permits to add operators like `operator+` as friend function that call functions like `add`, `mul`, ...

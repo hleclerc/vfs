@@ -4,11 +4,21 @@
 
 BEG_VFS_NAMESPACE
 
+///
+struct Functor_max {
+    auto operator()( auto &&...a ) const;
+};
+
 /// binary
 constexpr auto max( auto &&a, auto &&b ) {
     DEFAULT_BIN_OPERATOR_CODE( max )
 
     return a >= b ? FORWARD( a ) : FORWARD( b );
+}
+
+/// more than 2 operands
+constexpr auto max( auto &&a, auto &&b, auto &&c, auto &&...d ) {
+    return max( max( FORWARD( a ), FORWARD( b ) ), FORWARD( c ), FORWARD( d )... );
 }
 
 /// seq max
@@ -19,5 +29,8 @@ auto max( auto &&a ) requires ( TensorOrder<DECAYED_TYPE_OF( a )>::value == 1 ) 
         res = max( res, a[ i ] );
     return res;
 }
+
+///
+auto Functor_max::operator()( auto &&...a ) const { return max( FORWARD( a )... ); }
 
 END_VFS_NAMESPACE

@@ -56,7 +56,7 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
 
 
 //
-#define DEFAULT_BIN_OPERATOR_CODE( NAME, OPERATOR ) \
+#define DEFAULT_BIN_OPERATOR_CODE( NAME ) \
     /* methods */ \
     if constexpr( requires { a.NAME( FORWARD( b ) ); } ) { \
             return a.NAME( FORWARD( b ) ); \
@@ -68,16 +68,21 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
     \
     /* ct value */ \
     if constexpr( requires { DECAYED_TYPE_OF( a )::ct_value(); DECAYED_TYPE_OF( b )::ct_value(); } ) { \
-            constexpr auto val = OPERATOR( DECAYED_TYPE_OF( a )::ct_value(), DECAYED_TYPE_OF( b )::ct_value() ); \
+            constexpr auto val = NAME( DECAYED_TYPE_OF( a )::ct_value(), DECAYED_TYPE_OF( b )::ct_value() ); \
             return ct_value_wrapper_for<val>(); \
     } else \
     \
     if constexpr( requires { DECAYED_TYPE_OF( a )::ct_value(); } ) { \
-            return OPERATOR( DECAYED_TYPE_OF( a )::ct_value(), FORWARD( b ) ); \
+            return NAME( DECAYED_TYPE_OF( a )::ct_value(), FORWARD( b ) ); \
     } else \
     \
     if constexpr( requires { DECAYED_TYPE_OF( b )::ct_value(); } ) { \
-            return OPERATOR( FORWARD( a ), DECAYED_TYPE_OF( b )::ct_value() ); \
+            return NAME( FORWARD( a ), DECAYED_TYPE_OF( b )::ct_value() ); \
+    } else \
+\
+    /* arrays */ \
+    if constexpr( TensorOrder<DECAYED_TYPE_OF( a )>::value || TensorOrder<DECAYED_TYPE_OF( b )>::value ) { \
+        return make_array_from_binary_operations( Functor_##NAME(), FORWARD( a ), FORWARD( b ) ); \
     } else \
 
 
