@@ -37,4 +37,9 @@ constexpr auto add( auto &&a, auto &&b ) {
     STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "found no way to call add" );
 }
 
+/// more than 2 operands
+constexpr auto add( auto &&a, auto &&b, auto &&c, auto &&...d ) {
+    return add( add( FORWARD( a ), FORWARD( b ) ), FORWARD( c ), FORWARD( d )... );
+}
+
 END_VFS_NAMESPACE

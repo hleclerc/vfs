@@ -1,12 +1,14 @@
 #pragma once
 
-#include "Type.h"
+#include "support/WithDefaultOperators.h"
+#include "vfs_system/VfsWrapper.h"
+// #include "Type.h"
 
 BEG_VFS_NAMESPACE
 
 class Scalar : public WithDefaultOperators {
 public:
-    VfsDtObject_STD_METHODS( Scalar, "vfs", 4 * sizeof( void * ), alignof( void * ) );
+    STD_METHODS_FOR_VFS_WRAPPER( Scalar, "VFS_NAMESPACE", "vfs", sizeof( void * ), alignof( void * ) );
 };
 
 // types for ctors --------------------------------------------------------------------------

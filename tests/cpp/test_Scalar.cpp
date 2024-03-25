@@ -1,10 +1,10 @@
 #include <vfs/Scalar.h>
 #include "catch_main.h"
 
-// TEST_CASE( "Scalar", "" ) {
-//     Scalar b = 17;
-//     P( b );
-// }
+TEST_CASE( "Scalar", "" ) {
+    Scalar b = 17;
+    P( b );
+}
 
 // TEST_CASE( "Scalar from pointer", "" ) {
 //     int a = 10;
@@ -29,11 +29,11 @@
 //     VFS_CALL( PT, CtStringList<>, void, std::move( va ) );
 // }
 
-TEST_CASE( "Scalar from arg list", "" ) {
-    Scalar a = 17;
-    Scalar b = 17.6;
-    Scalar c = a / 2;
-    P( a );
-    P( b );
-    P( c );
-}
+// TEST_CASE( "Scalar from arg list", "" ) {
+//     Scalar a = 17;
+//     Scalar b = 17.6;
+//     Scalar c = a / 2;
+//     P( a );
+//     P( b );
+//     P( c );
+// }

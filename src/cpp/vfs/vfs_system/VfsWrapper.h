@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../support/operators/ceil.h" // IWYU pragma: export
-#include "../support/TypeConfig.h" // IWYU pragma: export
+#include "VfsFunc.h" // IWYU pragma: export
 
 BEG_VFS_NAMESPACE
 
@@ -40,7 +40,7 @@ struct alignas( alig_ ) VfsWrapperAttributes {
     /**/                   NAME                      ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_wrapper_attributes, CtType<NAME>(), FromTypeAndCtorArguments(), FORWARD( ct_type ), FORWARD( args )... ); } \
     static void            get_compilation_flags     ( auto &cn ) { cn.add_inc_file( INCLUDE_PATH "/" #NAME ".h" ); } \
     \
-    using                  __VfsWrapperAttributes           = VfsWrapperAttributes<SIZE,ALIG>; \
+    using                  __VfsWrapperAttributes    = VfsWrapperAttributes<SIZE,ALIG>; \
     __VfsWrapperAttributes __vfs_wrapper_attributes;
 
 #define STD_METHODS_FOR_VFS_WRAPPER( NAME, NAMESPACE, PATH, SIZE, ALIG ) \
