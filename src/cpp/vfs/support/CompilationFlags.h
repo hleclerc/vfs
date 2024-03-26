@@ -31,7 +31,7 @@ public:
     Vec<Str>       flags;          ///< like "inc_file:..."
 };
 
-VirtualCtStringList ct_value( const CompilationFlags &cn );
+// VirtualCtStringList ct_value( const CompilationFlags &cn );
 Str                 ctor_for( const CompilationFlags &cn );
 
 // by default, call T::get_compilation_flags( res )

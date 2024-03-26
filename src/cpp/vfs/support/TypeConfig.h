@@ -31,10 +31,7 @@ using       FP64                       = double;
 using       FP32                       = float;
 
 // common std types
-TT using    UniquePtr                  = std::unique_ptr<T>;
 using       StrView                    = std::string_view;
-TA using    Tuple                      = std::tuple<A...>;
-TUV using   Pair                       = std::pair<U,V>;
 using       Str                        = std::string;
 
 // // args for ctor selection

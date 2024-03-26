@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../support/get_compilation_flags_rec.h"
+// #include "../support/get_compilation_flags_rec.h"
 #include "../support/StaticStorage.h"
-#include "../support/type_name.h"
-#include "../support/OnInit.h"
+// #include "../support/type_name.h"
+// #include "../support/OnInit.h"
 
-#include "apply_on_vfs_objects.h"
-#include "get_vfs_func_inst.h"
-#include "VfsArgTrait.h"
+// #include "apply_on_vfs_objects.h"
+// #include "get_vfs_func_inst.h"
+#include "VfsWrapper.h"
 #include "VfsFunc.h"
 
 BEG_VFS_NAMESPACE
@@ -19,9 +19,9 @@ DTP UTP::VfsFunc() : array( init ) {
 }
 
 DTP Return UTP::operator()( Args ...args ) {
-    Callable *callable = apply_on_vfs_objects( [&]( const auto &...vfs_objects ) {
+    Callable *callable = tie( args... ).template filtered_apply<VfsWrapper_struct>( [&]( const auto &...vfs_objects ) {
         return *array( vfs_objects... );
-    }, std::make_tuple( &args... ) );
+    } );
     return callable( std::forward<Args>( args )... );
 }
 

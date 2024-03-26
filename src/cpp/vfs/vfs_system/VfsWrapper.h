@@ -1,17 +1,19 @@
 #pragma once
 
 #include "VfsWrapperAttributes.h" // IWYU pragma: export
+#include "VfsStorageTypeFor.h" // IWYU pragma: export
 
 BEG_VFS_NAMESPACE
 
+// concept + struct::value variant to define if an obbject is a Vfs wrapper (around a Vfs Object)
 TT concept VfsWrapper = requires ( T &t ) { t.__vfs_wrapper_attributes; };
+TT struct VfsWrapper_struct { enum { value = VfsWrapper<T> }; };
 
 //     /**/                   NAME                 ( FromPointerOnBorrowed, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_dt_attributes, CtType<NAME>(), FromPointerOnBorrowed(), FORWARD( pointer ) ); } \
 //     /**/                   NAME                 ( FromPointerOnOwned, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_dt_attributes, CtType<NAME>(), FromPointerOnOwned(), FORWARD( pointer ) ); } \
 //     /**/                   NAME                 ( FromValue, auto &&value ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_dt_attributes, CtType<NAME>(), FromValue(), FORWARD( value ) ); } \
 //     /**/                   NAME                 ( const NAME &that ) : NAME( FromValue(), that ) {} \
 //     /**/                   NAME                 ( NAME &&that ) : NAME( FromValue(), std::move( that ) ) {} \
-//     /**/                   NAME                 ( auto &&...args ) requires requires { vfs_dt_impl_type( CtType<NAME>(), args... ); } : NAME( FromTypeAndCtorArguments(), vfs_dt_impl_type( CtType<NAME>(), args... ), FORWARD( args )... ) {} \
 //     \
 //     /**/                  ~NAME                 () { VFS_CALL_CAST_METHOD( destroy, void, *this ); } \
 //     \
@@ -23,6 +25,8 @@ TT concept VfsWrapper = requires ( T &t ) { t.__vfs_wrapper_attributes; };
 
 #define STD_METHODS_FOR_VFS_WRAPPER__BASE( NAME, INCLUDE_PATH, SIZE, ALIG ) public: \
     /**/                   NAME                      ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_wrapper_attributes, CtType<NAME>(), FromTypeAndCtorArguments(), FORWARD( ct_type ), FORWARD( args )... ); } \
+    /**/                   NAME                      ( auto &&...args ) requires requires { vfs_object_for( CtType<NAME>(), args... ); } : NAME( FromTypeAndCtorArguments(), vfs_object_for( CtType<NAME>(), args... ), FORWARD( args )... ) {} \
+    \
     static void            get_compilation_flags     ( auto &cn ) { cn.add_inc_file( INCLUDE_PATH "/" #NAME ".h" ); } \
     \
     using                  __VfsWrapperAttributes    = VfsWrapperAttributes<SIZE,ALIG>; \
@@ -44,3 +48,5 @@ TT concept VfsWrapper = requires ( T &t ) { t.__vfs_wrapper_attributes; };
 
 
 END_VFS_NAMESPACE
+
+#include "VfsFunc.h" // IWYU pragma: export

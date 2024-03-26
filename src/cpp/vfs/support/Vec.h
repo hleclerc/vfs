@@ -57,71 +57,72 @@ public:
 template<class Item>
 class Vec<Item,-1> : public WithDefaultOperators {
 public:
-    /**/                Vec         ( FromSizeAndInitFunctionOnIndex, PI size, auto &&func );
-    Tis                 Vec         ( FromOperationOnItemsOf, auto &&functor, PrimitiveCtIntList<i...>, auto &&...lists );
-    /**/                Vec         ( FromSizeAndItemValue, PI size, auto &&...ctor_args );
-    /**/                Vec         ( FromReservationSize, PI capa, PI raw_size = 0 );
-    /**/                Vec         ( FromItemValues, auto &&...values );
-    /**/                Vec         ( FromSize, PI size );
-    /**/                Vec         ( const std::initializer_list<Item> &l );
-    /**/                Vec         ( const HasSizeAndAccess auto &l );
-    /**/                Vec         ( const Vec & );
-    /**/                Vec         ( Vec && );
-    /**/                Vec         ();
-    /**/               ~Vec         ();
+    /**/                Vec             ( FromSizeAndInitFunctionOnIndex, PI size, auto &&func );
+    Tis                 Vec             ( FromOperationOnItemsOf, auto &&functor, PrimitiveCtIntList<i...>, auto &&...lists );
+    /**/                Vec             ( FromSizeAndItemValue, PI size, auto &&...ctor_args );
+    /**/                Vec             ( FromReservationSize, PI capa, PI raw_size = 0 );
+    /**/                Vec             ( FromItemValues, auto &&...values );
+    /**/                Vec             ( FromSize, PI size );
+    /**/                Vec             ( const std::initializer_list<Item> &l );
+    /**/                Vec             ( const HasSizeAndAccess auto &l );
+    /**/                Vec             ( const Vec & );
+    /**/                Vec             ( Vec && );
+    /**/                Vec             ();
+    /**/               ~Vec             ();
 
-    static Vec          range       ( Item end );
+    static Vec          range           ( Item end );
 
-    Vec&                operator=   ( const Vec &that );
-    Vec&                operator=   ( Vec &&that );
+    Vec&                operator=       ( const Vec &that );
+    Vec&                operator=       ( Vec &&that );
 
-    Vec&                operator<<  ( auto &&value ) { push_back( FORWARD( value) ); return *this; }
+    Vec&                operator<<      ( auto &&value ) { push_back( FORWARD( value) ); return *this; }
 
-    const Item&         operator[]  ( PI index ) const;
-    Item&               operator[]  ( PI index );
-    PI                  size_tot    () const { return size(); }
-    const Item*         begin       () const { return data(); }
-    Item*               begin       () { return data(); }
-    const Item*         data        ( PI index ) const;
-    Item*               data        ( PI index );
-    const Item*         data        () const;
-    Item*               data        ();
-    const Item&         back        () const { return operator[]( size() - 1 ); }
-    Item&               back        () { return operator[]( size() - 1 ); }
-    const Item*         end         () const { return begin() + size(); }
-    Item*               end         () { return begin() + size(); }
+    const Item&         operator[]      ( PI index ) const;
+    Item&               operator[]      ( PI index );
+    PI                  size_tot        () const { return size(); }
+    const Item*         begin           () const { return data(); }
+    Item*               begin           () { return data(); }
+    const Item*         data            ( PI index ) const;
+    Item*               data            ( PI index );
+    const Item*         data            () const;
+    Item*               data            ();
+    const Item&         back            () const { return operator[]( size() - 1 ); }
+    Item&               back            () { return operator[]( size() - 1 ); }
+    const Item*         end             () const { return begin() + size(); }
+    Item*               end             () { return begin() + size(); }
 
-    bool                contains    ( const auto &v ) const { for( const auto &r : *this ) if ( r == v ) return true; return false; }
-    bool                empty       () const { return size_ == 0; }
-    PI                  size        ( PI d ) const { return size(); }
-    PI                  size        () const;
+    bool                contains        ( const auto &v ) const { for( const auto &r : *this ) if ( r == v ) return true; return false; }
+    bool                empty           () const { return size_ == 0; }
+    PI                  size            ( PI d ) const { return size(); }
+    PI                  size            () const;
 
-    Item                pop_back_val();
-    Item*               push_back_br( auto&&...args ); ///< push_back with Item{ FORWARD( args )... }
-    Item*               push_back   ( auto&&...args ); ///< push_back with Item( FORWARD( args )... )
-    void                reserve     ( PI capa );
-    void                resize      ( PI size, auto&&...ctor_args );
-    void                append      ( auto &&that );
-    void                clear       ();
+    Item*               push_back_unique( auto &&value );
+    Item                pop_back_val    ();
+    Item*               push_back_br    ( auto&&...args ); ///< push_back with Item{ FORWARD( args )... }
+    Item*               push_back       ( auto&&...args ); ///< push_back with Item( FORWARD( args )... )
+    void                reserve         ( PI capa );
+    void                resize          ( PI size, auto&&...ctor_args );
+    void                append          ( auto &&that );
+    void                clear           ();
 
-    void                copy_data_to( void *data ) const;
-    TUV void            set_item    ( CtType<U> array_type, CtType<V> item_type, auto &&value, const auto &index ) {
-        if ( ! reassign( operator[]( index ), FORWARD( value ) ) ) {
-            using Dst = VALUE_IN_DECAYED_TYPE_OF( type_promote( CtString<"reassign">(),
-                vfs_dt_impl_type( item_type, FORWARD( value ) ),
-                CtType<Item>()
-            ) );
-            P( type_name( CT_DECAYED_TYPE_OF( value ) ), type_name<Dst>() );
-            throw typename U::template TypeException<Vec<Dst>,Vec>{ std::move( *this ) };
-        }
-    }
-    const Item&         get_item    ( const auto &index ) const { return operator[]( index ); }
+    void                copy_data_to    ( void *data ) const;
+    // TUV void            set_item        ( CtType<U> array_type, CtType<V> item_type, auto &&value, const auto &index ) {
+    //     if ( ! reassign( operator[]( index ), FORWARD( value ) ) ) {
+    //         using Dst = VALUE_IN_DECAYED_TYPE_OF( type_promote( CtString<"reassign">(),
+    //             vfs_dt_impl_type( item_type, FORWARD( value ) ),
+    //             CtType<Item>()
+    //         ) );
+    //         P( type_name( CT_DECAYED_TYPE_OF( value ) ), type_name<Dst>() );
+    //         throw typename U::template TypeException<Vec<Dst>,Vec>{ std::move( *this ) };
+    //     }
+    // }
+    const Item&         get_item        ( const auto &index ) const { return operator[]( index ); }
 
-    static Item*        allocate    ( PI nb_items );
+    static Item*        allocate        ( PI nb_items );
 
-    Item*               data_;    ///<
-    PI                  size_;    ///<
-    PI                  capa_;    ///<
+    Item*               data_;          ///<
+    PI                  size_;          ///<
+    PI                  capa_;          ///<
 };
 
 // --------------------------------------------------------------------------------------------------------------------------------------------

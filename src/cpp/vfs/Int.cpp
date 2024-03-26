@@ -1,5 +1,6 @@
 // #include <vfs/vfs_system/VfsSymbolCache.h>
-#include "Scalar.h"
+#include <tuple>
+#include "Int.h"
 
 BEG_VFS_NAMESPACE
 

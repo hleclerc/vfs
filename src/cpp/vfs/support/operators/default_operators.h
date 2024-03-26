@@ -1,7 +1,7 @@
 #pragma once
 
-#include "make_array_from_binary_operations.h"
-#include "make_array_from_unary_operations.h"
+#include "make_array_from_binary_operations.h" // IWYU pragma: export
+#include "make_array_from_unary_operations.h" // IWYU pragma: export
 
 #include "../STATIC_ASSERT_IN_IF_CONSTEXPR.h" // IWYU pragma: export
 #include "../CtString.h" // IWYU pragma: export

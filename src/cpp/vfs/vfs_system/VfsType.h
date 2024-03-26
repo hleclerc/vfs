@@ -4,19 +4,17 @@
 #include "../support/string/string_replace.h"
 #include "../support/StaticStorage.h"
 #include "../support/type_name.h"
-#include "VfsDtTypeAncestor.h"
-#include "VfsDtTypeTable.h"
+#include "VfsTypeAncestor.h"
+#include "VfsTypeTable.h"
 
 BEG_VFS_NAMESPACE
 
 ///
 template<class Object,class Content,class RefAccess>
-class VfsDtType : public VfsDtTypeAncestor {
+class VfsType : public VfsTypeAncestor {
 public:
     virtual PI32           get_instantiated_type_index() override;
     virtual void           get_compilation_flags_rec  ( CompilationFlags &res, Vec<Str> &seen ) const override;
-    virtual Vec<Str>       final_types                () const override;
-    virtual Vec<Str>       final_refs                 () const override;
     virtual Str            cast_type                  () const override;
     virtual DisplayItem*   display                    ( Displayer &ds ) const override;
 
@@ -25,11 +23,11 @@ public:
 
 // impl -------------------------------------------------------------------------------------------------------------------
 #define DTP template<class Object,class Content,class RefAccess>
-#define UTP VfsDtType<Object,Content,RefAccess>
+#define UTP VfsType<Object,Content,RefAccess>
 
 DTP PI32 UTP::get_instantiated_type_index() {
     if ( instantiated_type_index == 0 )
-        instantiated_type_index = StaticStorage<VfsDtTypeTable,Object>::value.new_instantiated_type_index();
+        instantiated_type_index = StaticStorage<VfsTypeTable,Object>::value.new_instantiated_type_index();
     return instantiated_type_index;
 }
 
@@ -39,15 +37,6 @@ DTP void UTP::get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen )
 
 DTP DisplayItem *UTP::display( Displayer &ds ) const {
     return ds.string( type_name<Content>() );
-}
-
-DTP Vec<Str> UTP::final_types() const {
-    return { type_name( CT_DECAYED_TYPE_OF( RefAccess::ref( *(Content *)nullptr ) ) ) };
-}
-
-DTP Vec<Str> UTP::final_refs() const {
-    Str code = string_replace( RefAccess::code(), "{CONTENT}", "{BEG_ARG_FORWARD}{CAST_NAME}.data.ref(){END_ARG_FORWARD}" );
-    return { code };
 }
 
 DTP Str UTP::cast_type() const {

@@ -1,7 +1,7 @@
-#include "../support/push_back_unique.h"
-#include "../support/string/ctor_for.h"
 #include "../vfs_system/VfsCodegen.h"
+#include "string/ctor_for.h"
 #include "CompilationFlags.h"
+#include "compare.h"
 
 BEG_VFS_NAMESPACE
 
@@ -17,13 +17,13 @@ CompilationFlags::CompilationFlags( const Vec<Str> &flags ) : flags( flags ) {
 
 CompilationFlags &CompilationFlags::operator<<( const CompilationFlags &that ) {
     for( const auto &flag : that.flags )
-        push_back_unique( flags, flag );
+        flags.push_back_unique( flag );
     sort();
     return *this;
 }
 
 CompilationFlags &CompilationFlags::operator<<( const Str &flag ) {
-    push_back_unique( flags, flag );
+    flags.push_back_unique( flag );
     sort();
     return *this;
 }
@@ -50,13 +50,13 @@ DisplayItem *CompilationFlags::display( Displayer &ds ) const {
     return DS_OBJECT( CompilationFlags, flags );
 }
 
-void CompilationFlags::add_cpp_flag( const Str &val ) { if ( val.empty() ) return; push_back_unique( flags, "cpp_flag:" + val ); sort(); }
-void CompilationFlags::add_cpp_file( const Str &val ) { if ( val.empty() ) return; push_back_unique( flags, "cpp_file:" + val ); sort(); }
-void CompilationFlags::add_inc_file( const Str &val ) { if ( val.empty() ) return; push_back_unique( flags, "inc_file:" + val ); sort(); }
-void CompilationFlags::add_inc_path( const Str &val ) { if ( val.empty() ) return; push_back_unique( flags, "inc_path:" + val ); sort(); }
-void CompilationFlags::add_lib_flag( const Str &val ) { if ( val.empty() ) return; push_back_unique( flags, "lib_flag:" + val ); sort(); }
-void CompilationFlags::add_lib_name( const Str &val ) { if ( val.empty() ) return; push_back_unique( flags, "lib_name:" + val ); sort(); }
-void CompilationFlags::add_lib_path( const Str &val ) { if ( val.empty() ) return; push_back_unique( flags, "lib_path:" + val ); sort(); }
+void CompilationFlags::add_cpp_flag( const Str &val ) { if ( val.empty() ) return; flags.push_back_unique( "cpp_flag:" + val ); sort(); }
+void CompilationFlags::add_cpp_file( const Str &val ) { if ( val.empty() ) return; flags.push_back_unique( "cpp_file:" + val ); sort(); }
+void CompilationFlags::add_inc_file( const Str &val ) { if ( val.empty() ) return; flags.push_back_unique( "inc_file:" + val ); sort(); }
+void CompilationFlags::add_inc_path( const Str &val ) { if ( val.empty() ) return; flags.push_back_unique( "inc_path:" + val ); sort(); }
+void CompilationFlags::add_lib_flag( const Str &val ) { if ( val.empty() ) return; flags.push_back_unique( "lib_flag:" + val ); sort(); }
+void CompilationFlags::add_lib_name( const Str &val ) { if ( val.empty() ) return; flags.push_back_unique( "lib_name:" + val ); sort(); }
+void CompilationFlags::add_lib_path( const Str &val ) { if ( val.empty() ) return; flags.push_back_unique( "lib_path:" + val ); sort(); }
 
 void CompilationFlags::sort() {
     std::sort( flags.begin(), flags.end(), cmp_by_flag_type );
@@ -66,9 +66,9 @@ Str ctor_for( const CompilationFlags &cn ) {
     return "{ " + ctor_for( cn.flags ) + " }";
 }
 
-VirtualCtStringList ct_value( const CompilationFlags &cn ) {
-    return { cn.flags };
-}
+// VirtualCtStringList ct_value( const CompilationFlags &cn ) {
+//     return { cn.flags };
+// }
 
 END_VFS_NAMESPACE
 

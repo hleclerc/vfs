@@ -288,6 +288,13 @@ DTP PI UTP::size() const {
     return size_;
 }
 
+DTP Item *UTP::push_back_unique( auto &&value ) {
+    for( PI i = 0; i < size(); ++i )
+        if ( operator[]( i ) == value )
+            return &operator[]( i );
+    return push_back( FORWARD( value ) );
+}
+
 DTP Item UTP::pop_back_val() {
     PI pos = --size_;
     Item res = std::move( data_[ pos ] );
