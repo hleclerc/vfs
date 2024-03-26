@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../support/get_compilation_flags_rec.h"
-#include "../support/string/string_replace.h"
 #include "../support/StaticStorage.h"
 #include "../support/type_name.h"
 #include "VfsTypeAncestor.h"
@@ -10,7 +9,7 @@
 BEG_VFS_NAMESPACE
 
 ///
-template<class Object,class Content,class RefAccess>
+template<class Object>
 class VfsType : public VfsTypeAncestor {
 public:
     virtual PI32           get_instantiated_type_index() override;
@@ -22,8 +21,8 @@ public:
 };
 
 // impl -------------------------------------------------------------------------------------------------------------------
-#define DTP template<class Object,class Content,class RefAccess>
-#define UTP VfsType<Object,Content,RefAccess>
+#define DTP template<class Object>
+#define UTP VfsType<Object>
 
 DTP PI32 UTP::get_instantiated_type_index() {
     if ( instantiated_type_index == 0 )
@@ -32,15 +31,15 @@ DTP PI32 UTP::get_instantiated_type_index() {
 }
 
 DTP void UTP::get_compilation_flags_rec( CompilationFlags &res, Vec<Str> &seen ) const {
-    VFS_NAMESPACE::get_compilation_flags_rec( res, seen, CtType<Content>() );
+    VFS_NAMESPACE::get_compilation_flags_rec( res, seen, CtType<Object>() );
 }
 
 DTP DisplayItem *UTP::display( Displayer &ds ) const {
-    return ds.string( type_name<Content>() );
+    return ds.string( type_name<Object>() );
 }
 
 DTP Str UTP::cast_type() const {
-    return "VfsDtWrap<" + type_name<Object>() + "," + type_name<Content>() + "," + type_name<RefAccess>() + ">";
+    return type_name<Object>();
 }
 
 #undef DTP

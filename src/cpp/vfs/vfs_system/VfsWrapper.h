@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VfsWrapperAttributes.h" // IWYU pragma: export
-#include "VfsStorageTypeFor.h" // IWYU pragma: export
+#include "VfsObjectTypeFor.h" // IWYU pragma: export
 
 BEG_VFS_NAMESPACE
 
@@ -20,14 +20,14 @@ TT struct VfsWrapper_struct { enum { value = VfsWrapper<T> }; };
 //     NAME&                  operator=            ( const NAME &that ) { VFS_CALL( vfs_td_reassign, CtStringList<>, void, *this, that ); return *this; } \
 //     NAME&                  operator=            ( NAME &&that ) { VFS_CALL( vfs_td_reassign, CtStringList<>, void, *this, std::move( that ) ); return *this; } \
 //     \
-//     DisplayItem*           display              ( auto &ds ) const { return VFS_CALL( display, CtStringList<>, DisplayItem *, ds, *this ); } \
 //     Type                   type                 () const { return VFS_CALL( actual_type_of, CtStringList<>, Type, *this ); } \
 
 #define STD_METHODS_FOR_VFS_WRAPPER__BASE( NAME, INCLUDE_PATH, SIZE, ALIG ) public: \
     /**/                   NAME                      ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_wrapper_attributes, CtType<NAME>(), FromTypeAndCtorArguments(), FORWARD( ct_type ), FORWARD( args )... ); } \
-    /**/                   NAME                      ( auto &&...args ) requires requires { vfs_object_for( CtType<NAME>(), args... ); } : NAME( FromTypeAndCtorArguments(), vfs_object_for( CtType<NAME>(), args... ), FORWARD( args )... ) {} \
+    /**/                   NAME                      ( auto &&...args ) requires requires { (typename VfsObjectTypeFor<NAME,decltype(args)...>::value *)nullptr; } : NAME( FromTypeAndCtorArguments(), CtType<typename VfsObjectTypeFor<NAME,decltype(args)...>::value>(), FORWARD( args )... ) {} \
     \
     static void            get_compilation_flags     ( auto &cn ) { cn.add_inc_file( INCLUDE_PATH "/" #NAME ".h" ); } \
+    DisplayItem*           display                   ( auto &ds ) const { return VFS_CALL( display, CtStringList<>, DisplayItem *, ds, *this ); } \
     \
     using                  __VfsWrapperAttributes    = VfsWrapperAttributes<SIZE,ALIG>; \
     __VfsWrapperAttributes __vfs_wrapper_attributes;

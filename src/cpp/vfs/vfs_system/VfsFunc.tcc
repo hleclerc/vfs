@@ -1,12 +1,14 @@
 #pragma once
 
 // #include "../support/get_compilation_flags_rec.h"
+#include "../support/CompilationFlags.h"
 #include "../support/StaticStorage.h"
 // #include "../support/type_name.h"
-// #include "../support/OnInit.h"
+#include "../support/OnInit.h"
 
 // #include "apply_on_vfs_objects.h"
 // #include "get_vfs_func_inst.h"
+#include "VfsTypeAncestor.h"
 #include "VfsWrapper.h"
 #include "VfsFunc.h"
 
@@ -15,31 +17,37 @@ BEG_VFS_NAMESPACE
 #define DTP template<CtStringValue name,class CompilationFlags,class Return,class... Args>
 #define UTP VfsFunc<name,CompilationFlags,Return,Args...>
 
-DTP UTP::VfsFunc() : array( init ) {
+DTP UTP::VfsFunc() : array( &init, CtType<typename Tuple<std::decay_t<Args>...>::template Filtered<VfsWrapper_struct>>() ) {
 }
 
 DTP Return UTP::operator()( Args ...args ) {
-    Callable *callable = tie( args... ).template filtered_apply<VfsWrapper_struct>( [&]( const auto &...vfs_objects ) {
-        return *array( vfs_objects... );
-    } );
+    const auto get_ptr = [&]( const auto &...vfs_wrappers ) { return *array( vfs_wrappers... ); };
+    Callable *callable = tie( args... ).template filtered_apply<VfsWrapper_struct>( get_ptr );
     return callable( std::forward<Args>( args )... );
 }
 
 DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
-    TODO;
-    // // compilation flags with declared types
-    // Vec<Str> seen;
-    // CompilationFlags compilation_flags;
-    // Flags::for_each_string( [&]( auto str ) {
-    //     compilation_flags << str.to_string();
-    // } );
-    // get_compilation_flags_rec( compilation_flags, seen, CtType<Return>() );
-    // ( get_compilation_flags_rec( compilation_flags, seen, CtType<A>() ), ... );
+    // compilation flags
+    Vec<Str> seen;
+    VFS_NAMESPACE::CompilationFlags compilation_flags;
+    CompilationFlags::for_each_string( [&]( auto str ) {
+        compilation_flags << str.to_string();
+    } );
+    get_compilation_flags_rec( compilation_flags, seen, CtType<Return>() );
+    ( get_compilation_flags_rec( compilation_flags, seen, CtType<A>() ), ... );
 
-    // // codegen data for each arg
+    // codegen data for each arg
+    Vec<Str> cast_types( FromReservationSize(), nb_vfs_wrappers );
+    tie( args... ).template filtered_apply_seq<VfsWrapper_struct>( [&]( const auto &vfs_wrapper ) {
+        VfsTypeAncestor *ta = VfsTypeAncestor::type_at_global_index( vfs_wrapper.__vfs_wrapper_attributes.global_type_index );
+        cast_types << ta->cast_type();
+    } );
+
+    P( cast_types );
+    TODO;
+
     // Vec<Vec<Str>> final_types( FromReservationSize(), sizeof...( A ) );
     // Vec<Vec<Str>> final_refs( FromReservationSize(), sizeof...( A ) );
-    // Vec<Str> cast_types( FromReservationSize(), sizeof...( A ) );
     // auto get_cg_data_for = [&]( const auto &arg ) {
     //     Vec<Str> sub_final_types;
     //     Vec<Str> sub_final_refs;
@@ -73,37 +81,36 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
 }
 
 DTP Return UTP::init( Args ...args ) {
-    TODO;
-    // // to get up to date indices and surdefs
-    // OnInit::update();
+    // to get up to date indices and surdefs
+    OnInit::update();
 
-    // // test and update object
-    // bool made_key_update = false;
-    // auto tst_need_update = [&]( const auto &vfs_object ) {
-    //     using Obj = DECAYED_TYPE_OF( vfs_object );
-    //     if constexpr ( requires { VfsArgTrait<Obj>::key_update( vfs_object ); } )
-    //         if ( VfsArgTrait<Obj>::key_update( vfs_object ) )
-    //             made_key_update = true;
-    // };
-    // ( tst_need_update( args ), ... );
+    // test and update object
+    bool made_key_update = false;
+    tie( args... ).template filtered_apply_seq<VfsWrapper_struct>( [&]( const auto &vfs_wrapper ) {
+        if ( vfs_wrapper.__vfs_wrapper_attributes.instantiated_type_index == 0 ) {
+            VfsTypeAncestor *ta = VfsTypeAncestor::type_at_global_index( vfs_wrapper.__vfs_wrapper_attributes.global_type_index );
+            vfs_wrapper.__vfs_wrapper_attributes.instantiated_type_index = ta->get_instantiated_type_index();
+            made_key_update = true;
+        }
+    } );
 
-    // // vfs_func_type_index updated => try again
-    // auto &vfs_func = StaticStorage<VfsFunc>::value;
-    // if ( made_key_update )
-    //     return vfs_func( std::forward<Args>( args )... );
+    // vfs_func_type_index updated => try again
+    auto &vfs_func = StaticStorage<VfsFunc>::value;
+    if ( made_key_update )
+        return vfs_func( std::forward<Args>( args )... );
 
-    // // get or make the right callable
-    // Callable *callable = callable_for( args... );
+    // get or make the right callable
+    Callable *callable = callable_for( args... );
 
-    // // register it
-    // Callable **ptr = apply_on_keys_of_vfs_objects( [&]( const auto &...keys ) {
-    //     return vfs_func.array( keys... );
-    // }, Tuple<>{}, args... );
+    // register it
+    Callable **ptr = tie( args... ).template filtered_apply<VfsWrapper_struct>( [&]( const auto &...vfs_wrappers ) {
+        return vfs_func.array( vfs_wrappers... );
+    } );
 
-    // *ptr = callable;
+    *ptr = callable;
 
-    // // call it
-    // return callable( std::forward<Args>( args )... );
+    // call it
+    return callable( std::forward<Args>( args )... );
 }
 
 // -------------------------------------------------------------------- functions --------------------------------------------------------------------

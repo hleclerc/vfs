@@ -1,7 +1,6 @@
 #pragma once
 
 //#include "types_of_keys_of_vfs_objects.h"
-#include "../support/operators/add.h"
 #include "../support/CtStringList.h" // IWYU pragma: export
 #include "VfsFuncArray.h"
 #include "VfsWrapper.h" // IWYU pragma: export
@@ -12,7 +11,7 @@ BEG_VFS_NAMESPACE
 template<CtStringValue name,class CompilationFlags,class Return,class... Args>
 class VfsFunc {
 public:
-    static constexpr PI nb_vfs_wrappers = add( VfsWrapper<Args>... );
+    static constexpr PI nb_vfs_wrappers = ( VfsWrapper<Args> + ... );
     using               Callable        = Return( Args... );
     using               Array           = VfsFuncArray<Callable,nb_vfs_wrappers>;
 

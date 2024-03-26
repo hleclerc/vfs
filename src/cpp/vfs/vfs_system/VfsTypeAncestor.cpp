@@ -12,6 +12,9 @@ VfsTypeAncestor::VfsTypeAncestor() {
     last_new_type = this;
 }
 
+VfsTypeAncestor::~VfsTypeAncestor() {
+}
+
 void VfsTypeAncestor::register_the_new_types() {
     for( ; last_new_type; last_new_type = last_new_type->prev_new_type ) {
         auto p = last_new_type->global_type_index;
@@ -23,6 +26,7 @@ void VfsTypeAncestor::register_the_new_types() {
 
 VfsTypeAncestor *VfsTypeAncestor::type_at_global_index( PI32 index ) {
     register_the_new_types();
+
     ASSERT( index < all_the_types.size() );
     return all_the_types[ index ];
 }

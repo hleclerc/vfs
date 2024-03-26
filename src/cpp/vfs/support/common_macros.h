@@ -7,6 +7,7 @@
 #define     TAUV                          template<class... A,class U,class V>
 #define     TTij                          template<class T,int i,int j>
 #define     TUVi                          template<class U,class V,int i>
+#define     TTY                           template<template<typename...> class Y>
 #define     TTA                           template<class T,class... A>
 #define     TTI                           template<class T,std::size_t i>
 #define     TTi                           template<class T,int i>

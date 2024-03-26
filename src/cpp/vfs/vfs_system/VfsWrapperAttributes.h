@@ -12,7 +12,7 @@ struct alignas( alig_ ) VfsWrapperAttributes {
     static constexpr PI    min_size                = size_;
     static constexpr PI    alig                    = alig_;
 
-    TT void                construct               ( FromTypeAndCtorArguments, CtType<T>, auto &&...args );
+    TUV void               construct               ( CtType<U>, FromTypeAndCtorArguments, CtType<V>, auto &&...args );
 
     mutable PI32           instantiated_type_index;
     PI32                   global_type_index;
@@ -23,8 +23,8 @@ struct alignas( alig_ ) VfsWrapperAttributes {
 #define DTP template<PI size_,PI alig_>
 #define UTP VfsWrapperAttributes<size_,alig_>
 
-DTP TT void UTP::construct( FromTypeAndCtorArguments, CtType<T>, auto &&...args ) {
-    new ( this ) T( FORWARD( args )... );
+DTP TUV void UTP::construct( CtType<U>, FromTypeAndCtorArguments, CtType<V>, auto &&...args ) {
+    new ( this ) V( FORWARD( args )... );
 }
 
 #undef DTP

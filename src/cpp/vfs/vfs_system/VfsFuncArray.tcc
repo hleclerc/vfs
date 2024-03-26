@@ -26,47 +26,42 @@ BEG_VFS_NAMESPACE
 // #undef DTP
 // #undef UTP
 
-// /// 0 arg --------------------------------------------------------------
-// #define DTP template<class Callable>
-// #define UTP VfsFuncArray<Callable,0,false>
+/// 0 arg --------------------------------------------------------------
+#define DTP template<class Callable>
+#define UTP VfsFuncArray<Callable,0>
 
-// DTP TA UTP::VfsFuncArray( Callable *init, S<A>... ) {
-//     ptr = init;
-// }
+DTP UTP::VfsFuncArray( Callable *init, CtType<Tuple<>> ) {
+    ptr = init;
+}
 
-// DTP TA Callable** UTP::operator()( const A &... ) {
-//     return &ptr;
-// }
+DTP Callable** UTP::operator()() {
+    return &ptr;
+}
 
-// #undef DTP
-// #undef UTP
+#undef DTP
+#undef UTP
 
-// /// 1 arg --------------------------------------------------------------
-// #define DTP template<class Callable>
-// #define UTP VfsFuncArray<Callable,1,false>
+/// 1 arg --------------------------------------------------------------
+#define DTP template<class Callable>
+#define UTP VfsFuncArray<Callable,1>
 
-// DTP TA UTP::VfsFuncArray( Callable *init, S<A>... args ) {
-//     GetVfsObjects::apply_types( [&]( auto a ) {
-//         auto &table_a = StaticStorage<VfsTypeTable,typename decltype( a )::T::VfsObjectId>::value;
-//         size = table_a.current_vfs_func_array_size;
-//         ptr = new Callable *[ size ];
-//         for( std::size_t i = 0; i < size; ++i )
-//             ptr[ i ] = init;
-//     }, args... );
-// }
+DTP TT UTP::VfsFuncArray( Callable *init, CtType<Tuple<T>> ) {
+    auto size = StaticStorage<VfsTypeTable,T>::value.array_size;
+    ptr = new Callable *[ size ];
+    for( std::size_t i = 0; i < size; ++i )
+        ptr[ i ] = init;
+}
 
-// DTP UTP::~VfsFuncArray() {
-//     delete [] ptr;
-// }
+DTP UTP::~VfsFuncArray() {
+    delete [] ptr;
+}
 
-// DTP TA Callable** UTP::operator()( const A &... args ) {
-//     return GetVfsObjects::apply_values( [&]( const auto &a ) {
-//         return ptr + a.vfs_data.get_vfs_func_type_index();
-//     }, args... );
-// }
+DTP Callable** UTP::operator()( const auto &vfs_wrapper ) {
+    return ptr + vfs_wrapper.__vfs_wrapper_attributes.instantiated_type_index;
+}
 
-// #undef DTP
-// #undef UTP
+#undef DTP
+#undef UTP
 
 // /// 2 arg --------------------------------------------------------------
 // #define DTP template<class Callable>

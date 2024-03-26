@@ -13,8 +13,8 @@ public:
 };
 
 // types for ctors --------------------------------------------------------------------------
-TT requires std::is_integral_v<T> struct VfsStorageTypeFor<Int,T> { using value = VfsInt<T>; };
-template<> struct VfsStorageTypeFor<Int> { using value = VfsInt<CtInt<0>>; };
+TT requires std::is_integral_v<T> struct VfsObjectTypeFor<Int,T> { using value = VfsInt<T>; };
+template<> struct VfsObjectTypeFor<Int> { using value = VfsInt<CtInt<0>>; };
 
 
 // // -------------------------------------------------------------------------------------------

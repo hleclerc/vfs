@@ -9,9 +9,12 @@ BEG_VFS_NAMESPACE
 template<class IntType>
 class VfsInt : public VfsObject<Int,VfsInt<IntType>> {
 public:
-    /**/    VfsInt( IntType value = 0 ) : value( value ) {}
+    static void for_each_template_arg( auto &&f ) { f( CtType<IntType>() ); }
+    static auto template_type_name   () { return "VfsInt"; }
 
-    IntType value;
+    /**/        VfsInt               ( IntType value = 0 ) : value( value ) {}
+
+    IntType     value;
 };
 
 END_VFS_NAMESPACE

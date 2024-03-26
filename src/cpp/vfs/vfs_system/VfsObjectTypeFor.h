@@ -7,12 +7,12 @@ BEG_VFS_NAMESPACE
 
 //
 template<class Wrapper,class... CtorArgs>
-struct VfsStorageTypeFor;
+struct VfsObjectTypeFor;
 
 //
-template<class Wrapper,class Arg> requires ( std::is_same_v<std::decay_t<Arg>,Arg> == false ) && requires ( VfsStorageTypeFor<Wrapper,std::decay_t<Arg>>::value *v ) { v; }
-struct VfsStorageTypeFor<Wrapper,Arg> {
-    using value = VfsStorageTypeFor<Wrapper,std::decay_t<Arg>>::value;
+template<class Wrapper,class Arg> requires ( std::is_same_v<std::decay_t<Arg>,Arg> == false ) && requires ( VfsObjectTypeFor<Wrapper,std::decay_t<Arg>>::value *v ) { v; }
+struct VfsObjectTypeFor<Wrapper,Arg> {
+    using value = VfsObjectTypeFor<Wrapper,std::decay_t<Arg>>::value;
 };
 
 

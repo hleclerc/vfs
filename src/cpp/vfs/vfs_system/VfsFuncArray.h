@@ -14,8 +14,9 @@ class VfsFuncArray;
 template<class Callable>
 class VfsFuncArray<Callable,0> {
 public:
-    /**/       VfsFuncArray( Callable *init ) { ptr = init; }
-    Callable** operator()  () { return &ptr; }
+    /**/       VfsFuncArray( Callable *init, CtType<Tuple<>> );
+
+    Callable** operator()  ();
 
     Callable*  ptr;
 };
@@ -24,23 +25,13 @@ public:
 template<class Callable>
 class VfsFuncArray<Callable,1> {
 public:
-    TT         VfsFuncArray( Callable *init, CtType<T> ) { ptr = new Callable *[ StaticStorage<VfsTypeTable,T>::value.array_size ]; }
-    /**/      ~VfsFuncArray() { delete ptr; }
-    Callable** operator()  ( const auto &vfs_object ) { return ptr + vfs_object.__vfs_wrapper_attributes.instantiated_type_index; }
+    TT         VfsFuncArray( Callable *init, CtType<Tuple<T>> );
+    /**/      ~VfsFuncArray();
+
+    Callable** operator()  ( const auto &vfs_wrapper );
 
     Callable** ptr;
 };
-
-// /// 0 arg
-// template<class Callable>
-// class VfsFuncArray<Callable,0,false> {
-// public:
-//     TA            VfsFuncArray( Callable *init, S<A>... );
-
-//     TA Callable** operator()  ( const A &... );
-
-//     Callable*     ptr;
-// };
 
 // /// 1 arg
 // template<class Callable>
