@@ -2,19 +2,20 @@
 
 #include "support/WithDefaultOperators.h"
 #include "vfs_system/VfsWrapper.h"
-#include "impl/VfsInt.h"
+// #include "impl/VfsInt.h"
 // #include "Type.h"
 
 BEG_VFS_NAMESPACE
 
-class Int : public WithDefaultOperators {
+/// Wrap an integer
+class Int : public VfsWrapper, WithDefaultOperators {
 public:
-    STD_METHODS_FOR_VFS_WRAPPER( Int, "VFS_NAMESPACE", "vfs", sizeof( void * ), alignof( void * ) );
+    //STD_METHODS_FOR_VFS_WRAPPER( Int, "VFS_NAMESPACE", "vfs" );
 };
 
 // types for ctors --------------------------------------------------------------------------
-TT requires std::is_integral_v<T> struct VfsObjectTypeFor<Int,T> { using value = VfsInt<T>; };
-template<> struct VfsObjectTypeFor<Int> { using value = VfsInt<CtInt<0>>; };
+// TT requires std::is_integral_v<T> struct VfsObjectTypeFor<Int,T> { using value = VfsInt<T>; };
+// template<> struct VfsObjectTypeFor<Int> { using value = VfsInt<CtInt<0>>; };
 
 
 // // -------------------------------------------------------------------------------------------

@@ -11,7 +11,7 @@ BEG_VFS_NAMESPACE
 template<CtStringValue name,class CompilationFlags,class Return,class... Args>
 class VfsFunc {
 public:
-    static constexpr PI nb_vfs_wrappers = ( VfsWrapper<Args> + ... );
+    static constexpr PI nb_vfs_wrappers = ( IsAVfsWrapper<Args> + ... );
     using               Callable        = Return( Args... );
     using               Array           = VfsFuncArray<Callable,nb_vfs_wrappers>;
 

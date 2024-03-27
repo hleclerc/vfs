@@ -1,13 +1,18 @@
 #pragma once
 
-#include "VfsWrapperAttributes.h" // IWYU pragma: export
 #include "VfsObjectTypeFor.h" // IWYU pragma: export
+#include "VfsPtr.h" // IWYU pragma: export
 
 BEG_VFS_NAMESPACE
 
-// concept + struct::value variant to define if an obbject is a Vfs wrapper (around a Vfs Object)
-TT concept VfsWrapper = requires ( T &t ) { t.__vfs_wrapper_attributes; };
-TT struct VfsWrapper_struct { enum { value = VfsWrapper<T> }; };
+///
+class VfsWrapper {
+public:
+    VfsPtr owner;
+    VfsPtr data;
+};
+
+TT concept IsAVfsWrapper = std::is_base_of<VfsWrapper,T>;
 
 //     /**/                   NAME                 ( FromPointerOnBorrowed, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_dt_attributes, CtType<NAME>(), FromPointerOnBorrowed(), FORWARD( pointer ) ); } \
 //     /**/                   NAME                 ( FromPointerOnOwned, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_dt_attributes, CtType<NAME>(), FromPointerOnOwned(), FORWARD( pointer ) ); } \
@@ -22,28 +27,29 @@ TT struct VfsWrapper_struct { enum { value = VfsWrapper<T> }; };
 //     \
 //     Type                   type                 () const { return VFS_CALL( actual_type_of, CtStringList<>, Type, *this ); } \
 
-#define STD_METHODS_FOR_VFS_WRAPPER__BASE( NAME, INCLUDE_PATH, SIZE, ALIG ) public: \
+#define STD_METHODS_FOR_VFS_WRAPPER__BASE( NAME, INCLUDE_PATH ) public: \
     /**/                   NAME                      ( FromTypeAndCtorArguments, auto &&ct_type, auto &&...args ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_wrapper_attributes, CtType<NAME>(), FromTypeAndCtorArguments(), FORWARD( ct_type ), FORWARD( args )... ); } \
     /**/                   NAME                      ( auto &&...args ) requires requires { (typename VfsObjectTypeFor<NAME,decltype(args)...>::value *)nullptr; } : NAME( FromTypeAndCtorArguments(), CtType<typename VfsObjectTypeFor<NAME,decltype(args)...>::value>(), FORWARD( args )... ) {} \
     \
     static void            get_compilation_flags     ( auto &cn ) { cn.add_inc_file( INCLUDE_PATH "/" #NAME ".h" ); } \
     DisplayItem*           display                   ( auto &ds ) const { return VFS_CALL( display, CtStringList<>, DisplayItem *, ds, *this ); } \
-    \
-    using                  __VfsWrapperAttributes    = VfsWrapperAttributes<SIZE,ALIG>; \
-    __VfsWrapperAttributes __vfs_wrapper_attributes;
 
-#define STD_METHODS_FOR_VFS_WRAPPER( NAME, NAMESPACE, PATH, SIZE, ALIG ) \
+
+#define STD_METHODS_FOR_VFS_WRAPPER( NAME, NAMESPACE, PATH ) \
     static auto            type_name                 () { return NAMESPACE "::" #NAME; } \
-    STD_METHODS_FOR_VFS_WRAPPER__BASE( NAME, PATH, SIZE, ALIG );
+    \
+    STD_METHODS_FOR_VFS_WRAPPER__BASE( NAME, PATH );
 
 #define STD_METHODS_FOR_VFS_WRAPPER_TT( NAME, TEMPLATE_ARG_0, TEMPLATE_ARG_1, NAMESPACE, PATH, SIZE, ALIG ) \
     static void            for_each_template_arg     ( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); f( CtType<TEMPLATE_ARG_1>() ); } \
     static auto            template_type_name        () { return NAMESPACE "::" #NAME; } \
+    \
     STD_METHODS_FOR_VFS_WRAPPER__BASE( NAME, PATH, SIZE, ALIG );
 
 #define STD_METHODS_FOR_VFS_WRAPPER_TA( NAME, TEMPLATE_ARG_0, TEMPLATE_ARG_1, NAMESPACE, PATH, SIZE, ALIG ) \
     static void            for_each_template_arg     ( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); ( f( CtType<TEMPLATE_ARG_1>() ), ... ); } \
     static auto            template_type_name        () { return NAMESPACE "::" #NAME; } \
+    \
     STD_METHODS_FOR_VFS_WRAPPER__BASE( NAME, PATH, SIZE, ALIG );
 
 

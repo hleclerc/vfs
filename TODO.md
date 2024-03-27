@@ -171,4 +171,39 @@ VfsObject_StdInteger<...>
 VfsObject_StdScalar<...>
 
 
+La nouvelle approche consiste à manipuler des objets avec leur infos de type
+  => on y fera des opérations élémentaires, avec retour immédiat côté utilisation (au cas où le type change)
+  => on pourrait par ailleurs imaginer faire un bout du traitement en génération de code
+    Par exemple, si on sait qu'un argument ne sera utilisé qu'en lecture seule, on peut passer la référence finale
+      => ça serait cool pour les objets pointés par exemple
+    S'il y a de l'écriture, ... il faudrait définir comment changer le type. Ça pourrait se faire avec une fonction virtuelle
 
+  Rq: il faudrait peut être qu'on précise dans les VFS_CALL si les arguments doivent être en écriture, par exemple avec une liste d'entier 
+  Rq: ça serait plus simple à conceptualiser si les VfsObjects contenaient type et pointeur pour owner et donnée, 
+    le type d'owner définissant le type de pointeur, c.à.d. s'il faut faire une inc_ref ou autre
+    ... mais on pourrait très bien faire un wrapper qui se charge de ça. À ce moment là, il faut juste s'assurer d'avoir la place pour deux pointeurs pour éviter les indirections
+
+
+  Rq de la mort: si on fait des pointeurs vers des sous-données, ça ne sera pas un pointeur vers VfsObject<...>
+    Du coup, les pointeurs iront plutôt vers des objets C++ bruts, et idéalement, il faudrait un pointeur vers les compteurs de référence (objets en COW et objets référencés).
+    Rq: il faudra aussi gérer les cycles
+
+    Prop:
+      * type + données pour pointeur vers l'owner. A priori, on peut se débrouiller pour que le compteur de référence (s'il y en a un) soit stocké avec l'objet, et on peut aussi le mettre dans la structure, après les données si on veut.
+      * type + pointeur vers la donnée.
+
+  L'idée, c'est que les types décrivent les pointeurs, ce qui permet par exemple de faire des proxy
+
+  Rq: dans tl17, les variables sont représentée avec ExprOff... c'était a priori pour utiliser des représentation de variable en mémoire.
+    On pourrait quand même imaginer travailler sur des instructions qui font la séparation depuis une zone mémoire.
+
+Que fait-on lors du cast ?
+  * on pourrait récupérer à la fois le type de l'owner et le type pour les données, mais ça risque de faire du code bloat à fond
+  * on pourrait imaginer qu'il y ait une option pour récupérer uniquement le type de l'owner
+
+Rq: si on veut récupérer une sous-partie d'un tableau, on aimerait avoir des pointeurs vers strides + sizes + data... par défaut, ça oblige à faire un new pour la structure qui va prendre tous les pointeurs. Du coup, l'owner sera le nouvel objet, avec une référence vers l'owner d'origine.
+
+Rq: si l'objectif c'est de se ramener à des fonctions fondamentales, un Str sera représenté par une zone mémoire... mais on peut aussi imaginer.
+  
+Pb: idéalement, il faudrait que les types puissent aussi être décrits par des expressions...
+  On pourrait 
