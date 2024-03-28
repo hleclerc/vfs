@@ -207,3 +207,59 @@ Rq: si l'objectif c'est de se ramener à des fonctions fondamentales, un Str ser
   
 Pb: idéalement, il faudrait que les types puissent aussi être décrits par des expressions...
   On pourrait 
+
+Propositions pour améliorer Vfs
+  * on spécifie dans les VfsCall si les arguments sont en E/S. 
+    * ça permettra de générer moins de types d'appels (on va faire un `const &`, même si on peut faire un `&&`)
+    * on pourra gérer les copy-on-write
+  * on met un accesseur dans chaque VfsObject. L'idée est d'avoir un get_content(), get_type(), reassign(), get_ref()
+    Par exemple, si on veut modifier un item dans une liste, on va appeler set_item
+
+
+    En fait, on aimerait bien éviter d'avoir un "content" explicite qu'on manipulerait directement.
+    De façon fondamentale, on pourrait imaginer que les opérations reviennent à des manipulations de la mémoire.
+    Si on a ces zones mémoire, on peut directement y effectuer les opérations.
+
+On pourrait avoir une approche "de compilation":
+  * les VfsWrappers sont en fait des variables. On les voit comme des zones mémoires avec un type + éventuellement un objet owner.
+    Rq: en symbolique, on ne va pas directement allouer une zone mémoire même si on connait la taille.
+    Mais ça pourrait être obligatoire d'avoir une "date" de création ou une date de dernier changement pour capter les changements conditionnels
+    On pourrait avoir 
+      * un mode "exécution totale" où les zones sont directement allouées, et on utilise directement les pointeurs
+        Ce mode ne pourrait fonctionner que si host == target
+      * et un mode "compilation" où on ne va allouer que les petites tailles, et où les appels de fonction sont tracés.
+
+    En gros, il faut qu'on sache si on a besoin de rejouer.
+
+    Rq: l'"exécution totale" ne concerne que
+      * l'allocation => on peut tester les booléens à ce moment là, notamment si la taille est trop grande. Ensuite, on se retrouve avec un type symbolique ou pas
+      * les pointeurs => on peut sélectionner la fonction à appeler lors du premier appel en fonction de `host == target`
+      => on pourrait tester le flag "exécution totale" uniquement pendant ces fonctions.
+
+    Rq: il faut tester si on va chercher une valeur dans un block à une date inférieure. Le cas échéant, il faut être capables de modifier la variable pour y insérer un "input" conditionnel.
+
+    En résumé, on manipule des variables qui représentent essentiellement des zones mémoire.
+      * avec des "wrappers" typés pour appeler les bonnes fonctions avec les bon wrappers
+
+    => ça veut qd même dire qu'il va falloir ajouter un système d'interfaçage de librairies
+
+Rq: dans une solution générique, le type des variables est stocké dans un entier, et on ne connait pas forcément la valeur en runtime.
+  On pourrait cependant imaginer qui si on n'est pas capables de trouver un type en runtime, on génère plusieurs variantes.
+  Il faudrait que les demandes de type à partir d'entiers utilisent des callbacks...
+  À ce moment là, ça a du sens de mettre le type en dur.
+
+Que fait-on pour l'owning ?
+
+
+
+
+
+
+
+
+
+
+
+
+
+

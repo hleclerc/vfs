@@ -25,4 +25,9 @@ constexpr auto mul( auto &&a, auto &&b ) {
     STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "found no way to call mul" );
 }
 
+/// more than 2 operands
+constexpr auto mul( auto &&a, auto &&b, auto &&c, auto &&...d ) {
+    return mul( mul( FORWARD( a ), FORWARD( b ) ), FORWARD( c ), FORWARD( d )... );
+}
+
 END_VFS_NAMESPACE
