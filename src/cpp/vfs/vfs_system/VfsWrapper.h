@@ -1,18 +1,11 @@
 #pragma once
 
 #include "VfsObjectTypeFor.h" // IWYU pragma: export
-#include "VfsPtr.h" // IWYU pragma: export
+#include "VfsWrapperData.h" // IWYU pragma: export
 
 BEG_VFS_NAMESPACE
 
-///
-class VfsWrapper {
-public:
-    VfsPtr owner;
-    VfsPtr data;
-};
-
-TT concept IsAVfsWrapper = std::is_base_of<VfsWrapper,T>;
+TT concept VfsWrapper = requires ( T &t ) { t.__vfs_wrapper_data; };
 
 //     /**/                   NAME                 ( FromPointerOnBorrowed, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_dt_attributes, CtType<NAME>(), FromPointerOnBorrowed(), FORWARD( pointer ) ); } \
 //     /**/                   NAME                 ( FromPointerOnOwned, auto &&pointer ) { VFS_CALL_METHOD_DINK( construct, void, __vfs_dt_attributes, CtType<NAME>(), FromPointerOnOwned(), FORWARD( pointer ) ); } \
@@ -33,6 +26,10 @@ TT concept IsAVfsWrapper = std::is_base_of<VfsWrapper,T>;
     \
     static void            get_compilation_flags     ( auto &cn ) { cn.add_inc_file( INCLUDE_PATH "/" #NAME ".h" ); } \
     DisplayItem*           display                   ( auto &ds ) const { return VFS_CALL( display, CtStringList<>, DisplayItem *, ds, *this ); } \
+    \
+    mutable PI32           instantiated_type_index; \
+    PI32                   global_type_index; \
+    void*                  data;
 
 
 #define STD_METHODS_FOR_VFS_WRAPPER( NAME, NAMESPACE, PATH ) \

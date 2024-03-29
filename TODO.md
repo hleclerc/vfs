@@ -249,9 +249,15 @@ Rq: dans une solution générique, le type des variables est stocké dans un ent
   À ce moment là, ça a du sens de mettre le type en dur.
 
 Que fait-on pour l'owning ?
+  Si on dit que le "type" décrit le type de pointeur/proxy, ça donne plein de possibilités, y compris d'avoir une séparation entre l'owner et la donnée
+
+Normalement, un Ref contient la méthode get_expr() qui donne... un expr, mais on pourrait dire qu'on ne fait ça que s'il y a un argument symbolique, sinon, le ptr/proxy est casté vers un type (réel) qui donne un objet en faisant un `*`.
 
 
 
+Prop: 
+  * les wrappers pointent sur des proxys.
+  * on est capables en runtime de dire si un proxy est symbolique
 
 
 

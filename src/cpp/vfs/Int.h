@@ -11,6 +11,7 @@ BEG_VFS_NAMESPACE
 class Int : public VfsWrapper, WithDefaultOperators {
 public:
     //STD_METHODS_FOR_VFS_WRAPPER( Int, "VFS_NAMESPACE", "vfs" );
+    Int() {}
 };
 
 // types for ctors --------------------------------------------------------------------------
