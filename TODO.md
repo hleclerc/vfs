@@ -259,13 +259,34 @@ Prop:
   * les wrappers pointent sur des proxys.
   * on est capables en runtime de dire si un proxy est symbolique
 
+Obligatoire: il faudrait donner les infos d'entrée/sortie des fonctions
+  De même, il faudrait déterminer quelles variables sont impactées par les fonctions...
 
+En gros, il faudrait un système complet de qualification de fonction, avec des infos en runtime, mais qu'on pourrait utiliser en les référençant avec des CtString ou autres
 
+Qu'est-ce qu'un fonction ?
+  * il y a d'un côté l'instruction symbolique avec les E/S "claires" et une méthode pour dire comment transformer concrètement les E/S si on veut rentrer dedans.
+    * en particulier on pourra 
+  * de l'autre côté, on a les référence Tl ou C++ par exemple qui vont contenir du code, des variables catchées, etc... et qui vont pouvoir se traduire par une instruction avec des caches pour vérifier si ce n'est pas déjà fait
 
+  => en première étape, on a donc une fonction C++ ou Tl. En C++, il faudrait préciser les trucs habituels, par exemple si un paramètre est template, ou si le type est fixé, si on attend un ref mutable, etc... Idéalement, il faudrait préciser si ça peut modifier certains symboles, l'état global, etc...
 
+On peut dans tous les cas faire des appels avec le nom et voir dans une table s'il y a des propriétés particulières
+  Si on a besoin d'une valeur en compile-time, on pourra générer du code intermédiaire.
+  => on peut garder le principe de VfsFunc<name,...>
+  En gros, pour générer des instructions symboliques, il faudra qu'on aille chercher ou synthétiser les infos à partir du nom
 
+Prop pour clarifier le retour de fonction: on demande l'allocation avant, et on passe le pointeur. Les sorties de fonction vont donc fournir une taille en octets.
+  À ce compte là, les fonctions vfs ne doivent rien sortir...
 
+Ça serait plus simple d'avoir un seul type pour stocker tous les pointeurs
+  * on le voulait à l'origine pour diminuer la taille des tableaux de fonctions...
+  * celà dit, on peut très bien imaginer que l'index global soit vraiment global (pour pouvoir être appelé depuis les instructions) alors que l'index local dépende du type de wrapper
 
+Par contre, d'avoir une taille différente pour chaque sous type, ça ne passera pas l'étape globale. Il faudra faire un choix
+  * c'est tentant de prendre 2 pointeurs, histoire d'avoir l'owner et la données... mais en symbolique, il faudra 2 ExprOff... qui ne pourront de toutes façon pas loger dans 2 pointeurs
+  * On pourrait prendre un seul pointeur avec optimisation a posteriori. On pourrait imaginer mettre plus d'info dans les types pour éviter les indirections sur les objets de petite taille.
 
-
-
+L'idée de base c'est de générer du code pour passer du wrapper vers la donnée... 
+  Mais ça ne permet pas de changer de type !
+  Par exemple, si on fait un reassign
