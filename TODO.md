@@ -290,3 +290,14 @@ Par contre, d'avoir une taille différente pour chaque sous type, ça ne passera
 L'idée de base c'est de générer du code pour passer du wrapper vers la donnée... 
   Mais ça ne permet pas de changer de type !
   Par exemple, si on fait un reassign
+
+Définition de fonction
+  => pour vfs_call, on aura besoin de savoir si tel ou tel argument est en ecriture seul, pour savoir s'il faut aller lire le type
+    On pourrait fournir une liste d'index d'argument en entrée
+  => il faudrait aussi savoir si un argument en sortie seule est aussi utilisé en entrée ? Bof, on pourra savoir s'il est possible d'utiliser les ressources d'un autre argument avec les RHS refs.
+
+VfsWraper permet de stocker un objet quelconque, avec possibilité d'utiliser la génération de code pour les utilisations
+  Ça permet en particulier de gérer les expressions symboliques, mais pas que
+  On aimerait directement manipuler des types non wrappés, mais ça empêche de changer le type.
+
+Pb: on voudrait des CtStringValue par exemple pour les compilation flags. Si on le passe explicitement, c'est reglé. Sinon, on pourrait faire un wrapper, mais à ce moment là, on va se retrouver avec un VfsImplForCtStringList. 

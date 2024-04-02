@@ -114,10 +114,15 @@ DTP Return UTP::init( Args ...args ) {
 }
 
 // -------------------------------------------------------------------- functions --------------------------------------------------------------------
-template<CtStringValue name,class CompilationFlags,class Return,class... Args>
-auto vfs_call( Args&&... args ) {
-    auto &vfs_func = StaticStorage<VfsFunc<name,CompilationFlags,Return,Args&&...>>::value;
-    return vfs_func( FORWARD( args )... );
+// template<CtStringValue name,class CompilationFlags,class Return,class... Args>
+// void vfs_call( Args&&... args ) {
+//     auto &vfs_func = StaticStorage<VfsFunc<name,CompilationFlags,Return,Args&&...>>::value;
+//     return vfs_func( FORWARD( args )... );
+// }
+
+template<CtStringValue name,CtStringValue... compilations_flags,int... output_indices,class... Args>
+void vfs_call( CtString<name>, CtStringList<compilations_flags...>, CtIntList<output_indices...>, Args&&... args ) {
+    TODO;
 }
 
 #undef DTP
