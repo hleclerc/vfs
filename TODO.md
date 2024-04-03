@@ -302,4 +302,30 @@ VfsWraper permet de stocker un objet quelconque, avec possibilité d'utiliser la
 
 Pb: on voudrait des CtStringValue par exemple pour les compilation flags. Si on le passe explicitement, c'est reglé. Sinon, on pourrait faire un wrapper, mais à ce moment là, on va se retrouver avec un VfsImplForCtStringList. Ça pourrait passer si on le fait hériter d'un CtStringList
 
-Question: comment seront stockées 
+Prop: CtFuncInfo<nom,return_type,pure_outputs,comp_flags>
+  => le nom n'est pas très clair
+  => 
+
+Décision importante: est-ce que c'est raisonnable de n'utiliser qu'un entier pour les types ? Oui si on fonctionne avec des plugins chargés en fonction des besoins.
+
+Prop: on fixe 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

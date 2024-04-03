@@ -2,13 +2,15 @@
 
 // #include "VfsObjectTypeFor.h" // IWYU pragma: export
 #include "../support/operators/ceil.h" // IWYU pragma: export
-#include "../support/TypeConfig.h" // IWYU pragma: export
+#include "../support/CtFuncInfo.h" // IWYU pragma: export
 #include "../support/call_new.h" // IWYU pragma: export
 
 BEG_VFS_NAMESPACE
 
 /**
  * Proxy/pointer to symbolic or real reference
+ *
+ * Base class for Int, Type, Scalar, Array, ...
 */
 template<int size,int alig>
 class alignas( alig ) VfsWrapper {
@@ -22,6 +24,7 @@ public:
     char                 data[ data_attr_size ];
 };
 
+// concept + type test
 TT concept IsAVfsWrapper = std::is_base_of_v<VfsWrapper<T::vfs_data_size,T::vfs_data_alig>,std::decay_t<T>>;
 TT struct IsAVfsWrapper_struct { enum { value = IsAVfsWrapper<T> }; };
 
@@ -37,13 +40,13 @@ TT struct IsAVfsWrapper_struct { enum { value = IsAVfsWrapper<T> }; };
 //     NAME&               operator=            ( NAME &&that ) { VFS_CALL( vfs_td_reassign, CtStringList<>, void, *this, std::move( that ) ); return *this; } \
 //     \
 //     Type                type                 () const { return VFS_CALL( actual_type_of, CtStringList<>, Type, *this ); } \
-//                   NAME                      ( auto &&...args ) requires requires { ( typename VfsObjectTypeFor<NAME,decltype(args)...>::value * )nullptr; } : NAME( FromTypeAndCtorArguments(), CtType<typename VfsObjectTypeFor<NAME,decltype(args)...>::value>(), FORWARD( args )... ) {} \
+//                         NAME                 ( auto &&...args ) requires requires { ( typename VfsObjectTypeFor<NAME,decltype(args)...>::value * )nullptr; } : NAME( FromTypeAndCtorArguments(), CtType<typename VfsObjectTypeFor<NAME,decltype(args)...>::value>(), FORWARD( args )... ) {} \
 
 #define STD_METHODS_FOR_VFS_WRAPPER__BASE( NAME, INCLUDE_PATH ) public: \
-    /**/                   NAME                      ( FromTypeAndCtorArguments, auto &&type, auto &&...args ) { VFS_CALL_DINK( call_new, CtStringList<>(), CtIntList<0>(), *this, FORWARD( type ), FORWARD( args )... ); } \
+    /**/                   NAME                      ( FromTypeAndCtorArguments, auto &&type, auto &&...args ) { VFS_CALL_DINK( call_new, CtStringList<>(), CtIntList<0>(), CtType<void>(), *this, FORWARD( type ), FORWARD( args )... ); } \
     \
     static void            get_compilation_flags     ( auto &cn ) { cn.add_inc_file( INCLUDE_PATH "/" #NAME ".h" ); } \
-    DisplayItem*           display                   ( auto &ds ) const { return VFS_CALL( display, CtStringList<>, DisplayItem *, ds, *this ); } \
+    DisplayItem*           display                   ( auto &ds ) const { return VFS_CALL( CtFuncInfo<"display">(), CtStringList<>, DisplayItem *, ds, *this ); } \
 
 
 #define STD_METHODS_FOR_VFS_WRAPPER( NAME, NAMESPACE, PATH) \

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../support/StaticStorage.h"
-#include "VfsTypeTable.h"
+#include "VfsInstantiatedTypeTable.h"
 // #include <map>
 
 BEG_VFS_NAMESPACE

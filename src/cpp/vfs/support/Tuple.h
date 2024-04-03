@@ -1,5 +1,6 @@
 #pragma once
 
+#include "StorageTypeFor.h"
 #include "common_macros.h"
 #include "compare.h"
 
@@ -31,6 +32,8 @@ struct Tuple<Head,Tail...> {
     auto           apply             ( auto &&func, auto &&...end_args ) const { return next.apply( FORWARD( func ), FORWARD( end_args )..., head ); }
     auto           apply             ( auto &&func, auto &&...end_args ) { return next.apply( FORWARD( func ), FORWARD( end_args )..., head ); }
 
+    // auto           append            ( auto &&...args ) { return Tuple<Head,Tail...,>; }
+
     Head           head;
     Next           next;
 };
@@ -48,6 +51,7 @@ struct Tuple<> {
     auto           apply             ( auto &&func, auto &&...end_args ) const { return func( FORWARD( end_args )... ); }
 };
 
+// helper functions ------------------------------------------------------------------------------------------------------------
 
 ///
 template<class ...Args>
@@ -55,40 +59,23 @@ auto tie( Args &...args ) {
     return Tuple<Args& ...>{ args... };
 }
 
-// impl ---------------------------------------------------------------------------------------------------------
-#define DTP template<class Head,class... Tail>
-#define UTP Tuple<Head,Tail...>
-
-DTP TTY void UTP::filtered_apply_seq( const auto &func ) const {
-    if constexpr ( Y<Head>::value )
-        func( head );
-    next.template filtered_apply_seq<Y>( func );
+///
+template<class ...Args>
+auto tuple( Args &&...args ) {
+    return Tuple<typename StorageTypeFor<Args>::value...>{ FORWARD( args )... };
 }
 
-DTP TTY void UTP::filtered_apply_seq( const auto &func ) {
-    if constexpr ( Y<Head>::value )
-        func( head );
-    next.template filtered_apply_seq<Y>( func );
+///
+template<class... A,class... B>
+auto tuple_cat( Tuple<A...> &&a, Tuple<B...> &&b ) {
+    return a.apply( [&]( auto &...va ) {
+        return b.apply( [&]( auto &...vb ) {
+            return Tuple<A...,B...>( std::move( va )..., std::move( vb )... );
+        } );
+    } );
 }
 
-DTP TTY auto UTP::filtered_apply( auto &&func, auto &&...end_args ) const {
-    if constexpr ( Y<Head>::value )
-        return next.template filtered_apply<Y>( FORWARD( func ), FORWARD( end_args )..., head );
-    else
-        return next.template filtered_apply<Y>( FORWARD( func ), FORWARD( end_args )... );
-}
-
-DTP TTY auto UTP::filtered_apply( auto &&func, auto &&...end_args ) {
-    if constexpr ( Y<Head>::value )
-        return next.template filtered_apply<Y>( FORWARD( func ), FORWARD( end_args )..., head );
-    else
-        return next.template filtered_apply<Y>( FORWARD( func ), FORWARD( end_args )... );
-}
-
-#undef DTP
-#undef UTP
-
-// -----------------------------------------------------------------------------------------------------
+// ext functions ---------------------------------------------------------------------------------------------------------------
 TA auto *display( auto &ds, const Tuple<A...> &value ) { return value.apply( [&]( const auto &...args ) { return ds.array( { display( ds, args )... } ); } ); }
 
 END_VFS_NAMESPACE

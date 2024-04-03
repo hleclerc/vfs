@@ -1,16 +1,18 @@
 #pragma once
 
 #include "../../support/WithDefaultOperators.h"
-#include "../../vfs_system/VfsWrapper.h"
+#include "../../vfs_system/TdWrapper.h"
+#include "../../vfs_system/VfsFunc.h"
 // #include "impl/VfsInt.h"
 // #include "Type.h"
 
 BEG_VFS_NAMESPACE
 
 /// Wrap an integer
-class Int : public VfsWrapper<sizeof(PI64),alignof(PI64)>, WithDefaultOperators {
+class Int : public VFS_INTERNAL_NAMESPACE::TdWrapper<Int,sizeof(PI64),alignof(PI64)>, WithDefaultOperators {
 public:
-    STD_METHODS_FOR_VFS_WRAPPER( Int, "VFS_NAMESPACE", "vfs" );
+    // STD_METHODS_FOR_VFS_WRAPPER( Int, "VFS_NAMESPACE", "vfs" );
+    /**/ Int( FromTypeAndCtorArguments, auto &&type, auto &&...args ) { VFS_CALL_DINK( call_new, CtStringList<>(), CtIntList<0>(), CtType<void>(), *this, FORWARD( type ), FORWARD( args )... ); }
 };
 
 // types for ctors --------------------------------------------------------------------------
@@ -29,4 +31,4 @@ public:
 
 END_VFS_NAMESPACE
 
-#include "VfsImpl_StdInt.h"
+#include "TdImpl_StdInt.h"

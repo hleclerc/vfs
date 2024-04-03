@@ -46,7 +46,7 @@ DTP Callable** UTP::operator()() {
 #define UTP VfsFuncArray<Callable,1>
 
 DTP TT UTP::VfsFuncArray( Callable *init, CtType<Tuple<T>> ) {
-    auto size = StaticStorage<VfsTypeTable,T>::value.array_size;
+    auto size = StaticStorage<VfsInstantiatedTypeTable,T>::value.array_size;
     ptr = new Callable *[ size ];
     for( std::size_t i = 0; i < size; ++i )
         ptr[ i ] = init;
