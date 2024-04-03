@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../../vfs_system/VfsImpl.h"
-#include "../../Int.h"
 
 BEG_VFS_NAMESPACE
+class Int;
 
 template<class IntType>
 struct VfsImpl_StdInt : VfsImpl<Int,VfsImpl_StdInt<IntType>> {

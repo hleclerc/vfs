@@ -14,15 +14,15 @@
 
 BEG_VFS_NAMESPACE
 
-#define DTP template<CtStringValue name,class CompilationFlags,class Return,class... Args>
-#define UTP VfsFunc<name,CompilationFlags,Return,Args...>
+#define DTP template<CtStringValue name,class CompilationFlags,class OutputIndices,class... Args>
+#define UTP VfsFunc<name,CompilationFlags,OutputIndices,Args...>
 
-DTP UTP::VfsFunc() : array( &init, CtType<typename Tuple<std::decay_t<Args>...>::template Filtered<VfsWrapper_struct>>() ) {
+DTP UTP::VfsFunc() : array( &init, CtType<typename Tuple<std::decay_t<Args>...>::template Filtered<IsAVfsWrapper_struct>>() ) {
 }
 
-DTP Return UTP::operator()( Args ...args ) {
+DTP void UTP::operator()( Args ...args ) {
     const auto get_ptr = [&]( const auto &...vfs_wrappers ) { return *array( vfs_wrappers... ); };
-    Callable *callable = tie( args... ).template filtered_apply<VfsWrapper_struct>( get_ptr );
+    Callable *callable = tie( args... ).template filtered_apply<IsAVfsWrapper_struct>( get_ptr );
     return callable( std::forward<Args>( args )... );
 }
 
@@ -33,12 +33,11 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
     CompilationFlags::for_each_string( [&]( auto str ) {
         compilation_flags << str.to_string();
     } );
-    get_compilation_flags_rec( compilation_flags, seen, CtType<Return>() );
     ( get_compilation_flags_rec( compilation_flags, seen, CtType<A>() ), ... );
 
     // codegen data for each arg
     Vec<Str> cast_types( FromReservationSize(), nb_vfs_wrappers );
-    tie( args... ).template filtered_apply_seq<VfsWrapper_struct>( [&]( const auto &vfs_wrapper ) {
+    tie( args... ).template filtered_apply_seq<IsAVfsWrapper_struct>( [&]( const auto &vfs_wrapper ) {
         VfsTypeAncestor *ta = VfsTypeAncestor::type_at_global_index( vfs_wrapper.__vfs_wrapper_attributes.global_type_index );
         cast_types << ta->cast_type();
     } );
@@ -80,13 +79,13 @@ DTP TA typename UTP::Callable *UTP::callable_for( const A &...args ) {
     // ) );
 }
 
-DTP Return UTP::init( Args ...args ) {
+DTP void UTP::init( Args ...args ) {
     // to get up to date indices and surdefs
     OnInit::update();
 
     // test and update object
     bool made_key_update = false;
-    tie( args... ).template filtered_apply_seq<VfsWrapper_struct>( [&]( const auto &vfs_wrapper ) {
+    tie( args... ).template filtered_apply_seq<IsAVfsWrapper_struct>( [&]( const auto &vfs_wrapper ) {
         if ( vfs_wrapper.__vfs_wrapper_attributes.instantiated_type_index == 0 ) {
             VfsTypeAncestor *ta = VfsTypeAncestor::type_at_global_index( vfs_wrapper.__vfs_wrapper_attributes.global_type_index );
             vfs_wrapper.__vfs_wrapper_attributes.instantiated_type_index = ta->get_instantiated_type_index();
@@ -103,7 +102,7 @@ DTP Return UTP::init( Args ...args ) {
     Callable *callable = callable_for( args... );
 
     // register it
-    Callable **ptr = tie( args... ).template filtered_apply<VfsWrapper_struct>( [&]( const auto &...vfs_wrappers ) {
+    Callable **ptr = tie( args... ).template filtered_apply<IsAVfsWrapper_struct>( [&]( const auto &...vfs_wrappers ) {
         return vfs_func.array( vfs_wrappers... );
     } );
 
@@ -114,14 +113,10 @@ DTP Return UTP::init( Args ...args ) {
 }
 
 // -------------------------------------------------------------------- functions --------------------------------------------------------------------
-// template<CtStringValue name,class CompilationFlags,class Return,class... Args>
-// void vfs_call( Args&&... args ) {
-//     auto &vfs_func = StaticStorage<VfsFunc<name,CompilationFlags,Return,Args&&...>>::value;
-//     return vfs_func( FORWARD( args )... );
-// }
-
 template<CtStringValue name,CtStringValue... compilations_flags,int... output_indices,class... Args>
 void vfs_call( CtString<name>, CtStringList<compilations_flags...>, CtIntList<output_indices...>, Args&&... args ) {
+    //     auto &vfs_func = StaticStorage<VfsFunc<name,CompilationFlags,Return,Args&&...>>::value;
+    //     return vfs_func( FORWARD( args )... );
     TODO;
 }
 

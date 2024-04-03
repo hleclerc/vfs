@@ -9,19 +9,19 @@
 BEG_VFS_NAMESPACE
 
 /// generic definition
-template<CtStringValue name,class CompilationFlags,class Return,class... Args>
+template<CtStringValue name,class CompilationFlags,class OutputIndices,class... Args>
 class VfsFunc {
 public:
     static constexpr PI nb_vfs_wrappers = ( IsAVfsWrapper<Args> + ... );
-    using               Callable        = Return( Args... );
+    using               Callable        = void( Args... );
     using               Array           = VfsFuncArray<Callable,nb_vfs_wrappers>;
 
     /**/                VfsFunc         ();
 
-    Return              operator()      ( Args ...args );
+    void                operator()      ( Args ...args );
 
     TA static Callable* callable_for    ( const A &...args );
-    static Return       init            ( Args ...args );
+    static void         init            ( Args ...args );
 
     Array               array;          ///<
 };

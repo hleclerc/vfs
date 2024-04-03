@@ -2,7 +2,6 @@
 
 #include "../../support/WithDefaultOperators.h"
 #include "../../vfs_system/VfsWrapper.h"
-#include "VfsImplForStdInteger.h"
 // #include "impl/VfsInt.h"
 // #include "Type.h"
 
@@ -29,3 +28,5 @@ public:
 // auto scalar_type_for( PrimitiveCtInt<1>, auto, auto, auto ) { return CtType<Scalar>(); }
 
 END_VFS_NAMESPACE
+
+#include "VfsImpl_StdInt.h"

@@ -1,6 +1,5 @@
-#include <vfs/support/CtInt.h>
 #include "catch_main.h"
-// #include <vfs/Int.h>
+#include <vfs/Int.h>
 
 // template<class IntType>
 // struct VfsWrapedObject {
@@ -8,23 +7,11 @@
 //     PI32         global_type_index;
 //     IntType*     data;
 // };
-struct Yo {
-
-};
-
-struct Pouetox : CtInt<10>, Yo {
-    // operator CtInt<10>() const { return {}; }
-};
-
-template<int v>
-void pouet( CtInt<v> ) {
-    P( v );
-}
 
 TEST_CASE( "Int", "" ) {
-    // Int a( FromTypeAndCtorArguments(), CtType<VfsIntegerInstance<SI32>>(), 10 );
-    // P( a );
-    pouet( Pouetox() );
+    Int a( FromTypeAndCtorArguments(), CtType<VfsImpl_StdInt<SI32>>(), 10 );
+    P( a.global_type_index );
+    P( a );
     // using A = VfsObjectTypeFor<int,int &>::value;
     // PT( A() );
 }

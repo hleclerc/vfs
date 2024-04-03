@@ -300,4 +300,6 @@ VfsWraper permet de stocker un objet quelconque, avec possibilité d'utiliser la
   Ça permet en particulier de gérer les expressions symboliques, mais pas que
   On aimerait directement manipuler des types non wrappés, mais ça empêche de changer le type.
 
-Pb: on voudrait des CtStringValue par exemple pour les compilation flags. Si on le passe explicitement, c'est reglé. Sinon, on pourrait faire un wrapper, mais à ce moment là, on va se retrouver avec un VfsImplForCtStringList. 
+Pb: on voudrait des CtStringValue par exemple pour les compilation flags. Si on le passe explicitement, c'est reglé. Sinon, on pourrait faire un wrapper, mais à ce moment là, on va se retrouver avec un VfsImplForCtStringList. Ça pourrait passer si on le fait hériter d'un CtStringList
+
+Question: comment seront stockées 
