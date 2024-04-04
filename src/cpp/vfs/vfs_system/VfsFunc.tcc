@@ -12,8 +12,8 @@ BEG_VFS_INTERNAL_NAMESPACE
 #undef DTP
 #undef UTP
 
-template<CtStringValue name,CtStringValue... compilations_flags,int... output_indices,class ReturnType,class... Args>
-ReturnType vfs_call( CtString<name>, CtStringList<compilations_flags...>, CtIntList<output_indices...>, CtType<ReturnType>, Args&&... args ) {
+template<class ReturnType,class FuncInfo,class... Args>
+ReturnType vfs_call( FuncInfo &&func_info, Args&&... args ) {
     TODO;
     return {};
 }

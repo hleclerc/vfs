@@ -39,4 +39,7 @@ struct CtIntList<> {
 Ti auto ct_range( CtInt<i> ci ) { if constexpr( i ) return ct_range( CtInt<i-1>{} ).with( CtInt<i-1>{} ); else return CtIntList<>{}; }
 Ti auto ct_range() { return ct_range( CtInt<i>{} ); }
 
+template<int...values>
+auto as_ct( CtIntList<values...> v ) { return v; }
+
 END_VFS_NAMESPACE

@@ -23,6 +23,9 @@ struct CtType {
 template<class U>
 concept IsA_CtType = std::is_same_v<std::decay_t<U>,CtType<typename std::decay_t<U>::value>>;
 
+template<class Value>
+auto as_ct( CtType<Value> v ) { return v; }
+
 /// make an instance of CtType<type of v> if v is known.
 // auto actual_type_of( const auto &v ) { return CT_DECAYED_TYPE_OF( v ); }
 

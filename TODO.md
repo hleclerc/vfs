@@ -308,7 +308,6 @@ Prop: CtFuncInfo<nom,return_type,pure_outputs,comp_flags>
 
 Décision importante: est-ce que c'est raisonnable de n'utiliser qu'un entier pour les types ? Oui si on fonctionne avec des plugins chargés en fonction des besoins.
 
-Prop: on fixe 
 
 
 

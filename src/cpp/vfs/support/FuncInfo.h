@@ -6,11 +6,15 @@
 BEG_VFS_NAMESPACE
 
 ///
-template<CtStringValue str,class ReturnType=void,class PureOutputIndices=CtIntList<>,class CompilationFlags=CtStringList<>>
-struct CtFuncInfo {
-    static void  for_each_template_arg( auto &&f ) { f( CtString<str.value>() ); f( CtType<ReturnType>() ); f( CtType<PureOutputIndices>() ); f( CtType<CompilationFlags>() ); }
-    static auto  template_type_name   () { return "CtFuncInfo"; }
-    static auto* display              ( auto &ds ) { return ds.string( str.value ); }
+template<class Name,class CompilationFlags=CtStringList<>,class PureOutputIndices=CtIntList<>>
+struct FuncInfo {
+    static void       for_each_template_arg( auto &&f ) { f( CtType<Name>() ); f( CtType<CompilationFlags>() ); f( CtType<PureOutputIndices>() ); }
+    static auto       template_type_name   () { return "VFS_NAMESPACE::FuncInfo"; }
+    auto*             display              ( auto &ds ) { return VFS_NAMESPACE::display( name ); }
+
+    Name              name;
+    CompilationFlags  compilation_flags;
+    PureOutputIndices pure_output_indices;
 };
 
 END_VFS_NAMESPACE

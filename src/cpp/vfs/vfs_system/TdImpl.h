@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../support/StaticStorage.h"
-#include "TdType_.h"
 #include "TdKey.h"
 
 BEG_VFS_INTERNAL_NAMESPACE
@@ -14,7 +12,7 @@ class TdImpl {
 public:
     using               FinalWrapper = Wrapper_;
 
-    /**/                TdImpl       () { StaticStorage<TdType_<Impl>>::value.init_impl( static_cast<Impl &>( *this ) ); }
+    /**/                TdImpl       () : key( CtType<Impl>() ) {}
 
     TdKey<FinalWrapper> key;         ///<
 };

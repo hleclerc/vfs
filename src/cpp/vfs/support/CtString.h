@@ -14,4 +14,7 @@ struct CtString {
     static constexpr CtStringValue value                = str;
 };
 
+template<CtStringValue str>
+auto as_ct( CtString<str> v ) { return v; }
+
 END_VFS_NAMESPACE

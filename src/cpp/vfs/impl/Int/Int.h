@@ -2,7 +2,6 @@
 
 #include "../../support/WithDefaultOperators.h"
 #include "../../vfs_system/TdWrapper.h"
-#include "../../vfs_system/VfsFunc.h"
 // #include "impl/VfsInt.h"
 // #include "Type.h"
 
@@ -11,8 +10,7 @@ BEG_VFS_NAMESPACE
 /// Wrap an integer
 class Int : public VFS_INTERNAL_NAMESPACE::TdWrapper<Int,sizeof(PI64),alignof(PI64)>, WithDefaultOperators {
 public:
-    // STD_METHODS_FOR_VFS_WRAPPER( Int, "VFS_NAMESPACE", "vfs" );
-    /**/ Int( FromTypeAndCtorArguments, auto &&type, auto &&...args ) { VFS_CALL_DINK( call_new, CtStringList<>(), CtIntList<0>(), CtType<void>(), *this, FORWARD( type ), FORWARD( args )... ); }
+    STD_METHODS_FOR_VFS_TD_WRAPPER( Int, "VFS_NAMESPACE", "vfs" );
 };
 
 // types for ctors --------------------------------------------------------------------------

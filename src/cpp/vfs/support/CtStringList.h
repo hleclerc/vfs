@@ -13,4 +13,7 @@ struct CtStringList {
     static auto *display              ( auto &ds ) { return ds.array( { ds.string( values.value )... } ); }
 };
 
+template<CtStringValue... values>
+auto as_ct( CtStringList<values...> v ) { return v; }
+
 END_VFS_NAMESPACE
