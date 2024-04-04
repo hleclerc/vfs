@@ -308,8 +308,10 @@ Prop: CtFuncInfo<nom,return_type,pure_outputs,comp_flags>
 
 Décision importante: est-ce que c'est raisonnable de n'utiliser qu'un entier pour les types ? Oui si on fonctionne avec des plugins chargés en fonction des besoins.
 
+On pourrait mettre les tables de type en statique dans TdType<Wrapper> notamment pour les valeurs statiques
+  Est-ce que ça ne risque pas de coincer dans les expressions symboliques. A priori, non : on est de toutes façon obligés de stocker le type des arguments dont certain ne seront pas de Td.
 
-
+  
 
 
 
