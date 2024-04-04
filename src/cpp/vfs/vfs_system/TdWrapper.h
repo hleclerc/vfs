@@ -11,16 +11,15 @@ BEG_VFS_INTERNAL_NAMESPACE
 template<class FinalWrapper,int size,int alig>
 class alignas( alig ) TdWrapper {
 public:
-    static constexpr PI ds          = ceil( sizeof( TdKey<FinalWrapper> ), alig ) + size - sizeof( TdKey<FinalWrapper> );
+    static constexpr PI ds                           = ceil( sizeof( TdKey<FinalWrapper> ), alig ) + size - sizeof( TdKey<FinalWrapper> );
 
-    auto                wrapper_keys() const { return tie( type_info ); }
+    void                wrapper_get_compilation_flags( CompilationFlags &cg ) const { type_info.get_compilation_flags( cg ); }
+    Str                 wrapper_cast_type            () const { return type_info.cast_type(); }
+    auto                wrapper_keys                 () const { return tie( type_info ); }
 
-    TdKey<FinalWrapper> type_info;  ///<
-    char                data[ ds ]; ///<
+    TdKey<FinalWrapper> type_info;                   ///<
+    char                data[ ds ];                  ///<
 };
-
-///
-
 
 // macros ------------------------------------------------------------------------------------------------------------------------------
 #define STD_METHODS_FOR_VFS_TD_WRAPPER__BASE( NAME, INCLUDE_PATH ) public: \

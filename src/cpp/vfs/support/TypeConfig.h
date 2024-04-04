@@ -56,6 +56,7 @@ DECL_VOID_STRUCT_STD( FromTypeAndCtorArguments       );
 DECL_VOID_STRUCT_STD( FromOperationOnItemsOf         );
 DECL_VOID_STRUCT_STD( FromPointerOnBorrowed          ); ///<
 DECL_VOID_STRUCT_STD( FromSizeAndItemValue           );
+DECL_VOID_STRUCT_STD( FromSizeAndIterator            );
 DECL_VOID_STRUCT_STD( FromReservationSize            ); ///<
 DECL_VOID_STRUCT_STD( FromPointerOnOwned             ); ///<
 DECL_VOID_STRUCT_STD( FromItemValues                 ); ///< will make copies

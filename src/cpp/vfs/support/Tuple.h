@@ -18,6 +18,7 @@ struct Tuple<Head,Tail...> {
     TT using                     Prepend           = Tuple<T,Head,Tail...>;
     using                        Next              = Tuple<Tail...>;
     static constexpr std::size_t size              = 1 * Next::size;
+    TTY struct                   Map               { using value = Tuple<typename Y<Head>::value,typename Y<Tail>::value...>; };
 
     constexpr                    Tuple             ( auto &&head, auto &&...tail ) requires ( std::is_same_v<Tuple,DECAYED_TYPE_OF(head)> == false ) : head( FORWARD( head ) ), next( FORWARD( tail )... ) {}
     constexpr                    Tuple             ( const Tuple &that ) = default;
@@ -45,6 +46,7 @@ struct Tuple<> {
     TTY using                    Filtered          = Tuple;
     TT using                     Prepend           = Tuple<T>;
     static constexpr std::size_t size              = 0;
+    TTY struct                   Map               { using value = Tuple<>; };
 
     std::ptrdiff_t               compare           ( const Tuple &t ) const { return 0; }
 
@@ -53,7 +55,7 @@ struct Tuple<> {
     auto                         apply             ( auto &&func, auto &&...end_args ) const { return func( FORWARD( end_args )... ); }
 };
 
-// helper functions ------------------------------------------------------------------------------------------------------------
+// ctor functions ------------------------------------------------------------------------------------------------------------
 
 ///
 template<class ...Args>
@@ -67,6 +69,8 @@ auto tuple( Args &&...args ) {
     return Tuple<typename StorageTypeFor<Args>::value...>{ FORWARD( args )... };
 }
 
+// tuple_cat ------------------------------------------------------------------------------------------------------------------
+
 ///
 template<class... A,class... B>
 auto tuple_cat( Tuple<A...> &&a, Tuple<B...> &&b ) {
@@ -76,6 +80,20 @@ auto tuple_cat( Tuple<A...> &&a, Tuple<B...> &&b ) {
         } );
     } );
 }
+
+///
+template<class... A,class... B>
+auto tuple_cat( const Tuple<A...> &a, const Tuple<B...> &b ) {
+    return a.apply( [&]( auto &...va ) {
+        return b.apply( [&]( auto &...vb ) {
+            return Tuple<A...,B...>( va..., vb... );
+        } );
+    } );
+}
+
+///
+auto tuple_cat( auto &&a, auto &&b, auto &&c ) { return tuple_cat( tuple_cat( a, b ), c ); }
+auto tuple_cat( auto &&a ) { return a; }
 
 // ext functions ---------------------------------------------------------------------------------------------------------------
 TA auto *display( auto &ds, const Tuple<A...> &value ) { return value.apply( [&]( const auto &...args ) { return ds.array( { display( ds, args )... } ); } ); }

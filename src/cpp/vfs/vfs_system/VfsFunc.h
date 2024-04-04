@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../support/FuncInfo.h" // IWYU pragma: export
-#include "../support/Tuple.h"
+#include "VfsFuncArray.h" // IWYU pragma: export
 #include "Wrapper.h" // IWYU pragma: export
 
 BEG_VFS_INTERNAL_NAMESPACE
@@ -10,22 +10,22 @@ BEG_VFS_INTERNAL_NAMESPACE
 template<CtStringValue name,class CompilationFlags,class OutputIndices,class ReturnType,class... Args>
 class VfsFunc {
 public:
-    using               ArrayKey    = decltype( tuple_cat( wrapper_keys( *(Args *)nullptr )... ) );
+    using               TupleOfKeys = decltype( tuple_cat( wrapper_keys( *(std::decay_t<Args> *)nullptr )... ) )::template Map<StorageTypeFor>::value;
     using               Callable    = ReturnType( Args... );
-    // using            Array       = VfsFuncArray<Callable,ArrayKey>;
+    using               Array       = VfsFuncArray<Callable,TupleOfKeys>;
 
     /**/                VfsFunc     ();
 
-    void                operator()  ( Args ...args );
+    ReturnType          operator()  ( Args ...args );
 
     TA static Callable* callable_for( const A &...args );
-    static void         init        ( Args ...args );
+    static ReturnType   init        ( Args ...args );
 
-    // Array            array;      ///<
+    Array               array;      ///<
 };
 
-template<class ReturnType,class FuncInfo,class... Args>
-ReturnType vfs_call( FuncInfo &&func_info, Args&&... args );
+template<class ReturnType,CtStringValue name,class CompilationFlags,int... pure_output_indices,class... Args>
+ReturnType vfs_call( FuncInfo<CtString<name>,CompilationFlags,CtIntList<pure_output_indices...>> &&func_info, Args&&... args );
 
 END_VFS_INTERNAL_NAMESPACE
 

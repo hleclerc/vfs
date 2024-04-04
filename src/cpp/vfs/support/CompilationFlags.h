@@ -32,7 +32,7 @@ public:
 };
 
 // VirtualCtStringList ct_value( const CompilationFlags &cn );
-Str                 ctor_for( const CompilationFlags &cn );
+Str ctor_for( const CompilationFlags &cn );
 
 // by default, call T::get_compilation_flags( res )
 TT auto get_compilation_flags( CompilationFlags &res, CtType<T> ) -> decltype( T::get_compilation_flags( res ) ) { return T::get_compilation_flags( res ); }

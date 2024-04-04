@@ -60,6 +60,7 @@ public:
     /**/                Vec             ( FromSizeAndInitFunctionOnIndex, PI size, auto &&func );
     Tis                 Vec             ( FromOperationOnItemsOf, auto &&functor, PrimitiveCtIntList<i...>, auto &&...lists );
     /**/                Vec             ( FromSizeAndItemValue, PI size, auto &&...ctor_args );
+    /**/                Vec             ( FromSizeAndIterator, PI size, auto iterator );
     /**/                Vec             ( FromReservationSize, PI capa, PI raw_size = 0 );
     /**/                Vec             ( FromItemValues, auto &&...values );
     /**/                Vec             ( FromSize, PI size );

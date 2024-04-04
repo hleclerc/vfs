@@ -143,6 +143,11 @@ DTP UTP::Vec( FromSizeAndItemValue, PI size, auto &&...ctor_args ) : Vec( FromRe
         new ( data_ + index ) Item( FORWARD( ctor_args )... );
 }
 
+DTP UTP::Vec( FromSizeAndIterator, PI size, auto iterator ) : Vec( FromReservationSize(), size, size ) {
+    for( PI index = 0; index < size; ++index )
+        new ( data_ + index ) Item( *( iterator++ ) );
+}
+
 DTP UTP::Vec( FromSize, PI size ) : Vec( FromReservationSize(), size, size ) {
     for( PI index = 0; index < size; ++index )
         new ( data_ + index ) Item;

@@ -10,7 +10,7 @@ BEG_VFS_NAMESPACE
 class Displayer {
 public:
     static auto     include_path() { return "vfs/support/display/Displayer.h"; }
-    static auto     type_name   () { return "Displayer"; }
+    static auto     type_name   () { return "VFS_NAMESPACE::Displayer"; }
 
     template        <class T>
     DisplayItem*    number      ( const T &val ) { return pool.create<DisplayItem_Number<T>>( val ); }
