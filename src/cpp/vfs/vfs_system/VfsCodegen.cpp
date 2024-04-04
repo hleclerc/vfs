@@ -71,7 +71,7 @@ VfsSurdefStage VfsCodegen::valid( Vec<double> pertinence ) {
 
 Vec<Str> VfsCodegen::forwarded_args_from( PI start ) {
     Vec<Str> res;
-    for( PI i = start; i < final_names.size(); ++i )
+    for( PI i = start; i < cast_names.size(); ++i )
         res.push_back( forwarded_arg( i ) );
     return res;
 }
@@ -81,7 +81,7 @@ Vec<Str> VfsCodegen::forwarded_args() {
 }
 
 Str VfsCodegen::forwarded_arg( PI num ) {
-    return "FORWARD( " + final_names[ num ] + " )";
+    return "FORWARD( " + cast_names[ num ] + " )";
 }
 
 void VfsCodegen::add_prel_block( const std::function<void (VfsCodegen &)> &f ) {

@@ -13,8 +13,7 @@ ON_INIT {
     // generic forwarders -------------------------------------------------------------------------------------------------------------------------------------------------
     // forward call
     VFS_ADD_SURDEF( "*" ) {
-        TODO;
-        //cg.add_line( "$0$1( $2 );", cg.return_type == "void" ? "" : "return ", cg.func_name, join( cg.forwarded_args() ) );
+        cg.add_line( "$0$1( $2 );", cg.return_type == "void" ? "" : "return ", cg.func_name, join( cg.forwarded_args() ) );
         return cg.valid( { -1e6 } );
     };
 }

@@ -14,7 +14,7 @@ struct TdImpl_StdInt : TdImpl<Int,TdImpl_StdInt<IntType>> {
 
     static void get_compilation_flags( CompilationFlags &cf ) { cf.add_inc_file( "vfs/impl/Int/TdImpl_StdInt.h" ); }
     static void for_each_template_arg( auto &&f ) { f( CtType<IntType>() ); }
-    static auto template_type_name   () { return "VfsImpl_StdInt"; }
+    static auto template_type_name   () { return "VFS_INTERNAL_NAMESPACE::TdImpl_StdInt"; }
 
     IntType     data;
 };

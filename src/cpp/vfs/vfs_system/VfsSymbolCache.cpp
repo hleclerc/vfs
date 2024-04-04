@@ -228,7 +228,7 @@ Str VfsSymbolCache::cpp_for( const Str &function_name, const CompilationFlags &c
         // closing
         cg.add_line( "}" );
 
-        cg.add_init_line( "vfs_symbol_cache.register_func( $0, $1, $2, $3, $4, $5, $6, (void *)&__func );",
+        cg.add_init_line( "vfs_symbol_cache.register_func( $0, $1, $2, $3, $4, (void *)&__func );",
                 ctor_for( function_name ), ctor_for( compilation_flags ), ctor_for( return_type ),
                 ctor_for( arg_types ), ctor_for( cast_types ) );
 
