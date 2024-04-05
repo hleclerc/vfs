@@ -2,7 +2,7 @@
 
 #include "../../support/WithDefaultOperators.h"
 #include "../../vfs_system/TdWrapper.h"
-// #include "impl/VfsInt.h"
+#include "TdImpl_StdInt.h"
 // #include "Type.h"
 
 BEG_VFS_NAMESPACE
@@ -14,9 +14,8 @@ public:
 };
 
 // types for ctors --------------------------------------------------------------------------
-// TT requires std::is_integral_v<T> struct VfsObjectTypeFor<Int,T> { using value = VfsInt<T>; };
-// template<> struct VfsObjectTypeFor<Int> { using value = VfsInt<CtInt<0>>; };
-
+TT requires std::is_integral_v<T> struct VFS_INTERNAL_NAMESPACE::TdImplFor<Int,T> { using value = TdImpl_StdInt<typename StorageTypeFor<T>::value>; };
+template<> struct VFS_INTERNAL_NAMESPACE::TdImplFor<Int> { using value = TdImpl_StdInt<CtInt<0>>; };
 
 // // -------------------------------------------------------------------------------------------
 // // type info
@@ -29,4 +28,3 @@ public:
 
 END_VFS_NAMESPACE
 
-#include "TdImpl_StdInt.h"

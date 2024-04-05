@@ -24,7 +24,7 @@ public:
     Array               array;      ///<
 };
 
-template<class ReturnType,CtStringValue name,class CompilationFlags,int... pure_output_indices,class... Args>
+template<class ReturnType=void,CtStringValue name,class CompilationFlags,int... pure_output_indices,class... Args>
 ReturnType vfs_call( FuncInfo<CtString<name>,CompilationFlags,CtIntList<pure_output_indices...>> &&func_info, Args&&... args );
 
 END_VFS_INTERNAL_NAMESPACE

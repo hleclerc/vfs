@@ -48,6 +48,12 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
     if constexpr( requires { DECAYED_TYPE_OF( b )::ct_value(); } ) { \
         return FORWARD( a ) SIGN DECAYED_TYPE_OF( b )::ct_value(); \
     } else \
+\
+    /* wrapper */ \
+    if constexpr( requires { DECAYED_TYPE_OF( a )::ct_value(); DECAYED_TYPE_OF( b )::ct_value(); } ) { \
+        constexpr auto val = DECAYED_TYPE_OF( a )::ct_value() SIGN DECAYED_TYPE_OF( b )::ct_value(); \
+        return ; \
+    } else \
     \
     /* arrays */ \
     if constexpr( TensorOrder<DECAYED_TYPE_OF( a )>::value || TensorOrder<DECAYED_TYPE_OF( b )>::value ) { \

@@ -19,6 +19,9 @@ constexpr auto add( auto &&a, auto &&b ) {
         return FORWARD( a );
     } else
 
+    // default behavior
+    DEFAULT_BIN_OPERATOR_CODE_SIGN( add, + )
+
     // Str concatenation
     if constexpr( requires{ StrView( a ); StrView( b ); } ) {
         std::string_view sa( a );
@@ -30,9 +33,6 @@ constexpr auto add( auto &&a, auto &&b ) {
         std::copy( sb.begin(), sb.end(), res.data() + sa.size() );
         return res;
     } else
-
-    // default behavior
-    DEFAULT_BIN_OPERATOR_CODE_SIGN( add, + )
 
     STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "found no way to call add" );
 }
