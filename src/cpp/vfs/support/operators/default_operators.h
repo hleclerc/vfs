@@ -6,10 +6,18 @@
 #include "../STATIC_ASSERT_IN_IF_CONSTEXPR.h" // IWYU pragma: export
 #include "../CtString.h" // IWYU pragma: export
 #include "../CtType.h" // IWYU pragma: export
+#include "../get.h" // IWYU pragma: export
+
+#include "../../vfs_system/TypePromoteWrapper.h" // IWYU pragma: export
+#include "../../vfs_system/WrapperTypeFor.h" // IWYU pragma: export
 
 #include <string_view> // IWYU pragma: export
 #include <string> // IWYU pragma: export
 #include <cmath> // IWYU pragma: export
+
+BEG_VFS_INTERNAL_NAMESPACE
+struct Wrapper;
+END_VFS_INTERNAL_NAMESPACE
 
 BEG_VFS_NAMESPACE
 
@@ -50,9 +58,18 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
     } else \
 \
     /* wrapper */ \
-    if constexpr( requires { DECAYED_TYPE_OF( a )::ct_value(); DECAYED_TYPE_OF( b )::ct_value(); } ) { \
-        constexpr auto val = DECAYED_TYPE_OF( a )::ct_value() SIGN DECAYED_TYPE_OF( b )::ct_value(); \
-        return ; \
+    if constexpr( std::is_base_of_v<VFS_INTERNAL_NAMESPACE::Wrapper,DECAYED_TYPE_OF( a )> && std::is_base_of_v<VFS_INTERNAL_NAMESPACE::Wrapper,DECAYED_TYPE_OF( b )> ) { \
+        using Res = VFS_INTERNAL_NAMESPACE::TypePromoteWrapper<#NAME,DECAYED_TYPE_OF( a ),DECAYED_TYPE_OF( b )>::value; \
+        return a.template __wrapper_call<Res>( CtString<#NAME>(), a, b ); \
+    } else \
+    \
+    /* get( ... ) */ \
+    if constexpr( requires { VFS_INTERNAL_NAMESPACE::get( FORWARD( a ) ); } ) { \
+        return VFS_INTERNAL_NAMESPACE::get( FORWARD( a ) ) SIGN FORWARD( b ); \
+    } else \
+    \
+    if constexpr( requires { VFS_INTERNAL_NAMESPACE::get( FORWARD( b ) ); } ) { \
+        return FORWARD( a ) SIGN VFS_INTERNAL_NAMESPACE::get( FORWARD( b ) ); \
     } else \
     \
     /* arrays */ \

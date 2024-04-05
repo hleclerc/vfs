@@ -3,13 +3,13 @@
 #include "../support/operators/ceil.h" // IWYU pragma: export
 #include "../vfs_system/VfsFunc.h" // IWYU pragma: export
 #include "../support/call_new.h" // IWYU pragma: export
-#include "TdImplFor.h"
+#include "TdImplFor.h" // IWYU pragma: export
 #include "TdKey.h"
 
 BEG_VFS_INTERNAL_NAMESPACE
 ///
 template<class FinalWrapper,int size,int alig>
-class alignas( alig ) TdWrapper {
+class alignas( alig ) TdWrapper : public Wrapper {
 public:
     static constexpr PI    ds                           = ceil( sizeof( TdKey<FinalWrapper> ), alig ) + size - sizeof( TdKey<FinalWrapper> );
 
@@ -26,6 +26,8 @@ public:
     /**/                   NAME                      ( FromTypeAndCtorArguments, auto &&type, auto &&...args ) { VFS_CALL_DINK( call_new, void, CtStringList<>(), CtIntList<0>(), *this, FORWARD( type ), FORWARD( args )... ); } \
     /**/                   NAME                      ( auto &&...args ) requires requires { (typename VFS_INTERNAL_NAMESPACE::TdImplFor<NAME,decltype(args)...>::value *)nullptr; } : NAME( FromTypeAndCtorArguments(), CtType<typename VFS_INTERNAL_NAMESPACE::TdImplFor<NAME,decltype(args)...>::value>(), FORWARD( args )... ) {} \
     /**/                  ~NAME                      () { vfs_call( FuncInfo<CtString<"VFS_INTERNAL_NAMESPACE::destroy">,CtStringList<"inc_file:vfs/support/destroy.h">>(), *this ); } \
+    \
+    template<class Res> static Res __wrapper_call    ( auto func_name, auto &&...args ) { return vfs_call<Res>( FuncInfo<DECAYED_TYPE_OF(func_name)>(), FORWARD( args )... ); } \
     \
     static void            get_compilation_flags     ( auto &cn ) { cn.add_inc_file( INCLUDE_PATH "/" #NAME ".h" ); } \
     DisplayItem*           display                   ( auto &ds ) const { return vfs_call<DisplayItem *>( FuncInfo<CtString<"display">>(), ds, *this ); } \

@@ -11,6 +11,17 @@ BEG_VFS_INTERNAL_NAMESPACE
 template<class Callable,class TupleOfKeys>
 class VfsFuncArray;
 
+// // 0 arg
+// template<class Callable>
+// class VfsFuncArray<Callable,0> {
+// public:
+// /**/       VfsFuncArray( Callable *init, CtType<Tuple<>> );
+
+// Callable** operator()  ();
+
+// Callable*  ptr;
+// };
+
 /// 1 indexable arg
 template<class Callable,IsAKeyWithIndexAndArraySize Key>
 class VfsFuncArray<Callable,Tuple<Key>> {
@@ -24,51 +35,19 @@ public:
     Callable** ptr;
 };
 
-// // 0 arg
-// template<class Callable>
-// class VfsFuncArray<Callable,0> {
-// public:
-    // /**/       VfsFuncArray( Callable *init, CtType<Tuple<>> );
+/// 2 indexable args
+template<class Callable,IsAKeyWithIndexAndArraySize Key_0,IsAKeyWithIndexAndArraySize Key_1>
+class VfsFuncArray<Callable,Tuple<Key_0,Key_1>> {
+public:
+    /**/       VfsFuncArray( Callable *init );
+    /**/      ~VfsFuncArray();
 
-    // Callable** operator()  ();
+    Callable** operator()  ( const auto &tuple_of_keys );
 
-    // Callable*  ptr;
-// };
-
-// // 1 arg
-// template<class Callable>
-// class VfsFuncArray<Callable,1> {
-// public:
-// };
-
-// /// 1 arg
-// template<class Callable>
-// class VfsFuncArray<Callable,1,false> {
-// public:
-//     /**/          VfsFuncArray( const VfsFuncArray & ) = delete;
-//     TA            VfsFuncArray( Callable *init, S<A>... );
-//     /**/         ~VfsFuncArray();
-
-//     TA Callable** operator()  ( const A &... args );
-
-//     PI            size;
-//     Callable**    ptr;
-// };
-
-// /// 2 args
-// template<class Callable>
-// class VfsFuncArray<Callable,2,false> {
-// public:
-//     /**/          VfsFuncArray( const VfsFuncArray & ) = delete;
-//     TA            VfsFuncArray( Callable *init, S<A>... );
-//     /**/         ~VfsFuncArray();
-
-//     TA Callable** operator()  ( const A &... args );
-
-//     PI            size_a;
-//     PI            size_b;
-//     Callable**    ptr;
-// };
+    PI         size_0;
+    PI         size_1;
+    Callable** ptr;
+};
 
 // /// n args
 // template<class Callable,int nb_vfs_args>

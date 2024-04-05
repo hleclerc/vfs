@@ -311,7 +311,8 @@ Décision importante: est-ce que c'est raisonnable de n'utiliser qu'un entier po
 On pourrait mettre les tables de type en statique dans TdType<Wrapper> notamment pour les valeurs statiques
   Est-ce que ça ne risque pas de coincer dans les expressions symboliques. A priori, non : on est de toutes façon obligés de stocker le type des arguments dont certain ne seront pas de Td.
 
-  
+Pb: il faut être capables de proposer un type de retour pour les opérations entre Wrappers
+    
 
 
 

@@ -41,7 +41,7 @@ BEG_VFS_INTERNAL_NAMESPACE
 #undef DTP
 #undef UTP
 
-/// 1 arg --------------------------------------------------------------
+/// 1 indexable arg -------------------------------------------------------
 #define DTP template<class Callable,IsAKeyWithIndexAndArraySize Key>
 #define UTP VfsFuncArray<Callable,Tuple<Key>>
 
@@ -58,6 +58,29 @@ DTP UTP::~VfsFuncArray() {
 
 DTP Callable** UTP::operator()( const auto &tuple_of_keys ) {
     return ptr + tuple_of_keys.head.value();
+}
+
+#undef DTP
+#undef UTP
+
+/// 2 indexable args ------------------------------------------------------
+#define DTP template<class Callable,IsAKeyWithIndexAndArraySize Key_0,IsAKeyWithIndexAndArraySize Key_1>
+#define UTP VfsFuncArray<Callable,Tuple<Key_0,Key_1>>
+
+DTP UTP::VfsFuncArray( Callable *init ) {
+    size_0 = Key_0::array_size();
+    size_1 = Key_1::array_size();
+    ptr = new Callable *[ size_0 * size_1 ];
+    for( std::size_t i = 0; i < size_0 * size_1; ++i )
+        ptr[ i ] = init;
+}
+
+DTP UTP::~VfsFuncArray() {
+    delete [] ptr;
+}
+
+DTP Callable** UTP::operator()( const auto &tuple_of_keys ) {
+    return ptr + tuple_of_keys.head.value() + size_0 * tuple_of_keys.next.head.value();
 }
 
 #undef DTP
