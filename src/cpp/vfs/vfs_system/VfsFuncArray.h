@@ -5,7 +5,7 @@
 #include "../support/Tuple.h"
 // #include <map>
 
-BEG_VFS_INTERNAL_NAMESPACE
+BEG_VFS_NAMESPACE
 
 ///
 template<class Callable,class TupleOfKeys>
@@ -23,7 +23,7 @@ class VfsFuncArray;
 // };
 
 /// 1 indexable arg
-template<class Callable,IsAKeyWithIndexAndArraySize Key>
+template<class Callable,IsAVfsKeyWithIndexAndArraySize Key>
 class VfsFuncArray<Callable,Tuple<Key>> {
 public:
     /**/       VfsFuncArray( Callable *init );
@@ -36,7 +36,7 @@ public:
 };
 
 /// 2 indexable args
-template<class Callable,IsAKeyWithIndexAndArraySize Key_0,IsAKeyWithIndexAndArraySize Key_1>
+template<class Callable,IsAVfsKeyWithIndexAndArraySize Key_0,IsAVfsKeyWithIndexAndArraySize Key_1>
 class VfsFuncArray<Callable,Tuple<Key_0,Key_1>> {
 public:
     /**/       VfsFuncArray( Callable *init );
@@ -79,7 +79,7 @@ public:
 //     Callable*     init;
 // };
 
-END_VFS_INTERNAL_NAMESPACE
+END_VFS_NAMESPACE
 
 #include "VfsFuncArray.tcc" // IWYU pragma: export
 

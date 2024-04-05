@@ -6,7 +6,7 @@
 // #include "CtValue.h"
 #include "VfsFuncArray.h"
 
-BEG_VFS_INTERNAL_NAMESPACE
+BEG_VFS_NAMESPACE
 
 // generic case --------------------------------------------------------------
 // #define DTP template<class... KeyTypes,class Callable>
@@ -42,7 +42,7 @@ BEG_VFS_INTERNAL_NAMESPACE
 #undef UTP
 
 /// 1 indexable arg -------------------------------------------------------
-#define DTP template<class Callable,IsAKeyWithIndexAndArraySize Key>
+#define DTP template<class Callable,IsAVfsKeyWithIndexAndArraySize Key>
 #define UTP VfsFuncArray<Callable,Tuple<Key>>
 
 DTP UTP::VfsFuncArray( Callable *init ) {
@@ -64,7 +64,7 @@ DTP Callable** UTP::operator()( const auto &tuple_of_keys ) {
 #undef UTP
 
 /// 2 indexable args ------------------------------------------------------
-#define DTP template<class Callable,IsAKeyWithIndexAndArraySize Key_0,IsAKeyWithIndexAndArraySize Key_1>
+#define DTP template<class Callable,IsAVfsKeyWithIndexAndArraySize Key_0,IsAVfsKeyWithIndexAndArraySize Key_1>
 #define UTP VfsFuncArray<Callable,Tuple<Key_0,Key_1>>
 
 DTP UTP::VfsFuncArray( Callable *init ) {
@@ -163,4 +163,4 @@ DTP Callable** UTP::operator()( const auto &tuple_of_keys ) {
 // #undef DTP
 // #undef UTP
 
-END_VFS_INTERNAL_NAMESPACE
+END_VFS_NAMESPACE

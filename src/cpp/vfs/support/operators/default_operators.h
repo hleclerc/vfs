@@ -15,11 +15,8 @@
 #include <string> // IWYU pragma: export
 #include <cmath> // IWYU pragma: export
 
-BEG_VFS_INTERNAL_NAMESPACE
-struct Wrapper;
-END_VFS_INTERNAL_NAMESPACE
-
 BEG_VFS_NAMESPACE
+struct VfsWrapper;
 
 // needed declarationsn defined elsewhere
 Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
@@ -58,18 +55,20 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
     } else \
 \
     /* wrapper */ \
-    if constexpr( std::is_base_of_v<VFS_INTERNAL_NAMESPACE::Wrapper,DECAYED_TYPE_OF( a )> && std::is_base_of_v<VFS_INTERNAL_NAMESPACE::Wrapper,DECAYED_TYPE_OF( b )> ) { \
-        using Res = VFS_INTERNAL_NAMESPACE::TypePromoteWrapper<#NAME,DECAYED_TYPE_OF( a ),DECAYED_TYPE_OF( b )>::value; \
+    if constexpr( std::is_base_of_v<VfsWrapper,DECAYED_TYPE_OF( a )> || std::is_base_of_v<VfsWrapper,DECAYED_TYPE_OF( b )> ) { \
+        using Wta = VfsWrapperTypeFor<DECAYED_TYPE_OF( a )>::value; \
+        using Wtb = VfsWrapperTypeFor<DECAYED_TYPE_OF( b )>::value; \
+        using Res = VfsTypePromoteWrapper<#NAME,Wta,Wtb>::value; \
         return a.template __wrapper_call<Res>( CtString<#NAME>(), a, b ); \
     } else \
     \
     /* get( ... ) */ \
-    if constexpr( requires { VFS_INTERNAL_NAMESPACE::get( FORWARD( a ) ); } ) { \
-        return VFS_INTERNAL_NAMESPACE::get( FORWARD( a ) ) SIGN FORWARD( b ); \
+    if constexpr( requires { get( FORWARD( a ) ); } ) { \
+        return get( FORWARD( a ) ) SIGN FORWARD( b ); \
     } else \
     \
-    if constexpr( requires { VFS_INTERNAL_NAMESPACE::get( FORWARD( b ) ); } ) { \
-        return FORWARD( a ) SIGN VFS_INTERNAL_NAMESPACE::get( FORWARD( b ) ); \
+    if constexpr( requires { get( FORWARD( b ) ); } ) { \
+        return FORWARD( a ) SIGN get( FORWARD( b ) ); \
     } else \
     \
     /* arrays */ \

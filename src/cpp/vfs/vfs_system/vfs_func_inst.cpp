@@ -1,7 +1,7 @@
 #include "VfsSymbolCache.h"
 #include "vfs_func_inst.h"
 
-BEG_VFS_INTERNAL_NAMESPACE
+BEG_VFS_NAMESPACE
 
 void *vfs_func_inst( const Str &name, const CompilationFlags &cf, const Str &return_type, PI nb_args, const Str *arg_types, const Str *cast_types ) {
     Vec<Str> v_cast_types{ FromSizeAndIterator(), nb_args, cast_types };
@@ -18,4 +18,4 @@ ON_INIT {
     };
 }
 
-END_VFS_INTERNAL_NAMESPACE
+END_VFS_NAMESPACE

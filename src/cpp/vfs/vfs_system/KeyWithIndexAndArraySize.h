@@ -2,12 +2,12 @@
 
 #include "../support/common_macros.h"
 
-BEG_VFS_INTERNAL_NAMESPACE
+BEG_VFS_NAMESPACE
 
 /// base class for keys that support indexing in arrays
-struct KeyWithIndexAndArraySize {
+struct VfsKeyWithIndexAndArraySize {
 };
 
-TT concept IsAKeyWithIndexAndArraySize = std::is_base_of_v<KeyWithIndexAndArraySize,std::decay_t<T>>;
+TT concept IsAVfsKeyWithIndexAndArraySize = std::is_base_of_v<VfsKeyWithIndexAndArraySize,std::decay_t<T>>;
 
-END_VFS_INTERNAL_NAMESPACE
+END_VFS_NAMESPACE

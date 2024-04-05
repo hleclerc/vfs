@@ -2,13 +2,13 @@
 
 #include "../support/CtStringValue.h"
 
-BEG_VFS_INTERNAL_NAMESPACE
+BEG_VFS_NAMESPACE
 
 ///
-template<CtStringValue name,class... Types> struct TypePromoteWrapper;
+template<CtStringValue name,class... Types> struct VfsTypePromoteWrapper;
 
 /// by default...
-template<CtStringValue name,class Type> struct TypePromoteWrapper<name,Type,Type> { using value = Type; };
-template<CtStringValue name,class Type> struct TypePromoteWrapper<name,Type> { using value = Type; };
+template<CtStringValue name,class Type> struct VfsTypePromoteWrapper<name,Type,Type> { using value = Type; };
+template<CtStringValue name,class Type> struct VfsTypePromoteWrapper<name,Type> { using value = Type; };
 
-END_VFS_INTERNAL_NAMESPACE
+END_VFS_NAMESPACE

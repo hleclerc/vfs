@@ -9,11 +9,10 @@
 // };
 
 TEST_CASE( "Int", "" ) {
-    // Int a( FromTypeAndCtorArguments(), CtType<VFS_INTERNAL_NAMESPACE::TdImpl_StdInt<SI32>>(), 10 );
     Int a = 11;
     Int b;
 
-    P( a + a );
+    P( a + 2 );
     // Int b( FromTypeAndCtorArguments(), CtType<VfsImpl_StdInt<SI64>>(), 10 );
     //P( tuple_cat( tuple( 1, 5 ), tuple( "" ) ) );
     // using A = VfsObjectTypeFor<int,int &>::value;

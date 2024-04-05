@@ -1,20 +1,17 @@
 #pragma once
 
-#include "../../vfs_system/TdImpl.h"
+#include "../../vfs_system/VfsTdImpl.h"
 
 BEG_VFS_NAMESPACE
 class Int;
-END_VFS_NAMESPACE
-
-BEG_VFS_INTERNAL_NAMESPACE
 
 template<class IntType>
-struct TdImpl_StdInt : TdImpl<Int,TdImpl_StdInt<IntType>>, WithDefaultOperators {
-    /**/           TdImpl_StdInt        ( auto &&...ctor_args ) : data( FORWARD( ctor_args )... ) {}
+struct VfsTdImpl_StdInt : VfsTdImpl<Int,VfsTdImpl_StdInt<IntType>>, WithDefaultOperators {
+    /**/           VfsTdImpl_StdInt        ( auto &&...ctor_args ) : data( FORWARD( ctor_args )... ) {}
 
     static void    get_compilation_flags( CompilationFlags &cf ) { cf.add_inc_file( "vfs/impl/Int/TdImpl_StdInt.h" ); }
     static void    for_each_template_arg( auto &&f ) { f( CtType<IntType>() ); }
-    static auto    template_type_name   () { return "VFS_INTERNAL_NAMESPACE::TdImpl_StdInt"; }
+    static auto    template_type_name   () { return "VFS_NAMESPACE::VfsTdImpl_StdInt"; }
 
     const IntType& get_lvalue           () const { return data; }
     IntType&&      get_rvalue           () { return std::move( data ); }
@@ -24,4 +21,4 @@ struct TdImpl_StdInt : TdImpl<Int,TdImpl_StdInt<IntType>>, WithDefaultOperators 
 };
 
 
-END_VFS_INTERNAL_NAMESPACE
+END_VFS_NAMESPACE

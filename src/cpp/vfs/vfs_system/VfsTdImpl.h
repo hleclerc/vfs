@@ -1,20 +1,20 @@
 #pragma once
 
-#include "TdKey.h"
+#include "VfsTdKey.h"
 
-BEG_VFS_INTERNAL_NAMESPACE
+BEG_VFS_NAMESPACE
 
 /**
  * Proxy/pointer to symbolic or real reference
 */
 template<class Wrapper_,class Impl>
-class TdImpl {
+class VfsTdImpl {
 public:
-    using               FinalWrapper = Wrapper_;
+    using                  FinalWrapper = Wrapper_;
 
-    /**/                TdImpl       () : key( CtType<Impl>() ) {}
+    /**/                   VfsTdImpl    () : key( CtType<Impl>() ) {}
 
-    TdKey<FinalWrapper> key;         ///<
+    VfsTdKey<FinalWrapper> key;         ///<
 };
 
-END_VFS_INTERNAL_NAMESPACE
+END_VFS_NAMESPACE
