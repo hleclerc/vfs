@@ -2,7 +2,7 @@
 
 #include "../support/operators/ceil.h" // IWYU pragma: export
 #include "../vfs_system/VfsFunc.h" // IWYU pragma: export
-#include "../support/call_new.h" // IWYU pragma: export
+#include "../support/construct.h" // IWYU pragma: export
 #include "VfsTdImplFor.h" // IWYU pragma: export
 #include "VfsTdKey.h"
 
@@ -24,9 +24,11 @@ public:
 
 // macros ------------------------------------------------------------------------------------------------------------------------------
 #define STD_METHODS_FOR_VFS_TD_WRAPPER__BASE( NAME, INCLUDE_PATH ) public: \
-    /**/                   NAME                      ( FromTypeAndCtorArguments, auto &&type, auto &&...args ) { VFS_CALL_DINK( call_new, void, CtStringList<>(), CtIntList<0>(), *this, FORWARD( type ), FORWARD( args )... ); } \
+    /**/                   NAME                      ( FromTypeAndCtorArguments, auto &&type, auto &&...args ) { VFS_CALL_DINK( construct, void, CtStringList<>(), CtIntList<0>(), *this, FORWARD( type ), FORWARD( args )... ); } \
     /**/                   NAME                      ( auto &&...args ) requires requires { (typename VfsTdImplFor<NAME,decltype(args)...>::value *)nullptr; } : NAME( FromTypeAndCtorArguments(), CtType<typename VFS_NAMESPACE::VfsTdImplFor<NAME,decltype(args)...>::value>(), FORWARD( args )... ) {} \
     /**/                  ~NAME                      () { vfs_call( FuncInfo<CtString<"VFS_NAMESPACE::destroy">,CtStringList<"inc_file:vfs/support/destroy.h">>(), *this ); } \
+    \
+    NAME&                  operator=                 ( auto &&that ) { vfs_call<void>( FuncInfo<CtString<"reassign">,CtStringList<"inc_file:vfs/support/reassign.h">>(), *this, FORWARD( that ) ); return *this; } \
     \
     template<class Res> static Res __wrapper_call    ( auto func_name, auto &&...args ) { return vfs_call<Res>( FuncInfo<DECAYED_TYPE_OF(func_name)>(), FORWARD( args )... ); } \
     \

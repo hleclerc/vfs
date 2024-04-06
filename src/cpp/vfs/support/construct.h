@@ -5,7 +5,7 @@
 
 BEG_VFS_NAMESPACE
 
-TT auto *call_new( auto &self, CtType<T>, auto &&...ctor_args ) {
+TT auto *construct( auto &self, CtType<T>, auto &&...ctor_args ) {
     return new ( &self ) T( FORWARD( ctor_args )... );
 }
 

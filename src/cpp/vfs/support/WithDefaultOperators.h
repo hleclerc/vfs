@@ -1,5 +1,11 @@
 #pragma once
 
+#include "operators/self_add.h"
+#include "operators/self_sub.h"
+#include "operators/self_mul.h"
+#include "operators/self_div.h"
+#include "operators/self_mod.h"
+
 #include "operators/add.h"
 #include "operators/sub.h"
 #include "operators/mul.h"
@@ -27,6 +33,11 @@ struct WithDefaultOperators {
         std::is_base_of_v<WithDefaultOperators,DECAYED_TYPE_OF(b)> { return FUN( FORWARD( a ), FORWARD( b ) ); }
     #define ADD_UNA_OP( OP, FUN ) friend constexpr auto OP( auto &&a ) requires  \
         std::is_base_of_v<WithDefaultOperators,DECAYED_TYPE_OF(a)> { return FUN( FORWARD( a ) ); }
+    #define ADD_BIN_SO( OP, FUN ) friend constexpr auto &OP( auto &a,  auto &&b ) requires  \
+        std::is_base_of_v<WithDefaultOperators,DECAYED_TYPE_OF(a)> || \
+        std::is_base_of_v<WithDefaultOperators,DECAYED_TYPE_OF(b)> { FUN( a, FORWARD( b ) ); return a; }
+    #define ADD_UNA_SO( OP, FUN ) friend constexpr auto &OP( auto &a ) requires \
+        std::is_base_of_v<WithDefaultOperators,DECAYED_TYPE_OF(a)> { FUN( FORWARD( a ) ); return a; }
 
     ADD_BIN_OP( operator+ , add )
     ADD_BIN_OP( operator- , sub )
@@ -42,11 +53,16 @@ struct WithDefaultOperators {
 
     ADD_UNA_OP( operator- , neg )
 
-    // friend auto &operator+=( auto &a, auto &&b ) { a = a + FORWARD( b ); return a; }
-    // friend auto &operator/=( auto &a, auto &&b ) { a = a / FORWARD( b ); return a; }
+    ADD_BIN_SO( operator+=, self_add )
+    ADD_BIN_SO( operator-=, self_sub )
+    ADD_BIN_SO( operator*=, self_mul )
+    ADD_BIN_SO( operator/=, self_div )
+    ADD_BIN_SO( operator%=, self_mod )
 
     #undef ADD_BIN_OP
     #undef ADD_UNA_OP
+    #undef ADD_BIN_SO
+    #undef ADD_UNA_SO
 };
 
 END_VFS_NAMESPACE

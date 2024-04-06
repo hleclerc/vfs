@@ -3,7 +3,7 @@
 #include "../../support/WithDefaultOperators.h"
 #include "../../vfs_system/WrapperTypeFor.h"
 #include "../../vfs_system/VfsTdWrapper.h"
-#include "TdImpl_StdInt.h"
+#include "VfsTdImpl_StdInt.h"
 // #include "Type.h"
 
 BEG_VFS_NAMESPACE
@@ -15,8 +15,8 @@ public:
 };
 
 // types for ctors --------------------------------------------------------------------------
-TT requires std::is_integral_v<T> struct VfsTdImplFor<Int,T> { using value = VfsTdImpl_StdInt<typename StorageTypeFor<T>::value>; };
-template<> struct VfsTdImplFor<Int> { using value = VfsTdImpl_StdInt<CtInt<0>>; };
+TT requires std::is_integral_v<T> struct VfsTdImplFor<Int,T> { using value = VfsTdImpl_StdInt<Int,typename StorageTypeFor<T>::value>; };
+template<> struct VfsTdImplFor<Int> { using value = VfsTdImpl_StdInt<Int,CtInt<0>>; };
 
 //
 TT requires std::is_integral_v<T> struct VfsWrapperTypeFor<T> { using value = Int; };

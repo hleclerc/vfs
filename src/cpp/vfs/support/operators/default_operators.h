@@ -7,6 +7,7 @@
 #include "../CtString.h" // IWYU pragma: export
 #include "../CtType.h" // IWYU pragma: export
 #include "../get.h" // IWYU pragma: export
+#include "../set.h" // IWYU pragma: export
 
 #include "../../vfs_system/TypePromoteWrapper.h" // IWYU pragma: export
 #include "../../vfs_system/WrapperTypeFor.h" // IWYU pragma: export
@@ -20,14 +21,6 @@ struct VfsWrapper;
 
 // needed declarationsn defined elsewhere
 Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
-
-// \
-// /* virtual */ \
-//     if constexpr( VfsArg<DECAYED_TYPE_OF( a )> || VfsArg<DECAYED_TYPE_OF( b )> ) { \
-//         using Ret = VALUE_IN_DECAYED_TYPE_OF( type_promote( CtString<#NAME>(), CT_DECAYED_TYPE_OF( a ), CT_DECAYED_TYPE_OF( b ) ) ); \
-//         return vfs_call< "call_by_name", CtStringList<>, Ret >( CtString<#NAME>(), FORWARD( a ), FORWARD( b ) ); \
-// } else \
-// } else \
 
 //
 #define DEFAULT_BIN_OPERATOR_CODE_SIGN( NAME, SIGN ) \
@@ -76,6 +69,51 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
         return make_array_from_binary_operations( Functor_##NAME(), FORWARD( a ), FORWARD( b ) ); \
     } else \
 
+//
+#define DEFAULT_BIN_SELF_OPERATOR_CODE_SIGN( NAME, SELF_SIGN, SIGN ) \
+    /* methods */ \
+    if constexpr( requires { a.NAME( FORWARD( b ) ); } ) { \
+        a.NAME( FORWARD( b ) ); \
+        return; \
+    } else \
+    \
+    if constexpr( requires { b.r##NAME( FORWARD( a ) ); } ) { \
+        b.r##NAME( FORWARD( a ) ); \
+        return; \
+    } else \
+    \
+    /* ct value */ \
+    if constexpr( requires { DECAYED_TYPE_OF( b )::ct_value(); } ) { \
+        FORWARD( a ) SELF_SIGN DECAYED_TYPE_OF( b )::ct_value(); \
+        return; \
+    } else \
+    \
+    /* wrapper */ \
+    if constexpr( std::is_base_of_v<VfsWrapper,DECAYED_TYPE_OF( a )> || std::is_base_of_v<VfsWrapper,DECAYED_TYPE_OF( b )> ) { \
+        using Wta = VfsWrapperTypeFor<DECAYED_TYPE_OF( a )>::value; \
+        using Wtb = VfsWrapperTypeFor<DECAYED_TYPE_OF( b )>::value; \
+        using Res = VfsTypePromoteWrapper<#NAME,Wta,Wtb>::value; \
+        a.template __wrapper_call<void>( CtString<#NAME>(), a, b ); \
+        return; \
+    } else \
+    \
+    /* get( ... ) */ \
+    if constexpr( requires { get( FORWARD( b ) ); } ) { \
+        FORWARD( a ) SELF_SIGN get( FORWARD( b ) ); \
+        return; \
+    } else \
+    \
+    if constexpr( requires { set( a, get( a ) SIGN FORWARD( b ) ); } ) { \
+        set( a, get( a ) SIGN FORWARD( b ) ); \
+        return; \
+    } else \
+    \
+
+    // /* arrays */ \
+    // if constexpr( TensorOrder<DECAYED_TYPE_OF( a )>::value || TensorOrder<DECAYED_TYPE_OF( b )>::value ) { \
+    //     return make_array_from_binary_operations( Functor_##NAME(), FORWARD( a ), FORWARD( b ) ); \
+    // } else \
+
 
 //
 #define DEFAULT_BIN_OPERATOR_CODE( NAME ) \
@@ -107,11 +145,6 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
         return make_array_from_binary_operations( Functor_##NAME(), FORWARD( a ), FORWARD( b ) ); \
     } else \
 
-
-//     /* virtual */ \
-//     if constexpr( requires { a.template _real_type_call<#NAME>( FORWARD( a ) ); } ) { \
-//         return a.template _real_type_call<#NAME>( FORWARD( a ) ); \
-// } else \
 
 #define DEFAULT_UNA_OPERATOR_CODE( NAME, FUNC ) \
     /* methods */ \
