@@ -1,7 +1,9 @@
 #pragma once
 
 #include "../../support/WithDefaultOperators.h"
-#include "VfsTdImpl_StdInt.h"
+#include "../../vfs_system/WrapperTypeFor.h"
+#include "../../vfs_system/VfsTdWrapper.h"
+#include "VfsTdImpl_StdScalar.h"
 // #include "Type.h"
 
 BEG_VFS_NAMESPACE

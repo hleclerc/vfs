@@ -1,20 +1,20 @@
 #pragma once
 
-#include "../../support/WithDefaultOperators.h"
-#include "VfsTdImpl_StdInt.h"
-// #include "Type.h"
+#include "../../vfs_system/WrapperTypeFor.h"
+#include "../../vfs_system/VfsTdWrapper.h"
+#include "VfsTdImpl_StdType.h"
 
 BEG_VFS_NAMESPACE
 
-/// Wrap an integer
-class Int : public VfsTdWrapper<Int,sizeof(PI64),alignof(PI64)>, WithDefaultOperators {
+/// Wrap an type
+class Type : public VfsTdWrapper<Type,sizeof(PI64),alignof(PI64)> {
 public:
-    STD_METHODS_FOR_VFS_TD_WRAPPER( Int, "VFS_NAMESPACE", "vfs" );
+    STD_METHODS_FOR_VFS_TD_WRAPPER( Type, "VFS_NAMESPACE", "vfs" );
 };
 
 // types for ctors --------------------------------------------------------------------------
-TT requires std::is_integral_v<T> struct VfsTdImplFor<Int,T> { using value = VfsTdImpl_StdInt<Int,typename StorageTypeFor<T>::value>; };
-template<> struct VfsTdImplFor<Int> { using value = VfsTdImpl_StdInt<Int,CtInt<0>>; };
+// TT requires std::is_integral_v<T> struct VfsTdImplFor<Int,T> { using value = VfsTdImpl_StdInt<Int,typename StorageTypeFor<T>::value>; };
+template<> struct VfsTdImplFor<Type> { using value = VfsTdImpl_StdInt<Int,CtInt<0>>; };
 
 //
 TT requires std::is_integral_v<T> struct VfsWrapperTypeFor<T> { using value = Int; };
