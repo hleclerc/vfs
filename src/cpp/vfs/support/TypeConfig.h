@@ -59,6 +59,7 @@ DECL_VOID_STRUCT_STD( FromSizeAndItemValue           );
 DECL_VOID_STRUCT_STD( FromSizeAndIterator            );
 DECL_VOID_STRUCT_STD( FromReservationSize            ); ///<
 DECL_VOID_STRUCT_STD( FromPointerOnOwned             ); ///<
+DECL_VOID_STRUCT_STD( FromTupleValues                ); ///<
 DECL_VOID_STRUCT_STD( FromItemValues                 ); ///< will make copies
 DECL_VOID_STRUCT_STD( FromItemValue                  );
 DECL_VOID_STRUCT_STD( FromIterator                   ); ///<

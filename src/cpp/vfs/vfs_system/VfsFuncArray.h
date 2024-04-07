@@ -3,24 +3,34 @@
 #include "KeyWithIndexAndArraySize.h"
 #include "../support/TypeConfig.h"
 #include "../support/Tuple.h"
-// #include <map>
+#include <map>
 
 BEG_VFS_NAMESPACE
 
-///
+/// generic version (std::map)
 template<class Callable,class TupleOfKeys>
-class VfsFuncArray;
+class VfsFuncArray {
+public:
+    using      Map         = std::map<TupleOfKeys,Callable *>;
 
-// // 0 arg
-// template<class Callable>
-// class VfsFuncArray<Callable,0> {
-// public:
-// /**/       VfsFuncArray( Callable *init, CtType<Tuple<>> );
+    /**/       VfsFuncArray( Callable *init );
 
-// Callable** operator()  ();
+    Callable** operator()  ( auto &&tuple_of_keys );
 
-// Callable*  ptr;
-// };
+    Callable*  init;
+    Map        map;
+};
+
+/// 0 arg
+template<class Callable>
+class VfsFuncArray<Callable,Tuple<>> {
+public:
+    /**/       VfsFuncArray( Callable *init );
+
+    Callable** operator()  ( const auto &tuple_of_keys );
+
+    Callable*  ptr;
+};
 
 /// 1 indexable arg
 template<class Callable,IsAVfsKeyWithIndexAndArraySize Key>

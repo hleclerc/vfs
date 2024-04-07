@@ -2,6 +2,7 @@
 
 #include "../../vfs_system/WrapperTypeFor.h"
 #include "../../vfs_system/VfsTdWrapper.h"
+#include "../../make_ct_value.h"
 #include "VfsTdImpl_StdType.h"
 
 BEG_VFS_NAMESPACE
@@ -10,23 +11,18 @@ BEG_VFS_NAMESPACE
 class Type : public VfsTdWrapper<Type,sizeof(PI64),alignof(PI64)> {
 public:
     STD_METHODS_FOR_VFS_TD_WRAPPER( Type, "VFS_NAMESPACE", "vfs" );
+
+    /**/ Type( auto &&name, auto &&compilation_flags, auto &&template_parameters ) {
+        vfs_call<void>( FuncInfo<CtString<"construct_Type">,CtStringList<"inc_file:vfs/impl/Type/construct_Type.h">>(), make_ct_value( name ), make_ct_value( compilation_flags ), make_ct_value( template_parameters ) );
+    }
 };
 
-// types for ctors --------------------------------------------------------------------------
-// TT requires std::is_integral_v<T> struct VfsTdImplFor<Int,T> { using value = VfsTdImpl_StdInt<Int,typename StorageTypeFor<T>::value>; };
-template<> struct VfsTdImplFor<Type> { using value = VfsTdImpl_StdInt<Int,CtInt<0>>; };
+// types for ctors
+TT struct VfsTdImplFor<Type,CtType<T>> { using value = VfsTdImpl_StdType<Type,T>; };
+template<> struct VfsTdImplFor<Type> { using value = VfsTdImpl_StdType<Type,void>; };
 
-//
-TT requires std::is_integral_v<T> struct VfsWrapperTypeFor<T> { using value = Int; };
-
-// // -------------------------------------------------------------------------------------------
-// // type info
-// constexpr inline auto nb_bits_mantissa( CtType<Scalar> ) { return PrimitiveCtInt<1000000>(); }
-// constexpr inline auto scalar_class    ( CtType<Scalar> ) { return PrimitiveCtInt<2>(); }
-// constexpr inline auto has_sign_bit    ( CtType<Scalar> ) { return PrimitiveCtInt<1>(); }
-
-// // scalar_type_for (when creating "virtual" objects from "real" values)
-// auto scalar_type_for( PrimitiveCtInt<1>, auto, auto, auto ) { return CtType<Scalar>(); }
+// value to wrapper
+TT struct VfsWrapperTypeFor<CtType<T>> { using value = Type; };
 
 END_VFS_NAMESPACE
 

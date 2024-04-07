@@ -18,7 +18,7 @@ public:
     Str                    wrapper_cast_type            () const { return type_info.cast_type(); }
     auto                   wrapper_keys                 () const { return tie( type_info ); }
 
-    VfsTdKey<FinalWrapper>    type_info;                   ///<
+    VfsTdKey<FinalWrapper> type_info;                   ///<
     char                   data[ ds ];                  ///<
 };
 

@@ -38,8 +38,6 @@ struct CtInt : public WithDefaultOperators {
     constexpr operator    bool                  () const { return value; }
 };
 
-template<int i> constexpr auto make_ct_value( CtInt<i> ) { return CtInt<i>(); }
-
 template<int i> constexpr auto ct_value_wrapper_for() { return CtInt<i>(); }
 
 

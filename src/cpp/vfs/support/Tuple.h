@@ -1,7 +1,7 @@
 #pragma once
 
 #include "StorageTypeFor.h"
-#include "common_macros.h"
+#include "TypeConfig.h"
 #include "compare.h"
 
 BEG_VFS_NAMESPACE
@@ -20,6 +20,7 @@ struct Tuple<Head,Tail...> {
     static constexpr std::size_t size              = 1 * Next::size;
     TTY struct                   Map               { using value = Tuple<typename Y<Head>::value,typename Y<Tail>::value...>; };
 
+    constexpr                    Tuple             ( FromTupleValues, auto &&tuple ) : head( tuple.head ), next( FromTupleValues(), tuple.next ) {}
     constexpr                    Tuple             ( auto &&head, auto &&...tail ) requires ( std::is_same_v<Tuple,DECAYED_TYPE_OF(head)> == false ) : head( FORWARD( head ) ), next( FORWARD( tail )... ) {}
     constexpr                    Tuple             ( const Tuple &that ) = default;
     constexpr                    Tuple             ( Tuple &&that ) = default;
@@ -47,6 +48,9 @@ struct Tuple<> {
     TT using                     Prepend           = Tuple<T>;
     static constexpr std::size_t size              = 0;
     TTY struct                   Map               { using value = Tuple<>; };
+
+    constexpr                    Tuple             ( FromTupleValues, auto &&tuple ) {}
+    constexpr                    Tuple             () {}
 
     std::ptrdiff_t               compare           ( const Tuple &t ) const { return 0; }
 

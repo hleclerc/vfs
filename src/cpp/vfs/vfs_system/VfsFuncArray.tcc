@@ -1,42 +1,38 @@
 #pragma once
 
-// #include "../support/StaticStorage.h"
-// #include "GetVfsObjects.h"
-// #include "VfsTypeTable.h"
-// #include "CtValue.h"
 #include "VfsFuncArray.h"
 
 BEG_VFS_NAMESPACE
 
 // generic case --------------------------------------------------------------
-// #define DTP template<class... KeyTypes,class Callable>
-// #define UTP VfsFuncArray<CtTypeList<KeyTypes...>,Callable>
+#define DTP template<class Callable,class TupleOfKeys>
+#define UTP VfsFuncArray<Callable,TupleOfKeys>
 
-// DTP UTP::VfsFuncArray( Callable *init ) : init( init ) {
-// }
+DTP UTP::VfsFuncArray( Callable *init ) : init( init ) {
+}
 
-// DTP Callable** UTP::operator()( auto &&...keys ) {
-//     Key key{ FORWARD( keys )... };
-//     auto iter = func_map.find( key );
-//     if ( iter == func_map.end() )
-//         iter = func_map.insert( iter, { std::move( key ), init } );
-//     return &iter->second;
-// }
+DTP Callable** UTP::operator()( auto &&tuple_of_keys ) {
+    TupleOfKeys key( FromTupleValues(), FORWARD( tuple_of_keys ) );
+    auto iter = map.find( key );
+    if ( iter == map.end() )
+        iter = map.insert( iter, { std::move( key ), init } );
+    return &iter->second;
+}
 
-// #undef DTP
-// #undef UTP
+#undef DTP
+#undef UTP
 
-/// 0 arg --------------------------------------------------------------
+/// 0 arg -------------------------------------------------------
 #define DTP template<class Callable>
-#define UTP VfsFuncArray<Callable,0>
+#define UTP VfsFuncArray<Callable,Tuple<>>
 
-// DTP UTP::VfsFuncArray( Callable *init, CtType<Tuple<>> ) {
-//     ptr = init;
-// }
+DTP UTP::VfsFuncArray( Callable *init ) {
+    ptr = init;
+}
 
-// DTP Callable** UTP::operator()() {
-//     return &ptr;
-// }
+DTP Callable** UTP::operator()( const auto &tuple_of_keys ) {
+    return &ptr;
+}
 
 #undef DTP
 #undef UTP
