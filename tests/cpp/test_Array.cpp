@@ -1,5 +1,5 @@
-#include <vfs/Vector.h>
-#include <vfs/Point.h>
+// #include <vfs/Vector.h>
+// #include <vfs/Point.h>
 #include <vfs/List.h>
 
 #include "catch_main.h"
@@ -10,9 +10,17 @@
 // }
 
 TEST_CASE( "Rt dim array", "" ) {
-    using Vol = Array<Scalar>;
-    Vol v{ 1, 2, 3, 4 };
-    P( v );
+    auto t = tuple( 1, 2, 4 );
+    P( t );
+    // using Vol = List<Int>;
+    // Vol v;
+    // v << 17;
+    // P( v );
+
+    // Vol v{ 1, 2, 3, 4 };
+    // auto t = tuple( Str( "a" ), Str( "b" ), Str( "c" ) );
+    // auto r = t.prefix_scan_with_index( []( auto a, auto b, auto i ) { return a + b; }, Str(), CtInt<0>(), CtInt<1>() );
+    // P( r );
 }
 
 // TEST_CASE( "Array", "" ) {

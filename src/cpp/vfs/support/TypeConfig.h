@@ -34,46 +34,14 @@ using       FP32                       = float;
 using       StrView                    = std::string_view;
 using       Str                        = std::string;
 
-// // args for ctor selection
-// #define DECL_VOID_STRUCT_TTT( NAME, ... ) template<class T> struct NAME { static auto base_type_name() { return #NAME; } static void for_each_template_arg( auto &&f ) { f( S<T>() ); } }
-#define DECL_VOID_STRUCT_STD( NAME ) struct NAME { static auto type_name() { return #NAME; } }
-
-// DECL_VOID_STRUCT_STD( FromSizeAndUninitializedItemValues ); ///<
-// DECL_VOID_STRUCT_STD( FromSizeAndExternalItemValues  ); ///< will make a ref
-// DECL_VOID_STRUCT_STD( FromSizeAndItemIndexFunction   ); ///< fill with a init function
-// DECL_VOID_STRUCT_STD( FromSizeAndInitItemFunction    ); ///< fill with a init function
-// DECL_VOID_STRUCT_STD( FromSizeAndItemValues          ); ///< will make a copy
-// DECL_VOID_STRUCT_STD( FromSizeAndItemValue           ); ///< fill-like
-// DECL_VOID_STRUCT_TTT( FromTypedItemValues            ); ///< will make a copy, with a forced type
-// DECL_VOID_STRUCT_STD( FromMovableIterator            );
-// DECL_VOID_STRUCT_STD( FromIterator                   );
-// DECL_VOID_STRUCT_STD( FromExternalValue              ); ///< will make a ref
-// DECL_VOID_STRUCT_STD( FromInitFunction               );
-// DECL_VOID_STRUCT_STD( Uninitialized                  );
-
-DECL_VOID_STRUCT_STD( FromSizeAndInitFunctionOnIndex );
-DECL_VOID_STRUCT_STD( FromTypeAndCtorArguments       );
-DECL_VOID_STRUCT_STD( FromOperationOnItemsOf         );
-DECL_VOID_STRUCT_STD( FromPointerOnBorrowed          ); ///<
-DECL_VOID_STRUCT_STD( FromSizeAndItemValue           );
-DECL_VOID_STRUCT_STD( FromSizeAndIterator            );
-DECL_VOID_STRUCT_STD( FromReservationSize            ); ///<
-DECL_VOID_STRUCT_STD( FromPointerOnOwned             ); ///<
-DECL_VOID_STRUCT_STD( FromTupleValues                ); ///<
-DECL_VOID_STRUCT_STD( FromItemValues                 ); ///< will make copies
-DECL_VOID_STRUCT_STD( FromItemValue                  );
-DECL_VOID_STRUCT_STD( FromIterator                   ); ///<
-DECL_VOID_STRUCT_STD( FromValue                      );
-DECL_VOID_STRUCT_STD( FromSize                       );
-
 // // common concepts
 // TT concept IsNotA_Unitialized = std::is_same_v<T,Uninitialized> == false;
-TT concept HasSizeAndAccess   = requires( const T &t ) { t.size(); } && ( requires( const T &t ) { t.begin(); } || requires( const T &t ) { t[ 0 ]; } );
-TT concept HasSizeAndSelect   = requires( const T &t ) { t.size(); t[ 0 ]; };
-TT concept HasBeginAndEnd     = requires( const T &t ) { t.begin(); t.end(); };
-TT concept ScalarLike         = requires( const T &t ) { t * t; };
-TT concept ListLike           = HasSizeAndSelect<T> || HasBeginAndEnd<T>;
-TT concept StrLike            = std::is_convertible_v<T,std::string_view>;
+TT concept  HasSizeAndAccess   = requires( const T &t ) { t.size(); } && ( requires( const T &t ) { t.begin(); } || requires( const T &t ) { t[ 0 ]; } );
+TT concept  HasSizeAndSelect   = requires( const T &t ) { t.size(); t[ 0 ]; };
+TT concept  HasBeginAndEnd     = requires( const T &t ) { t.begin(); t.end(); };
+TT concept  ScalarLike         = requires( const T &t ) { t * t; };
+TT concept  ListLike           = HasSizeAndSelect<T> || HasBeginAndEnd<T>;
+TT concept  StrLike            = std::is_convertible_v<T,std::string_view>;
 // TT concept IteratorLike       = requires( T &t ) { *( t++ ); };
 // TT concept FunctionLike       = std::is_function_v<std::decay_t<T>>;
 // TT concept IsA_S              = IsSpecializationOf<S,T>::value;

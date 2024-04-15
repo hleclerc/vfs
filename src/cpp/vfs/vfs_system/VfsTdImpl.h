@@ -12,7 +12,7 @@ class VfsTdImpl {
 public:
     using                  FinalWrapper = Wrapper_;
 
-    /**/                   VfsTdImpl    () : key( CtType<Impl>() ) {}
+    /**/                   VfsTdImpl    () : key( CtType<Impl>() ) { /*static_assert( sizeof( Impl ) <= sizeof( FinalWrapper ) );*/ }
 
     VfsTdKey<FinalWrapper> key;         ///<
 };

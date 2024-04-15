@@ -2,7 +2,7 @@
 
 #include "../../support/WithDefaultOperators.h"
 #include "VfsTdImpl_StdInt.h"
-// #include "Type.h"
+#include "../../Type.h"
 
 BEG_VFS_NAMESPACE
 

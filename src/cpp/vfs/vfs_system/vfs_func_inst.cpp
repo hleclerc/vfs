@@ -16,6 +16,12 @@ ON_INIT {
         cg.add_line( "$0$1( $2 );", cg.return_type == "void" ? "" : "return ", cg.func_name, join( cg.forwarded_args() ) );
         return cg.valid( { -1e6 } );
     };
+
+    // forward method call
+    VFS_ADD_SURDEF( "*__method" ) {
+        cg.add_line( "$0$2.$1( $3 );", cg.return_type == "void" ? "" : "return ", cg.func_name.substr( 0, cg.func_name.size() - 8 ), cg.forwarded_arg( 0 ), join( cg.forwarded_args_from( 1 ) ) );
+        return cg.valid( { -1e6 + 1 } );
+    };
 }
 
 END_VFS_NAMESPACE

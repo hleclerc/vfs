@@ -2,6 +2,7 @@
 
 #include "KeyWithIndexAndArraySize.h"
 #include "../support/TypeConfig.h"
+#include "../support/compare.h"
 #include "../support/Tuple.h"
 #include <map>
 
@@ -11,7 +12,7 @@ BEG_VFS_NAMESPACE
 template<class Callable,class TupleOfKeys>
 class VfsFuncArray {
 public:
-    using      Map         = std::map<TupleOfKeys,Callable *>;
+    using      Map         = std::map<TupleOfKeys,Callable *,Less>;
 
     /**/       VfsFuncArray( Callable *init );
 

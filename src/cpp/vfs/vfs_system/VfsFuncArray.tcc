@@ -76,7 +76,7 @@ DTP UTP::~VfsFuncArray() {
 }
 
 DTP Callable** UTP::operator()( const auto &tuple_of_keys ) {
-    return ptr + tuple_of_keys.head.value() + size_0 * tuple_of_keys.next.head.value();
+    return ptr + tuple_of_keys.head.value() + size_0 * tuple_of_keys.tail.head.value();
 }
 
 #undef DTP

@@ -10,6 +10,7 @@ struct VfsTdImpl_StdInt : VfsTdImpl<Int,VfsTdImpl_StdInt<Int,IntType>>, WithDefa
     /**/           VfsTdImpl_StdInt     ( auto &&...ctor_args ) : data( FORWARD( ctor_args )... ) {}
 
     TT void        operator=            ( const VfsTdImpl_StdInt<Int,T> &that ) { if constexpr ( requires { data = that.data; } ) data = that; else { data.~IntType(); new ( this ) Int( FromTypeAndCtorArguments(), CtType<VfsTdImpl_StdInt<Int,T>>(), that.data ); } }
+    operator       IntType              () const { return data; }
     void           set                  ( auto &&that ) { if constexpr ( requires { data = that; } ) data = that; else { data.~IntType(); new ( this ) Int( FORWARD( that ) ); } }
 
     static void    get_compilation_flags( CompilationFlags &cf ) { cf.add_inc_file( "vfs/impl/Int/VfsTdImpl_StdInt.h" ); }
@@ -23,5 +24,7 @@ struct VfsTdImpl_StdInt : VfsTdImpl<Int,VfsTdImpl_StdInt<Int,IntType>>, WithDefa
     IntType        data;
 };
 
+template<class Int,class IntType>
+struct StorageTypeFor<VfsTdImpl_StdInt<Int,IntType>> { using value = IntType; };
 
 END_VFS_NAMESPACE

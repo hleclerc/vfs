@@ -54,6 +54,14 @@ auto display( Ds &ds, const T &value ) {
     else if constexpr( requires { value.to_string(); } ) {
         return ds.string( value.to_string() );
     }
+    // array (with for_each_item)
+    else if constexpr( requires { value.for_each_item( []( const auto & ) {} ); } ) {
+        std::vector<DisplayItem *> items;
+        value.for_each_item( [&]( const auto &item ) {
+            items.push_back( display( ds, item ) );
+        } );
+        return ds.array( items );
+    }
     // array (with begin/end)
     else if constexpr( requires { std::begin( value ); std::end( value ); } ) {
         std::vector<DisplayItem *> items;

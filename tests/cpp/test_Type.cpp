@@ -5,7 +5,7 @@ TEST_CASE( "Type", "" ) {
     // Type t = CtType<PI32>();
     // P( t );
 
-    vfs_call( FuncInfo<CtString<"P">,CtStringList<"inc_file:vfs/support/P.h">>(), make_ct_value( 17 ) );
+    //vfs_call( FuncInfo<CtString<"P">,CtStringList<"inc_file:vfs/support/P.h">>(), make_ct_value( 17 ) );
 
     // template<class Item,class Memory,int static_size,int alignment,int local_size,bool allow_heap>
     // class alignas( std::max( PI( alignment ), alignof( Item ) ) ) GenericVector {

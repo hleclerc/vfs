@@ -32,6 +32,8 @@ public:
     \
     template<class Res> static Res __wrapper_call    ( auto func_name, auto &&...args ) { return vfs_call<Res>( FuncInfo<DECAYED_TYPE_OF(func_name)>(), FORWARD( args )... ); } \
     \
+    Type                   impl_type                 () const;\
+    \
     static void            get_compilation_flags     ( auto &cn ) { cn.add_inc_file( INCLUDE_PATH "/" #NAME ".h" ); } \
     DisplayItem*           display                   ( auto &ds ) const { return vfs_call<DisplayItem *>( FuncInfo<CtString<"display">>(), ds, *this ); } \
 
@@ -41,17 +43,17 @@ public:
     \
     STD_METHODS_FOR_VFS_TD_WRAPPER__BASE( NAME, PATH )
 
-#define STD_METHODS_FOR_VFS_TD_WRAPPER_TT( NAME, TEMPLATE_ARG_0, TEMPLATE_ARG_1, NAMESPACE, PATH, SIZE, ALIG ) \
+#define STD_METHODS_FOR_VFS_TD_WRAPPER_TT( NAME, TEMPLATE_ARG_0, TEMPLATE_ARG_1, NAMESPACE, PATH ) \
     static void            for_each_template_arg     ( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); f( CtType<TEMPLATE_ARG_1>() ); } \
     static auto            template_type_name        () { return NAMESPACE "::" #NAME; } \
     \
-    STD_METHODS_FOR_VFS_TD_WRAPPER__BASE( NAME, PATH, SIZE, ALIG )
+    STD_METHODS_FOR_VFS_TD_WRAPPER__BASE( NAME, PATH )
 
-#define STD_METHODS_FOR_VFS_TD_WRAPPER_TA( NAME, TEMPLATE_ARG_0, TEMPLATE_ARG_1, NAMESPACE, PATH, SIZE, ALIG ) \
+#define STD_METHODS_FOR_VFS_TD_WRAPPER_TA( NAME, TEMPLATE_ARG_0, TEMPLATE_ARG_1, NAMESPACE, PATH ) \
     static void            for_each_template_arg     ( auto &&f ) { f( CtType<TEMPLATE_ARG_0>() ); ( f( CtType<TEMPLATE_ARG_1>() ), ... ); } \
     static auto            template_type_name        () { return NAMESPACE "::" #NAME; } \
     \
-    STD_METHODS_FOR_VFS_TD_WRAPPER__BASE( NAME, PATH, SIZE, ALIG )
+    STD_METHODS_FOR_VFS_TD_WRAPPER__BASE( NAME, PATH )
 
 
 END_VFS_NAMESPACE
