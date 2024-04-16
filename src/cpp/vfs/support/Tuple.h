@@ -26,6 +26,9 @@ struct Tuple<Head,Tail...> {
     constexpr                    Tuple                 ( Tuple &&that ) = default;
     constexpr                    Tuple                 () = default;
 
+    Tuple&                       operator=             ( const Tuple<Head,Tail...> &that ) { head = that.head; tail = that.tail; return *this;  }
+    Tuple&                       operator=             ( Tuple<Head,Tail...> &&that ) { head = std::move( that.head ); tail = std::move( that.tail ); return *this;  }
+
     std::ptrdiff_t               compare               ( const Tuple &t ) const { if ( auto v = VFS_NAMESPACE::compare( head, t.head ) ) return v; return tail.compare( t.tail ); }
 
     constexpr auto               prefix_scan_with_index( auto &&func, auto &&value_so_far, auto &&index, const auto &increment, auto &&...values ) const { auto n = index + increment; auto v = func( value_so_far, head, n ); return tail.prefix_scan_with_index( FORWARD( func ), v, std::move( n ), increment, FORWARD( values )..., std::move( value_so_far ) ); }
@@ -42,8 +45,8 @@ struct Tuple<Head,Tail...> {
 
     // auto                      append                ( auto &&...args ) { return Tuple<Head,Tail...,>; }
 
-    Head                         head;
-    Next                         tail;
+    NUA Head                     head;
+    NUA Next                     tail;
 };
 
 //
@@ -55,7 +58,12 @@ struct Tuple<> {
     TTY struct                   Map                   { using value = Tuple<>; };
 
     constexpr                    Tuple                 ( FromTupleValues, auto &&tuple ) {}
+    constexpr                    Tuple                 ( const Tuple & ) {}
+    constexpr                    Tuple                 ( Tuple && ) {}
     constexpr                    Tuple                 () {}
+
+    Tuple&                       operator=             ( const Tuple<> & ) { return *this; }
+    Tuple&                       operator=             ( Tuple<> && ) { return *this; }
 
     std::ptrdiff_t               compare               ( const Tuple &t ) const { return 0; }
 

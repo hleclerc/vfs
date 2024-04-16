@@ -15,12 +15,16 @@ template<class Wrapper            ,
          class Sizes              = Tuple<PI>,
          class Strides            = Tuple<CtInt<sizeof(Item)>>,
          int   alignment_in_bytes = 0,
-         bool  need_row_alignment = true
-         >
-class ArrayImpl : public VfsTdImpl<Wrapper,ArrayImpl<Wrapper,Item,Capa,Sizes,Strides,alignment_in_bytes,need_row_alignment>> {
+         bool  need_row_alignment = true,
+         bool  owned              = true
+        >
+class ArrayImpl : public VfsTdImpl<Wrapper,ArrayImpl<Wrapper,Item,Capa,Sizes,Strides,alignment_in_bytes,need_row_alignment,owned>> {
 public:
-    /**/                  ArrayImpl            ( FromReservationSize, auto &&strides, auto &&sizes, auto &&capa );
+    /**/                  ArrayImpl            ( FromReservationSize, auto &&sizes, auto &&capa, auto &&strides );
+    /**/                  ArrayImpl            ( FromReservationSize, auto &&sizes, auto &&capa );
+    /**/                  ArrayImpl            ( FromReservationSize, auto &&sizes );
     /**/                  ArrayImpl            ( FromSizesAndValues, auto &&sizes, auto &&...values );
+    /**/                  ArrayImpl            ( FromAttributes, auto &&strides, auto &&sizes, auto &&capa, char *data );
     /**/                  ArrayImpl            ( const ArrayImpl &that ) = delete;
     /**/                  ArrayImpl            ( ArrayImpl &&that );
     /**/                 ~ArrayImpl            ();
@@ -28,18 +32,25 @@ public:
     void                  operator=            ( const ArrayImpl &that ) = delete;
     void                  operator=            ( ArrayImpl &&that ) = delete;
 
+    auto                  operator[]           ( PI index ) const;
+    void                  set                  ( PI index, auto &&value );
+
     static void           get_compilation_flags( CompilationFlags &cn );
     static void           for_each_template_arg( auto &&f );
     static auto           template_type_name   ();
+    void                  for_each_indices     ( auto &&func ) const;
     static auto           tight_strides        ( const Capa &capa );
-    void                  for_each_item        ( const auto &func );
+    // void               for_each_item        ( const auto &func );
+    auto                  reserve_for          ( auto &&wanted_capa, auto &&func_on_new_array );
+    void                  push_back            ( auto &&value );
     constexpr static auto nb_dims              ();
-    constexpr auto        size                 ();
+    constexpr auto        size                 () const;
 
-    Strides               strides;
-    Sizes                 sizes;
-    Capa                  capa;
-    Item*                 data;
+
+    NUA Strides           strides;
+    NUA Sizes             sizes;
+    NUA Capa              capa;
+    NUA char*             data;
 };
 
 END_VFS_NAMESPACE

@@ -27,10 +27,8 @@ public:
             new ( this ) ArrayImpl<Wrapper,Item,Sizes,Sizes,Strides>( FromSizesAndValues(), Sizes{ CtInt<1>{} }, FORWARD( value ) );
         } else {
             using Sizes = Tuple<PI>;
-            auto sizes = Sizes{ PI( 1 ) };
-            new ( this ) ArrayImpl<Wrapper,Item,Sizes,Sizes,Strides>( FromSizesAndValues(), sizes, FORWARD( value ) );
+            new ( this ) ArrayImpl<Wrapper,Item,Sizes,Sizes,Strides>( FromSizesAndValues(), Sizes{ PI( 1 ) }, FORWARD( value ) );
         }
-
     }
 };
 

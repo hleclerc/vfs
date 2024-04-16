@@ -32,3 +32,6 @@
 
 #define     FIRST_TYPE_IS_A_SPECIALIZATION_OF( TYPE_LIST, P ) ( []( auto &t, const auto &... ){ return CtInt<requires { t.~P(); }>(); } )( TYPE_LIST(), ... )
 #define     IS_A_SPECIALIZATION_OF( S, P )                    requires ( S &t ) { t.~P(); }
+
+//
+#define     NUA                           [[no_unique_address]]
