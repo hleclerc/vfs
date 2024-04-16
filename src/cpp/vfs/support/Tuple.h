@@ -38,6 +38,8 @@ struct Tuple<Head,Tail...> {
     auto                         apply                 ( auto &&func, auto &&...end_args ) const { return tail.apply( FORWARD( func ), FORWARD( end_args )..., head ); }
     auto                         apply                 ( auto &&func, auto &&...end_args ) { return tail.apply( FORWARD( func ), FORWARD( end_args )..., head ); }
 
+    auto                         reversed_tie          ( auto &...values_so_far ) const { return tail.reversed_tie( head, values_so_far... ); }
+
     // auto                      append                ( auto &&...args ) { return Tuple<Head,Tail...,>; }
 
     Head                         head;
@@ -63,6 +65,8 @@ struct Tuple<> {
     TTY void                     filtered_apply_seq    ( const auto &func ) const {}
     TTY auto                     filtered_apply        ( auto &&func, auto &&...end_args ) const { return func( FORWARD( end_args )... ); }
     auto                         apply                 ( auto &&func, auto &&...end_args ) const { return func( FORWARD( end_args )... ); }
+
+    TA auto                      reversed_tie          ( A &...values_so_far ) const { return Tuple<A& ...>{ values_so_far... }; }
 };
 
 // ctor functions ------------------------------------------------------------------------------------------------------------

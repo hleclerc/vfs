@@ -10,8 +10,12 @@
 // }
 
 TEST_CASE( "Rt dim array", "" ) {
-    auto t = tuple( 1, 2, 4 );
-    P( t );
+    // auto t = tuple( 1, 2, 4 );
+    // P( CtInt<10>() + 5 );
+    // using V = StorageTypeFor<CtInt<11> &&>::value;
+    PT( tuple( CtInt<10>() ) );
+    P( tuple( CtInt<10>(), 43, CtInt<11>() ) );
+    // P( t.reversed_tie().prefix_scan_with_index( []( auto a, auto b, auto i ) { return a + b; }, CtInt<10>(), CtInt<0>(), CtInt<1>() ) );
     // using Vol = List<Int>;
     // Vol v;
     // v << 17;
