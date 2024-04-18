@@ -10,15 +10,18 @@ import os
 class Link( Actor ):
     def on_start( self, link_type: str, sources: list[ str ] ) -> None:
         self.nb_sources_to_compile = 0
-        self.has_used_sources = False
-        self.has_used_flags = False
         self.link_type = link_type
         self.seen_includes = []
         self.seen_sources = []
         self.objects = []
-        
+
+        self.has_used_sources_deps = False
+        self.has_used_sources = False
+        self.has_used_flags = False
+
         for source in sources:
             self.add_source( os.path.abspath( source ) )
+
         self.check_if_ended()
 
     def add_source( self, source: str ):
@@ -44,11 +47,10 @@ class Link( Actor ):
         self.nb_sources_to_compile -= 1
         self.objects.append( obj )
 
-        print( obj, deps )
-
         for dep in deps:
             if dep.endswith( ".h" ):
                 self.add_include( os.path.abspath( dep ) )
+                
         self.check_if_ended()
 
     def add_include( self, include: str ):
@@ -63,6 +65,21 @@ class Link( Actor ):
             self.add_source( cpp )
 
     def write_used_sources( self ) -> bool:
+        # first pass: we add the source dependancies (may add some source files)
+        if self.has_used_sources_deps == False:
+            self.has_used_sources_deps = True
+
+            for opt in self.options.all_the_options():
+                if opt[ 0 ] == 'inc-path':
+                    for include in [ "vfs/support/used_sources.h", "vfs/support/OnInit.h" ]:
+                        h_name = os.path.join( opt[ 1 ], include )
+                        if self.check_file( h_name ):
+                            self.add_include( h_name )
+
+            self.check_if_ended()
+            return True
+
+        # second pass: we create
         if self.has_used_sources:
             return False
         self.has_used_sources = True
