@@ -1,5 +1,6 @@
 from ..support.Options import Options 
 from .WriteFile import WriteFile
+from .Analyzer import Analyzer
 from .Compiler import Compiler
 from .Command import Command
 from .Actor import Actor
@@ -9,13 +10,14 @@ import os
 
 class Link( Actor ):
     def on_start( self, link_type: str, sources: list[ str ] ) -> None:
-        self.nb_sources_to_compile = 0
+        self.nb_sources_to_compile_or_analyze = 0
         self.link_type = link_type
         self.seen_includes = []
         self.seen_sources = []
         self.objects = []
 
         self.has_used_sources_deps = False
+        self.has_used_flags_deps = False
         self.has_used_sources = False
         self.has_used_flags = False
 
@@ -40,12 +42,15 @@ class Link( Actor ):
 
         # launch compilation (--do-not-link-deps => we compile and link only the first .cpp file)
         if not self.options[ "do-not-link-deps" ] or len( self.seen_sources ) == 1:
-            self.nb_sources_to_compile += 1
+            self.nb_sources_to_compile_or_analyze += 1
             self.launch( self.on_compile, Compiler( self.options_to_remove() ), source )
 
     def on_compile( self, obj: str, deps: list[ str ] ):
-        self.nb_sources_to_compile -= 1
         self.objects.append( obj )
+        self.on_analysis( deps )
+
+    def on_analysis( self, deps: list[ str ] ):
+        self.nb_sources_to_compile_or_analyze -= 1
 
         for dep in deps:
             if dep.endswith( ".h" ):
@@ -64,26 +69,20 @@ class Link( Actor ):
         if self.check_file( cpp ):
             self.add_source( cpp )
 
-    def write_used_sources( self ) -> bool:
-        # first pass: we add the source dependancies (may add some source files)
-        if self.has_used_sources_deps == False:
-            self.has_used_sources_deps = True
+    def add_deps_for_include( self, includes: list[ str ] ):
+        for opt in self.options.all_the_options():
+            if opt[ 0 ] == 'inc-path':
+                for include in includes:
+                    h_name = os.path.join( opt[ 1 ], include )
+                    if self.check_file( h_name ):
+                        self.nb_sources_to_compile_or_analyze += 1
+                        self.launch( self.on_analysis, Analyzer( self.options_to_remove() ), h_name )
+                        break
 
-            for opt in self.options.all_the_options():
-                if opt[ 0 ] == 'inc-path':
-                    for include in [ "vfs/support/used_sources.h", "vfs/support/OnInit.h" ]:
-                        h_name = os.path.join( opt[ 1 ], include )
-                        if self.check_file( h_name ):
-                            self.add_include( h_name )
+    def get_used_sources_deps( self ):
+        self.add_deps_for_include( [ "vfs/support/used_sources.h", "vfs/support/OnInit.h" ] )
 
-            self.check_if_ended()
-            return True
-
-        # second pass: we create
-        if self.has_used_sources:
-            return False
-        self.has_used_sources = True
-
+    def write_used_sources( self ):
         src_content  = "#include <vfs/support/used_sources.h>\n"
         src_content += "#include <vfs/support/OnInit.h>\n"
         src_content += "\n"
@@ -93,14 +92,13 @@ class Link( Actor ):
             src_content += f'    VFS_NAMESPACE::used_sources.insert( "{ source }" );\n'
         src_content += "}\n"
 
-        self.launch( self.add_source, WriteFile( self.options_to_remove() ), content = src_content, ext = "cpp", stem = "used_sources" )
-        return True
+        self.nb_sources_to_compile_or_analyze += 1
+        self.launch( self.add_generated_source, WriteFile( self.options_to_remove() ), content = src_content, ext = "cpp", stem = "used_sources" )
 
-    def write_used_flags( self ) -> bool:
-        if self.has_used_flags:
-            return False
-        self.has_used_flags = True
+    def get_used_flags_deps( self ):
+        self.add_deps_for_include( [ "vfs/support/used_flags.h", "vfs/support/OnInit.h" ] )
 
+    def write_used_flags( self ):
         src_content  = "#include <vfs/support/used_flags.h>\n"
         src_content += "#include <vfs/support/OnInit.h>\n"
         src_content += "\n"
@@ -110,20 +108,43 @@ class Link( Actor ):
             src_content += f'    VFS_NAMESPACE::used_flags.push_back( "{ name }", "{ cvalue }" );\n'
         src_content += "}\n"
 
-        self.launch( self.add_source, WriteFile( self.options_to_remove() ), content = src_content, ext = "cpp", stem = "used_flags" )
-        return True
+        self.nb_sources_to_compile_or_analyze += 1
+        self.launch( self.add_generated_source, WriteFile( self.options_to_remove() ), content = src_content, ext = "cpp", stem = "used_flags" )
+
+    def add_generated_source( self, source: str ):
+        self.launch( self.on_compile, Compiler( self.options_to_remove() ), source )
 
     def check_if_ended( self ):
-        if self.nb_sources_to_compile:
+        if self.nb_sources_to_compile_or_analyze:
             return
 
-        # need to write the used sources ?
-        if self.options[ "write-used-sources" ] and not self.options[ "do-not-link-deps" ] and self.write_used_sources():
-            return
+        # first pass of used sources or flags (we look for the dependancies which may change the flags and the sources)
+        want_used_flags = self.options[ "write-used-flags" ] and not self.options[ "do-not-link-deps" ]
+        if want_used_flags and not self.has_used_flags_deps:
+            self.has_used_flags_deps = True
+            self.get_used_flags_deps()
+            if self.nb_sources_to_compile_or_analyze:
+                return
+            
+        want_used_sources = self.options[ "write-used-sources" ] and not self.options[ "do-not-link-deps" ]
+        if want_used_sources and not self.has_used_sources_deps:
+            self.has_used_sources_deps = True
+            self.get_used_sources_deps()
+            if self.nb_sources_to_compile_or_analyze:
+                return
 
-        # need to write the used flags ?
-        if self.options[ "write-used-flags" ] and not self.options[ "do-not-link-deps" ] and self.write_used_flags():
-            return
+        # second pass of used sources or flags (we write the files)
+        if want_used_flags and not self.has_used_flags:
+            self.has_used_flags = True
+            self.write_used_flags()
+            if self.nb_sources_to_compile_or_analyze:
+                return
+            
+        if want_used_sources and not self.has_used_sources:
+            self.has_used_sources = True
+            self.write_used_sources()
+            if self.nb_sources_to_compile_or_analyze:
+                return
 
         # extension
         ext = None
