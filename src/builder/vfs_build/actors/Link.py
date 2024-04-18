@@ -88,7 +88,9 @@ class Link( Actor ):
         src_content += "\n"
         src_content += "ON_INIT {\n"
 
-        for source in self.seen_sources:
+        sorted_sources = self.seen_sources.copy()
+        sorted_sources.sort()
+        for source in sorted_sources:
             src_content += f'    VFS_NAMESPACE::used_sources.insert( "{ source }" );\n'
         src_content += "}\n"
 
