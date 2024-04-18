@@ -70,13 +70,15 @@ Str VfsSymbolCache::make_tmp_file( PI64 base ) {
 }
 
 void *VfsSymbolCache::load_lib_for( const Str &name, const CompilationFlags &compilation_flags, const Str &return_type, const Vec<Str> &arg_types, const Vec<Str> &cast_types ) {
+    // first thing to do (to avoid "update of ... because input_file '.../.vfs_symbol_cache/vfs_build_config.py' has appeared")
+    check_dir( vfs_symbol_source_directory );
+    check_build_config_file();
+
     // get surdef, make the corresponding cpp
     Str cpp_content = cpp_for( name, compilation_flags, return_type, arg_types, cast_types );
 
     // find file with the right line or make it
     std::hash<Str> hash;
-    check_build_config_file();
-    check_dir( vfs_symbol_source_directory );
     for( PI64 h = hash( cpp_content ); ; ++h ) {
         // find a place to write the .cpp file (the same name may be used for another content)
         Str base_name = symbol_for( name ) + "_" + std::to_string( h );
@@ -291,6 +293,8 @@ void VfsSymbolCache::check_build_config_file() {
     Path config = vfs_symbol_source_directory / "vfs_build_config.py";
     if ( ! std::filesystem::exists( config ) ) {
         std::ofstream fout( config );
+        if ( ! fout )
+            ERROR( "impossible to create `vfs_build_config.py` in `" + vfs_symbol_source_directory.string() + "`" );
         fout << "import vfs\n";
         fout << "def config( options ):\n";
         fout << "    vfs.vfs_build_config( options )\n";

@@ -12,9 +12,10 @@
 TEST_CASE( "Rt dim array", "" ) {
     using Vol = List<Int>;
     Vol v;
-    v << 17 << 18;
-    P( v );
-
+    // for( size_t i = 0; i < 4; i++ )
+    //     v << i;
+    // P( v );
+ 
     // Vol v{ 1, 2, 3, 4 };
     // auto t = tuple( Str( "a" ), Str( "b" ), Str( "c" ) );
     // auto r = t.prefix_scan_with_index( []( auto a, auto b, auto i ) { return a + b; }, Str(), CtInt<0>(), CtInt<1>() );

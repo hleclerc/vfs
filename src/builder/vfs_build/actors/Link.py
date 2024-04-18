@@ -44,6 +44,8 @@ class Link( Actor ):
         self.nb_sources_to_compile -= 1
         self.objects.append( obj )
 
+        print( obj, deps )
+
         for dep in deps:
             if dep.endswith( ".h" ):
                 self.add_include( os.path.abspath( dep ) )
@@ -53,7 +55,7 @@ class Link( Actor ):
         if include in self.seen_includes:
             return 
         self.seen_includes.append( include )
-
+        
         self.add_source_dep( include )
 
         cpp = str( Path( include ).with_suffix( ".cpp" ) )
@@ -69,6 +71,7 @@ class Link( Actor ):
         src_content += "#include <vfs/support/OnInit.h>\n"
         src_content += "\n"
         src_content += "ON_INIT {\n"
+
         for source in self.seen_sources:
             src_content += f'    VFS_NAMESPACE::used_sources.insert( "{ source }" );\n'
         src_content += "}\n"

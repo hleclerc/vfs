@@ -314,8 +314,8 @@ On pourrait mettre les tables de type en statique dans TdType<Wrapper> notamment
 Pb: il faut être capables de proposer un type de retour pour les opérations entre Wrappers
     
 
-
-
+Pb: quand on recompile un 2eme fois le test, il regénère un used_files où manque plein de dépendances.
+  Actuellement, c'est le link qui va chercher les .cpp qu'il faut ajouter
 
 
 
