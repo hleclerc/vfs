@@ -302,32 +302,19 @@ VfsWraper permet de stocker un objet quelconque, avec possibilité d'utiliser la
 
 Pb: on voudrait des CtStringValue par exemple pour les compilation flags. Si on le passe explicitement, c'est reglé. Sinon, on pourrait faire un wrapper, mais à ce moment là, on va se retrouver avec un VfsImplForCtStringList. Ça pourrait passer si on le fait hériter d'un CtStringList
 
-Prop: CtFuncInfo<nom,return_type,pure_outputs,comp_flags>
-  => le nom n'est pas très clair
-  => 
+Orientations de la plateforme
+=============================
 
-Décision importante: est-ce que c'est raisonnable de n'utiliser qu'un entier pour les types ? Oui si on fonctionne avec des plugins chargés en fonction des besoins.
+L'idée générale, c'est qu'un wrapper contient un type de pointeur et un pointeur. Les données peuvent être réelles ou symboliques.
+  Éventuellement, on peut être ammenés à changer le type d'un pointeur, par exemple parce qu'une donnée devient symbolique, voire parce que le type des données change, s'il y a un niveau suffisant d'indirection.
 
-On pourrait mettre les tables de type en statique dans TdType<Wrapper> notamment pour les valeurs statiques
-  Est-ce que ça ne risque pas de coincer dans les expressions symboliques. A priori, non : on est de toutes façon obligés de stocker le type des arguments dont certain ne seront pas de Td.
+Si c'est un objet TL, le wrapper englobera un objet symbolique, où sera décrit le type...
 
-Pb: il faut être capables de proposer un type de retour pour les opérations entre Wrappers
-    
-
-Pb: quand on recompile un 2eme fois le test, il regénère un used_files où manque plein de dépendances.
-  Actuellement, c'est le link qui va chercher les .cpp qu'il faut ajouter
-
-
-
-
-
-
-
-
-
-
-
-
+=> si on voulait faire un exemple avec de la corrélation d'image, 
+  Pour démarrer, on pourrait juste faire une fonction qui donne les déformations à partir de tableaux python.
+  => il faudrait déjà l'avoir en C++
+  
+L'idée générale est qu'on appelle des fonctions avec leur nom. Si on veut dériver ou qualifier, on peut ensuite rentrer dans le code, mais on peut exécuter directement si on veut.
 
 
 

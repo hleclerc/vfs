@@ -1,25 +1,24 @@
 #pragma once
 
 #include "../../support/WithDefaultOperators.h"
-#include "../../vfs_system/WrapperTypeFor.h"
-#include "../../vfs_system/VfsTdWrapper.h"
 #include "VfsTdImpl_StdScalar.h"
+#include "../../Type.h"
 // #include "Type.h"
 
 BEG_VFS_NAMESPACE
 
 /// Wrap an integer
-class Int : public VfsTdWrapper<Int,sizeof(PI64),alignof(PI64)>, WithDefaultOperators {
+class Scalar : public VfsTdWrapper<Scalar,sizeof(PI64),alignof(PI64)>, WithDefaultOperators {
 public:
-    STD_METHODS_FOR_VFS_TD_WRAPPER( Int, "VFS_NAMESPACE", "vfs" );
+    STD_METHODS_FOR_VFS_TD_WRAPPER( Scalar, "VFS_NAMESPACE", "vfs" );
 };
 
 // types for ctors --------------------------------------------------------------------------
-TT requires std::is_integral_v<T> struct VfsTdImplFor<Int,T> { using value = VfsTdImpl_StdInt<Int,typename StorageTypeFor<T>::value>; };
-template<> struct VfsTdImplFor<Int> { using value = VfsTdImpl_StdInt<Int,CtInt<0>>; };
+TT requires std::is_scalar_v<T> struct VfsTdImplFor<Scalar,T> { using value = VfsTdImpl_StdScalar<Scalar,typename StorageTypeFor<T>::value>; };
+template<> struct VfsTdImplFor<Scalar> { using value = VfsTdImpl_StdScalar<Scalar,CtInt<0>>; };
 
 //
-TT requires std::is_integral_v<T> struct VfsWrapperTypeFor<T> { using value = Int; };
+TT requires ( std::is_scalar_v<T> && ! std::is_integral_v<T> ) struct VfsWrapperTypeFor<T> { using value = Scalar; };
 
 // // -------------------------------------------------------------------------------------------
 // // type info

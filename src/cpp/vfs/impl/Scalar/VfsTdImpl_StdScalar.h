@@ -5,22 +5,22 @@
 BEG_VFS_NAMESPACE
 
 ///
-template<class Int,class IntType>
-struct VfsTdImpl_StdInt : VfsTdImpl<Int,VfsTdImpl_StdInt<Int,IntType>>, WithDefaultOperators {
-    /**/           VfsTdImpl_StdInt     ( auto &&...ctor_args ) : data( FORWARD( ctor_args )... ) {}
+template<class Scalar,class ScalarType>
+struct VfsTdImpl_StdScalar : VfsTdImpl<Scalar,VfsTdImpl_StdScalar<Scalar,ScalarType>>, WithDefaultOperators {
+    /**/              VfsTdImpl_StdScalar  ( auto &&...ctor_args ) : data( FORWARD( ctor_args )... ) {}
 
-    TT void        operator=            ( const VfsTdImpl_StdInt<Int,T> &that ) { if constexpr ( requires { data = that.data; } ) data = that; else { data.~IntType(); new ( this ) Int( FromTypeAndCtorArguments(), CtType<VfsTdImpl_StdInt<Int,T>>(), that.data ); } }
-    void           set                  ( auto &&that ) { if constexpr ( requires { data = that; } ) data = that; else { data.~IntType(); new ( this ) Int( FORWARD( that ) ); } }
+    TT void           operator=            ( const VfsTdImpl_StdScalar<Scalar,T> &that ) { if constexpr ( requires { data = that.data; } ) data = that; else { data.~ScalarType(); new ( this ) Scalar( FromTypeAndCtorArguments(), CtType<VfsTdImpl_StdScalar<Scalar,T>>(), that.data ); } }
+    void              set                  ( auto &&that ) { if constexpr ( requires { data = that; } ) data = that; else { data.~ScalarType(); new ( this ) Scalar( FORWARD( that ) ); } }
 
-    static void    get_compilation_flags( CompilationFlags &cf ) { cf.add_inc_file( "vfs/impl/Int/VfsTdImpl_StdInt.h" ); }
-    static void    for_each_template_arg( auto &&f ) { f( CtType<Int>() ); f( CtType<IntType>() ); }
-    static auto    template_type_name   () { return "VFS_NAMESPACE::VfsTdImpl_StdInt"; }
+    static void       get_compilation_flags( CompilationFlags &cf ) { cf.add_inc_file( "vfs/impl/Scalar/VfsTdImpl_StdScalar.h" ); }
+    static void       for_each_template_arg( auto &&f ) { f( CtType<Scalar>() ); f( CtType<ScalarType>() ); }
+    static auto       template_type_name   () { return "VFS_NAMESPACE::VfsTdImpl_StdScalar"; }
 
-    const IntType& get_lvalue           () const { return data; }
-    IntType&&      get_rvalue           () { return std::move( data ); }
-    DisplayItem*   display              ( Displayer &ds ) const { return VFS_NAMESPACE::display( ds, data ); }
+    const ScalarType& get_lvalue           () const { return data; }
+    ScalarType&&      get_rvalue           () { return std::move( data ); }
+    DisplayItem*      display              ( Displayer &ds ) const { return VFS_NAMESPACE::display( ds, data ); }
 
-    IntType        data;
+    ScalarType        data;
 };
 
 

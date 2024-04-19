@@ -18,6 +18,11 @@ public:
     TT                       Array               ( const std::initializer_list<std::initializer_list<T>> &values );
     TT                       Array               ( const std::initializer_list<T> &values );
 
+    /**/                     Array               ( FromSizeAndItemValue, auto &&sizes, auto &&item_value ) {
+        using Func = FuncInfo<CtString<"construct_Array_FromSizeAndItemValue">,CtStringList<"inc_file:vfs/impl/Array/construct_Array_FromSizeAndItemValue.h">,CtIntList<0>>;
+        vfs_call<void>( Func(), *this, FORWARD( sizes ), FORWARD( item_value ) );
+    }
+
     Sizes                    sizes               () const;
     Int                      size                () const;
 
@@ -37,9 +42,8 @@ public:
 };
 
 // types for ctors --------------------------------------------------------------------------
-// TTA auto vfs_dt_impl_type( CtType<Array<T,A...>>, const HasSizeAndAccess auto &that );
-// TTA auto vfs_dt_impl_type( CtType<Array<T,A...>> );
 template<class Item,class... Tags> struct VfsTdImplFor<Array<Item,Tags...>> { using value = EmptyArrayImpl<Array<Item,Tags...>,ArrayTagListAnalyzer::requested_nb_dims( Tags()... )>; };
+// template<class Item,class... Tags> struct VfsTdImplFor<Array<Item,Tags...>,FromSizeAndItemValue,class Size> { using value = EmptyArrayImpl<Array<Item,Tags...>,ArrayTagListAnalyzer::requested_nb_dims( Tags()... )>; };
 
 // type info -------------------------------------------------------------------------------------------
 TTA auto constexpr tensor_order( CtType<Array<T,A...>> ) { return ArrayTagListAnalyzer::requested_nb_dims( A()... ); }
