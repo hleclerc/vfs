@@ -25,6 +25,8 @@ DECL_VOID_STRUCT_STD( FromSizeAndInitFunctionOnIndex );
 DECL_VOID_STRUCT_STD( FromTypeAndCtorArguments       );
 DECL_VOID_STRUCT_STD( FromOperationOnItemsOf         );
 DECL_VOID_STRUCT_STD( FromPointerOnBorrowed          ); ///<
+DECL_VOID_STRUCT_STD( FromSizesAndItemValue          );
+DECL_VOID_STRUCT_STD( FromSizesAndIterator           );
 DECL_VOID_STRUCT_STD( FromSizeAndItemValue           );
 DECL_VOID_STRUCT_STD( FromSizeAndIterator            );
 DECL_VOID_STRUCT_STD( FromReservationSize            ); ///<

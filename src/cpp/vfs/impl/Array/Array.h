@@ -18,10 +18,9 @@ public:
     TT                       Array               ( const std::initializer_list<std::initializer_list<T>> &values );
     TT                       Array               ( const std::initializer_list<T> &values );
 
-    /**/                     Array               ( FromSizeAndItemValue, auto &&sizes, auto &&item_value ) {
-        using Func = FuncInfo<CtString<"construct_Array_FromSizeAndItemValue">,CtStringList<"inc_file:vfs/impl/Array/construct_Array_FromSizeAndItemValue.h">,CtIntList<0>>;
-        vfs_call<void>( Func(), *this, FORWARD( sizes ), FORWARD( item_value ) );
-    }
+    /**/                     Array               ( FromSizesAndItemValue, auto &&sizes, auto &&item_value );
+    /**/                     Array               ( FromSizesAndIterator, auto &&sizes, auto &&iterator );
+    /**/                     Array               ( FromSizeAndIterator, auto &&size, auto &&iterator );
 
     Sizes                    sizes               () const;
     Int                      size                () const;
