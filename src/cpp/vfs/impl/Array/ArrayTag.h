@@ -12,7 +12,6 @@ namespace ArrayTag {
     #define DECL_TAG__( NAME ) struct NAME { static auto type_name() { return "VFS_NAMESPACE::ArrayTag::" #NAME; } }
         DECL_TAG__( WantCtSizeInAllDims );
         DECL_TAG__( ForceKnownSizes );
-        DECL_TAG__( ForceTupleRepr );
         DECL_TAG_i( ForceNbDimsTo );
     #undef DECL_TAG_T
     #undef DECL_TAG_i

@@ -2,7 +2,7 @@
 
 #include "../support/CompilationFlags.h"
 #include "../support/CtIntList.h"
-#include "../support/Tuple.h"
+#include "../support/Tup.h"
 
 BEG_VFS_NAMESPACE
 
@@ -10,7 +10,7 @@ BEG_VFS_NAMESPACE
 struct VfsWrapper {};
 
 /// keys for a given type. Return a Tuple<>() for the generic case.
-TT auto vfs_wrapper_keys( const T &wrapper ) { if constexpr ( requires { wrapper.wrapper_keys(); } ) return wrapper.wrapper_keys(); else return Tuple<>{}; }
+TT auto vfs_wrapper_keys( const T &wrapper ) { if constexpr ( requires { wrapper.wrapper_keys(); } ) return wrapper.wrapper_keys(); else return Tup<>{}; }
 
 ///
 TT Str vfs_wrapper_cast_type( const T &wrapper ) { if constexpr ( requires { wrapper.wrapper_cast_type(); } ) return wrapper.wrapper_cast_type(); else return {}; }
@@ -29,6 +29,6 @@ Tijs auto vfs_wrapper_tuple_of_keys( CtInt<i> index, CtIntList<j...> output_indi
     else
         return tuple_cat( vfs_wrapper_keys( head ), vfs_wrapper_tuple_of_keys( CtInt<i+1>(), output_indices, tail... ) );
 }
-auto vfs_wrapper_tuple_of_keys( auto index, auto output_indices ) { return Tuple<>(); }
+auto vfs_wrapper_tuple_of_keys( auto index, auto output_indices ) { return Tup<>(); }
 
 END_VFS_NAMESPACE

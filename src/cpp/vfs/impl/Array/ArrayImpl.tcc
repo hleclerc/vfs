@@ -133,7 +133,7 @@ DTP auto UTP::reserve_for( auto &&wanted_capa, auto &&func_on_new_array ) {
         auto new_capa = wanted_capa.apply( [&]( auto... wcs ) {
             return capa.apply( [&]( auto... ccs ) {
                 auto nc = []( auto wc, auto cc ) { return wc >= CtInt<2>() * cc ? wc : CtInt<2>() * cc; };
-                return tuple( nc( wcs, ccs )... ); 
+                return tup( nc( wcs, ccs )... ); 
             } );
         } );
 
@@ -184,7 +184,7 @@ DTP void UTP::for_each_indices( auto &&func ) const {
 }
 
 DTP void UTP::push_back( auto &&value ) {
-    auto new_sizes = sizes.apply( [&]( auto sh, auto ...st ) { return tuple( sh + CtInt<1>(), st... ); } );
+    auto new_sizes = sizes.apply( [&]( auto sh, auto ...st ) { return tup( sh + CtInt<1>(), st... ); } );
     reserve_for( new_sizes, [&]( auto &new_array ) {
         new_array.set( sizes.head, FORWARD( value ) );
         new_array.sizes = new_sizes;

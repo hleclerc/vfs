@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../vfs_system/VfsTdImpl.h"
-#include "../../support/Tuple.h"
+#include "../../support/Tup.h"
 
 BEG_VFS_NAMESPACE
 
@@ -11,9 +11,9 @@ BEG_VFS_NAMESPACE
 ///
 template<class Wrapper            ,
          class Item               ,
-         class Capa               = Tuple<PI>,
-         class Sizes              = Tuple<PI>,
-         class Strides            = Tuple<CtInt<sizeof(Item)>>,
+         class Capa               = Tup<PI>,
+         class Sizes              = Tup<PI>,
+         class Strides            = Tup<CtInt<sizeof(Item)>>,
          int   alignment_in_bytes = 0,
          bool  need_row_alignment = true,
          bool  owned              = true

@@ -24,7 +24,7 @@ DTP Callable** UTP::operator()( auto &&tuple_of_keys ) {
 
 /// 0 arg -------------------------------------------------------
 #define DTP template<class Callable>
-#define UTP VfsFuncArray<Callable,Tuple<>>
+#define UTP VfsFuncArray<Callable,Tup<>>
 
 DTP UTP::VfsFuncArray( Callable *init ) {
     ptr = init;
@@ -39,7 +39,7 @@ DTP Callable** UTP::operator()( const auto &tuple_of_keys ) {
 
 /// 1 indexable arg -------------------------------------------------------
 #define DTP template<class Callable,IsAVfsKeyWithIndexAndArraySize Key>
-#define UTP VfsFuncArray<Callable,Tuple<Key>>
+#define UTP VfsFuncArray<Callable,Tup<Key>>
 
 DTP UTP::VfsFuncArray( Callable *init ) {
     size = Key::array_size();
@@ -61,7 +61,7 @@ DTP Callable** UTP::operator()( const auto &tuple_of_keys ) {
 
 /// 2 indexable args ------------------------------------------------------
 #define DTP template<class Callable,IsAVfsKeyWithIndexAndArraySize Key_0,IsAVfsKeyWithIndexAndArraySize Key_1>
-#define UTP VfsFuncArray<Callable,Tuple<Key_0,Key_1>>
+#define UTP VfsFuncArray<Callable,Tup<Key_0,Key_1>>
 
 DTP UTP::VfsFuncArray( Callable *init ) {
     size_0 = Key_0::array_size();
