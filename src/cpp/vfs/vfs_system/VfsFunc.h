@@ -10,7 +10,7 @@ BEG_VFS_NAMESPACE
 template<CtStringValue name,class CompilationFlags,class OutputIndices,class ReturnType,class... Args>
 class VfsFunc {
 public:
-    using               TupleOfKeys = decltype( tuple_cat( vfs_wrapper_keys( *(std::decay_t<Args> *)nullptr )... ) )::template Map<StorageTypeFor>::value;
+    using               TupleOfKeys = decltype( vfs_wrapper_tuple_of_keys( CtInt<0>(), OutputIndices(), *(std::decay_t<Args> *)nullptr... ) )::template Map<StorageTypeFor>::value;
     using               Callable    = ReturnType( Args... );
     using               Array       = VfsFuncArray<Callable,TupleOfKeys>;
 

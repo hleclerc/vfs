@@ -14,7 +14,7 @@ BEG_VFS_NAMESPACE
 DTP UTP::VfsFunc() : array( init ) {}
 
 DTP ReturnType UTP::operator()( Args ...args ) {
-    Callable *callable = *array( tuple_cat( vfs_wrapper_keys( args )... ) );
+    Callable *callable = *array( vfs_wrapper_tuple_of_keys( CtInt<0>(), OutputIndices(), args... ) );
     return callable( std::forward<Args>( args )... );
 }
 
@@ -36,9 +36,11 @@ DTP TA UTP::Callable *UTP::callable_for( const A &...args ) {
     Str arg_types[ sizeof...( args ) ];
     PI num_arg = 0;
     auto get_cast_types = [&]<class Arg>( const auto &arg, CtType<Arg> ) {
-        vfs_wrapper_get_compilation_flags( compilation_flags, arg );
-        cast_types[ num_arg ] = vfs_wrapper_cast_type( arg );
-        arg_types[ num_arg ] = type_name<Arg>();
+        if ( ! OutputIndices::contains( num_arg ) ) {
+            vfs_wrapper_get_compilation_flags( compilation_flags, arg );
+            cast_types[ num_arg ] = vfs_wrapper_cast_type( arg );
+            arg_types[ num_arg ] = type_name<Arg>();
+        }
         ++num_arg;
     };
     ( get_cast_types( args, CtType<Args>() ), ... );
@@ -56,7 +58,7 @@ DTP TA UTP::Callable *UTP::callable_for( const A &...args ) {
 
 DTP ReturnType UTP::init( Args ...args ) {
     // find and register
-    Callable **ptr = StaticStorage<VfsFunc>::value.array( tuple_cat( vfs_wrapper_keys( args )... ) );
+    Callable **ptr = StaticStorage<VfsFunc>::value.array( vfs_wrapper_tuple_of_keys( CtInt<0>(), OutputIndices(), args... ) );
     Callable *callable = callable_for( args... );
     *ptr = callable;
 
