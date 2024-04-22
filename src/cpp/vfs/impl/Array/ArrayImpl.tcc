@@ -26,6 +26,14 @@ DTP UTP::ArrayImpl( FromReservationSize, auto &&sizes, auto &&capa ) : ArrayImpl
 DTP UTP::ArrayImpl( FromReservationSize, auto &&sizes ) : ArrayImpl( FromReservationSize(), sizes, sizes ) {
 }
 
+DTP UTP::ArrayImpl( FromSizesAndItemValue, auto &&sizes, auto &&item ) : ArrayImpl( FromReservationSize(), sizes ) {
+    static_assert( owned == true );
+
+    for_each_indices( [&]( auto ...indices ) {
+        new ( data + offset( indices... ) ) Item( item );
+    } );
+}
+
 DTP UTP::ArrayImpl( FromSizesAndIterator, auto &&sizes, auto iterator ) : ArrayImpl( FromReservationSize(), sizes ) {
     static_assert( owned == true );
 

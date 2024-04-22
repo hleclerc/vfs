@@ -316,5 +316,8 @@ Si c'est un objet TL, le wrapper englobera un objet symbolique, où sera décrit
   
 L'idée générale est qu'on appelle des fonctions avec leur nom. Si on veut dériver ou qualifier, on peut ensuite rentrer dans le code, mais on peut exécuter directement si on veut.
 
+On voudrait transfomer une liste d'entier en tuple pour stocker taille et capacité.
+  => on pourrait éventuellement passer par des vecteurs de taille connue
 
+Rq: ne pas mmanipuler les types 
 

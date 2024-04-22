@@ -120,4 +120,8 @@ auto tuple_cat( auto &&a ) { return a; }
 // ext functions ---------------------------------------------------------------------------------------------------------------
 TA auto *display( auto &ds, const Tuple<A...> &value ) { return value.apply( [&]( const auto &...args ) { return ds.array( { display( ds, args )... } ); } ); }
 
+// -----------------------------------------------------------------------------------------------------------------------------
+template<class... Items> struct StorageTypeFor<Tuple<Items...>> { using value = Tuple<typename StorageTypeFor<Items>::value...>; };
+
+
 END_VFS_NAMESPACE

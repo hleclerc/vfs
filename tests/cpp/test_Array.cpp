@@ -8,15 +8,15 @@
 //     Vector b;
 //     P( b );
 // }
+using ArraySize = Array<Int,ArrayTag::ForceTupleRepr>;
 
 TEST_CASE( "Rt dim array", "" ) {
     using Vol = Array<Scalar>;
 
-    P( List<Int>{ 2, 3, 4 } );
-    // Vol v( FromSizeAndItemValue(), List<Int>{ 2, 2, 2 }, CtInt<0>() );
+    Vol v( FromSizesAndItemValue(), ArraySize{ 2, 2, 2 }, CtInt<0>() );
     // for( size_t i = 0; i < 4; i++ )
     //     v << i;
-    // P( v );
+    P( v );
  
     // Vol v{ 1, 2, 3, 4 };
 }
