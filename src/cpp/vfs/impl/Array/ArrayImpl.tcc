@@ -26,6 +26,14 @@ DTP UTP::ArrayImpl( FromReservationSize, auto &&sizes, auto &&capa ) : ArrayImpl
 DTP UTP::ArrayImpl( FromReservationSize, auto &&sizes ) : ArrayImpl( FromReservationSize(), sizes, sizes ) {
 }
 
+DTP UTP::ArrayImpl( FromSizesAndIterator, auto &&sizes, auto iterator ) : ArrayImpl( FromReservationSize(), sizes ) {
+    static_assert( owned == true );
+
+    for_each_indices( [&]( auto ...indices ) {
+        new ( data + offset( indices... ) ) Item( *( iterator++ ) );
+    } );
+}
+
 DTP UTP::ArrayImpl( FromSizesAndValues, auto &&sizes, auto&& ...values ) : ArrayImpl( FromReservationSize(), sizes ) {
     static_assert( owned == true );
 
@@ -46,6 +54,12 @@ DTP UTP::ArrayImpl( ArrayImpl &&that ) {
 DTP UTP::~ArrayImpl() {
     if ( owned && data )
         free( data );
+}
+
+DTP auto UTP::offset( auto &&...indices ) const {
+    return strides.apply( [&]( auto ...stride_values ) {
+        return ( ( stride_values * indices ) + ... );
+    } );
 }
 
 DTP auto UTP::operator[]( PI index ) const {
@@ -91,7 +105,7 @@ DTP auto UTP::template_type_name() {
 //     func( *data );
 // }
 
-DTP auto UTP::tight_strides( const Capa &capa ) {
+DTP auto UTP::tight_strides( const auto &capa ) {
     return capa.reversed_tie().prefix_scan_with_index( [&]( auto prod, auto capa_value, auto index ) {
         if constexpr ( index == 0 && Sizes::size > 1 && need_row_alignment && alignment_in_bytes )
             return ceil( prod * capa_value, alignment_in_bytes );
@@ -131,7 +145,6 @@ DTP auto UTP::reserve_for( auto &&wanted_capa, auto &&func_on_new_array ) {
         new_strides.apply( [&]( auto ...new_stride_values ) {
             strides.apply( [&]( auto ...stride_values ) {
                 for_each_indices( [&]( auto ...indices ) {
-                    P( indices... );
                     const Item *ov = reinterpret_cast<const Item *>( data + ( ( stride_values * indices ) + ... ) );
                     new ( new_data + ( ( new_stride_values * indices ) + ... ) ) Item( std::move( *ov ) );
                 } );

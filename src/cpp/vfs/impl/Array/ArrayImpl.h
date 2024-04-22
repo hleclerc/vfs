@@ -23,6 +23,7 @@ public:
     /**/                  ArrayImpl            ( FromReservationSize, auto &&sizes, auto &&capa, auto &&strides );
     /**/                  ArrayImpl            ( FromReservationSize, auto &&sizes, auto &&capa );
     /**/                  ArrayImpl            ( FromReservationSize, auto &&sizes );
+    /**/                  ArrayImpl            ( FromSizesAndIterator, auto &&sizes, auto iterator );
     /**/                  ArrayImpl            ( FromSizesAndValues, auto &&sizes, auto &&...values );
     /**/                  ArrayImpl            ( FromAttributes, auto &&strides, auto &&sizes, auto &&capa, char *data );
     /**/                  ArrayImpl            ( const ArrayImpl &that ) = delete;
@@ -33,13 +34,14 @@ public:
     void                  operator=            ( ArrayImpl &&that ) = delete;
 
     auto                  operator[]           ( PI index ) const;
+    auto                  offset               ( auto &&...indices ) const;
     void                  set                  ( PI index, auto &&value );
 
     static void           get_compilation_flags( CompilationFlags &cn );
     static void           for_each_template_arg( auto &&f );
     static auto           template_type_name   ();
     void                  for_each_indices     ( auto &&func ) const;
-    static auto           tight_strides        ( const Capa &capa );
+    static auto           tight_strides        ( const auto &capa );
     // void               for_each_item        ( const auto &func );
     auto                  reserve_for          ( auto &&wanted_capa, auto &&func_on_new_array );
     void                  push_back            ( auto &&value );

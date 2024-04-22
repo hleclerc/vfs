@@ -12,7 +12,7 @@
 TEST_CASE( "Rt dim array", "" ) {
     using Vol = Array<Scalar>;
 
-    P( List<Int>{ 2, 2, 2 } );
+    P( List<Int>{ 2, 3, 4 } );
     // Vol v( FromSizeAndItemValue(), List<Int>{ 2, 2, 2 }, CtInt<0>() );
     // for( size_t i = 0; i < 4; i++ )
     //     v << i;

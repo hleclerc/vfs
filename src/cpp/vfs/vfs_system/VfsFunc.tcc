@@ -39,8 +39,8 @@ DTP TA UTP::Callable *UTP::callable_for( const A &...args ) {
         if ( ! OutputIndices::contains( num_arg ) ) {
             vfs_wrapper_get_compilation_flags( compilation_flags, arg );
             cast_types[ num_arg ] = vfs_wrapper_cast_type( arg );
-            arg_types[ num_arg ] = type_name<Arg>();
         }
+        arg_types[ num_arg ] = type_name<Arg>();
         ++num_arg;
     };
     ( get_cast_types( args, CtType<Args>() ), ... );
