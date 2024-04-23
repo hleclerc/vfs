@@ -21,12 +21,12 @@ public:
 
     void                  push_back            ( auto &&value ) {
         using Item = StorageTypeFor<decltype(value)>::value;
-        using Strides = Tuple<CtInt<sizeof(Item)>>;
+        using Strides = Tup<CtInt<sizeof(Item)>>;
         if constexpr ( Wrapper::template want_ct_size_for_dim<0>() ) {
-            using Sizes = Tuple<CtInt<1>>;
+            using Sizes = Tup<CtInt<1>>;
             new ( this ) ArrayImpl<Wrapper,Item,Sizes,Sizes,Strides>( FromSizesAndValues(), Sizes{ CtInt<1>{} }, FORWARD( value ) );
         } else {
-            using Sizes = Tuple<PI>;
+            using Sizes = Tup<PI>;
             new ( this ) ArrayImpl<Wrapper,Item,Sizes,Sizes,Strides>( FromSizesAndValues(), Sizes{ PI( 1 ) }, FORWARD( value ) );
         }
     }

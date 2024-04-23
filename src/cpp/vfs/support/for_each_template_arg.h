@@ -2,7 +2,7 @@
 
 #include "CtTypeList.h"
 #include "UniquePtr.h"
-#include "Tuple.h"
+#include "Tup.h"
 #include "Pair.h"
 
 #include <functional>
@@ -20,7 +20,7 @@ DECL_BASE_TYPE_INFO_T_( std::initializer_list );
 DECL_BASE_TYPE_INFO_A_( CtTypeList            );
 DECL_BASE_TYPE_INFO_T_( UniquePtr             );
 DECL_BASE_TYPE_INFO_T_( CtType                );
-DECL_BASE_TYPE_INFO_A_( Tuple                 );
+DECL_BASE_TYPE_INFO_A_( Tup                 );
 DECL_BASE_TYPE_INFO_UV( Pair                  );
 
 #undef DECL_BASE_TYPE_INFO_UV

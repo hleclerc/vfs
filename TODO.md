@@ -319,5 +319,9 @@ L'idée générale est qu'on appelle des fonctions avec leur nom. Si on veut dé
 On voudrait transfomer une liste d'entier en tuple pour stocker taille et capacité.
   => on pourrait éventuellement passer par des vecteurs de taille connue
 
-Question : faut-il que `ensure_ct_known( int )` passe par un VfsTd ?
-  => a priori, pour obtenir un type, on aura besoin de code généré pour chaque valeur d'entier...
+Rq: manipuler les wrappers est fortement chiant, mais on doit pouvoir répliquer les fonctions qui manquent si nécessaire...
+
+Question: à quoi correspond exactement StorageType ? En particulier, est-ce que StorageType<...Impl> devrait renvoyer le type wrappé ?
+  => on pourrait dire que StorageType renvoie une copie, pas nécessairement modifiable. On pourrait avoir MutableStorageType<...> ou éventuellement un flag pour dire qu'on veut du mutable.
+
+

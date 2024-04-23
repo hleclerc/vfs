@@ -15,7 +15,7 @@ BEG_VFS_NAMESPACE
 class VfsSymbolCache {
 public:
     using           Path                   = std::filesystem::path;
-    using           Key                    = Tuple<Str, CompilationFlags, Str, Vec<Str>, Vec<Str>>;
+    using           Key                    = Tup<Str, CompilationFlags, Str, Vec<Str>, Vec<Str>>;
     using           LoadedSymbols          = std::map<Key,void *,Less>;
     using           SurdefFunc             = std::function<VfsSurdefStage( VfsCodegen &cg )>;
 

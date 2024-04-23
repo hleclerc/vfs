@@ -3,7 +3,7 @@
 #include "KeyWithIndexAndArraySize.h"
 #include "../support/TypeConfig.h"
 #include "../support/compare.h"
-#include "../support/Tuple.h"
+#include "../support/Tup.h"
 #include <map>
 
 BEG_VFS_NAMESPACE
@@ -24,7 +24,7 @@ public:
 
 /// 0 arg
 template<class Callable>
-class VfsFuncArray<Callable,Tuple<>> {
+class VfsFuncArray<Callable,Tup<>> {
 public:
     /**/       VfsFuncArray( Callable *init );
 
@@ -35,7 +35,7 @@ public:
 
 /// 1 indexable arg
 template<class Callable,IsAVfsKeyWithIndexAndArraySize Key>
-class VfsFuncArray<Callable,Tuple<Key>> {
+class VfsFuncArray<Callable,Tup<Key>> {
 public:
     /**/       VfsFuncArray( Callable *init );
     /**/      ~VfsFuncArray();
@@ -48,7 +48,7 @@ public:
 
 /// 2 indexable args
 template<class Callable,IsAVfsKeyWithIndexAndArraySize Key_0,IsAVfsKeyWithIndexAndArraySize Key_1>
-class VfsFuncArray<Callable,Tuple<Key_0,Key_1>> {
+class VfsFuncArray<Callable,Tup<Key_0,Key_1>> {
 public:
     /**/       VfsFuncArray( Callable *init );
     /**/      ~VfsFuncArray();

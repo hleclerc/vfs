@@ -8,11 +8,18 @@
 //     Vector b;
 //     P( b );
 // }
+<<<<<<< HEAD
 using ArraySize = Array<Int,ArrayTag::WantCtSizeInAllDims>;
+=======
+using ArrayShape = Array<Int,ArrayTag::ForceKnownSizes>;
+>>>>>>> 4970fbdf272868c6ca582882b8e7603276cea972
 
 TEST_CASE( "Rt dim array", "" ) {
-    using Vol = Array<Scalar>;
+    // using Vol = Array<Scalar>;
+    ArrayShape a{ 1, 2, 3 };
+    P( a );
 
+<<<<<<< HEAD
     using Func = FuncInfo<CtString<"PT">>;
     vfs_call<void>( Func(), ensure_ct_known( 17 ) );
 
@@ -20,6 +27,13 @@ TEST_CASE( "Rt dim array", "" ) {
     // for( size_t i = 0; i < 4; i++ )
     //     v << i;
     //    P( v );
+=======
+    //P(  )
+    // Vol v( FromSizesAndItemValue(), ArraySize{ 2, 2, 2 }, CtInt<0>() );
+    // for( size_t i = 0; i < 4; i++ )
+    //     v << i;
+    //P( v );
+>>>>>>> 4970fbdf272868c6ca582882b8e7603276cea972
  
     // Vol v{ 1, 2, 3, 4 };
 }
