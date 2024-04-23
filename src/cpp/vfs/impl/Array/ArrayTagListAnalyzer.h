@@ -9,13 +9,17 @@ BEG_VFS_NAMESPACE
 
 /// struct to analyze array tags ----------------------------------------------------------------------------------------------------------------------------------------------
 struct ArrayTagListAnalyzer {
+    Ti   static constexpr auto want_ct_size_for_dim( CtInt<i> dim, ArrayTag::WantCtSizeInAllDims, auto ...tail ) { return CtInt<1>(); }
+    Ti   static constexpr auto want_ct_size_for_dim( CtInt<i> dim, auto head, auto ...tail ) { return want_ct_size_for_dim( dim, tail... ); }
+    Ti   static constexpr auto want_ct_size_for_dim( CtInt<i> dim ) { return CtInt<0>(); }
+
     Ti   static constexpr auto requested_nb_dims   ( ArrayTag::ForceNbDimsTo<i>, auto ...tail ) { return CtInt<i>(); }
     /**/ static constexpr auto requested_nb_dims   ( auto head, auto ...tail ) { return requested_nb_dims( tail... ); }
     /**/ static constexpr auto requested_nb_dims   () { return CtInt<-1>(); }
 
-    Ti   static constexpr auto want_ct_size_for_dim( CtInt<i> dim, ArrayTag::WantCtSizeInAllDims, auto ...tail ) { return CtInt<1>(); }
-    Ti   static constexpr auto want_ct_size_for_dim( CtInt<i> dim, auto head, auto ...tail ) { return want_ct_size_for_dim( dim, tail... ); }
-    Ti   static constexpr auto want_ct_size_for_dim( CtInt<i> dim ) { return CtInt<0>(); }
+    /**/ static constexpr auto want_ct_sizes       ( ArrayTag::WantCtSizeInAllDims, auto ...tail ) { return CtInt<1>(); }
+    /**/ static constexpr auto want_ct_sizes       ( auto head, auto ...tail ) { return want_ct_sizes( tail... ); }
+    /**/ static constexpr auto want_ct_sizes       ( ) { return CtInt<0>(); }
 };
 
 // auto array_type_for_ctor_args( auto sub_obj_type, auto tags, const HasSizeAndAccess auto &v );

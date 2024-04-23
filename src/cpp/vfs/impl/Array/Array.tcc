@@ -2,6 +2,7 @@
 
 //#include "support/with_sizes_and_sample_item_ptr.h"
 //#include "containers/SelectArray.h"
+#include "../../vfs_system/ensure_ct_known.h"
 #include "Array.h"
 //#include "Any.h"
 
@@ -31,7 +32,10 @@ DTP UTP::Array( FromSizesAndIterator, auto &&sizes, auto &&iterator ) {
 
 DTP UTP::Array( FromSizeAndIterator, auto &&size, auto &&iterator ) {
     using Func = FuncInfo<CtString<"construct_Array_FromSizeAndIterator">,CtStringList<"inc_file:vfs/impl/Array/construct_Array_FromSizeAndIterator.h">,CtIntList<0>>;
-    vfs_call<void>( Func(), *this, FORWARD( size ), FORWARD( iterator ) );
+    if constexpr ( ArrayTagListAnalyzer::want_ct_sizes( Tags{}... ) )
+        vfs_call<void>( Func(), *this, ensure_ct_known( FORWARD( size ) ), FORWARD( iterator ) );
+    else
+        vfs_call<void>( Func(), *this, ensure_ct_known( FORWARD( size ) ), FORWARD( iterator ) );
 }
 
 // DTP Int UTP::size() const {

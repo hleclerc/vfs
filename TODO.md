@@ -319,5 +319,5 @@ L'idée générale est qu'on appelle des fonctions avec leur nom. Si on veut dé
 On voudrait transfomer une liste d'entier en tuple pour stocker taille et capacité.
   => on pourrait éventuellement passer par des vecteurs de taille connue
 
-Rq: ne pas mmanipuler les types 
-
+Question : faut-il que `ensure_ct_known( int )` passe par un VfsTd ?
+  => a priori, pour obtenir un type, on aura besoin de code généré pour chaque valeur d'entier...

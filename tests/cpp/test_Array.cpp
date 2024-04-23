@@ -8,15 +8,18 @@
 //     Vector b;
 //     P( b );
 // }
-using ArraySize = Array<Int,ArrayTag::ForceTupleRepr>;
+using ArraySize = Array<Int,ArrayTag::WantCtSizeInAllDims>;
 
 TEST_CASE( "Rt dim array", "" ) {
     using Vol = Array<Scalar>;
 
-    Vol v( FromSizesAndItemValue(), ArraySize{ 2, 2, 2 }, CtInt<0>() );
+    using Func = FuncInfo<CtString<"PT">>;
+    vfs_call<void>( Func(), ensure_ct_known( 17 ) );
+
+    //Vol v( FromSizesAndItemValue(), ArraySize{ 2, 2, 2 }, CtInt<0>() );
     // for( size_t i = 0; i < 4; i++ )
     //     v << i;
-    P( v );
+    //    P( v );
  
     // Vol v{ 1, 2, 3, 4 };
 }
