@@ -25,12 +25,12 @@ DECL_VOID_STRUCT_STD( FromSizeAndInitFunctionOnIndex );
 DECL_VOID_STRUCT_STD( FromTypeAndCtorArguments       );
 DECL_VOID_STRUCT_STD( FromOperationOnItemsOf         );
 DECL_VOID_STRUCT_STD( FromPointerOnBorrowed          ); ///<
-DECL_VOID_STRUCT_STD( FromSizesAndItemValue          );
-DECL_VOID_STRUCT_STD( FromSizesAndIterator           );
+DECL_VOID_STRUCT_STD( FromShapeAndItemValue          );
+DECL_VOID_STRUCT_STD( FromShapeAndIterator           );
 DECL_VOID_STRUCT_STD( FromSizeAndItemValue           );
 DECL_VOID_STRUCT_STD( FromSizeAndIterator            );
 DECL_VOID_STRUCT_STD( FromReservationSize            ); ///<
-DECL_VOID_STRUCT_STD( FromSizesAndValues             );
+DECL_VOID_STRUCT_STD( FromShapeAndValues             );
 DECL_VOID_STRUCT_STD( FromPointerOnOwned             ); ///<
 DECL_VOID_STRUCT_STD( FromTupleValues                ); ///<
 DECL_VOID_STRUCT_STD( FromAttributes                 );

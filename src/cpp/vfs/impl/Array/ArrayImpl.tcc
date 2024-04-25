@@ -26,7 +26,7 @@ DTP UTP::ArrayImpl( FromReservationSize, auto &&sizes, auto &&capa ) : ArrayImpl
 DTP UTP::ArrayImpl( FromReservationSize, auto &&sizes ) : ArrayImpl( FromReservationSize(), sizes, sizes ) {
 }
 
-DTP UTP::ArrayImpl( FromSizesAndItemValue, auto &&sizes, auto &&item ) : ArrayImpl( FromReservationSize(), sizes ) {
+DTP UTP::ArrayImpl( FromShapeAndItemValue, auto &&sizes, auto &&item ) : ArrayImpl( FromReservationSize(), sizes ) {
     static_assert( owned == true );
 
     for_each_indices( [&]( auto ...indices ) {
@@ -34,7 +34,7 @@ DTP UTP::ArrayImpl( FromSizesAndItemValue, auto &&sizes, auto &&item ) : ArrayIm
     } );
 }
 
-DTP UTP::ArrayImpl( FromSizesAndIterator, auto &&sizes, auto iterator ) : ArrayImpl( FromReservationSize(), sizes ) {
+DTP UTP::ArrayImpl( FromShapeAndIterator, auto &&sizes, auto iterator ) : ArrayImpl( FromReservationSize(), sizes ) {
     static_assert( owned == true );
 
     for_each_indices( [&]( auto ...indices ) {
@@ -42,7 +42,7 @@ DTP UTP::ArrayImpl( FromSizesAndIterator, auto &&sizes, auto iterator ) : ArrayI
     } );
 }
 
-DTP UTP::ArrayImpl( FromSizesAndValues, auto &&sizes, auto&& ...values ) : ArrayImpl( FromReservationSize(), sizes ) {
+DTP UTP::ArrayImpl( FromShapeAndValues, auto &&sizes, auto&& ...values ) : ArrayImpl( FromReservationSize(), sizes ) {
     static_assert( owned == true );
 
     auto set_item = [&]( const auto &value ) { new ( data ) Item( value ); };

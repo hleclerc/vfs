@@ -24,10 +24,10 @@ public:
         using Strides = Tup<CtInt<sizeof(Item)>>;
         if constexpr ( Wrapper::template want_ct_size_for_dim<0>() ) {
             using Sizes = Tup<CtInt<1>>;
-            new ( this ) ArrayImpl<Wrapper,Item,Sizes,Sizes,Strides>( FromSizesAndValues(), Sizes{ CtInt<1>{} }, FORWARD( value ) );
+            new ( this ) ArrayImpl<Wrapper,Item,Sizes,Sizes,Strides>( FromShapeAndValues(), Sizes{ CtInt<1>{} }, FORWARD( value ) );
         } else {
             using Sizes = Tup<PI>;
-            new ( this ) ArrayImpl<Wrapper,Item,Sizes,Sizes,Strides>( FromSizesAndValues(), Sizes{ PI( 1 ) }, FORWARD( value ) );
+            new ( this ) ArrayImpl<Wrapper,Item,Sizes,Sizes,Strides>( FromShapeAndValues(), Sizes{ PI( 1 ) }, FORWARD( value ) );
         }
     }
 };

@@ -20,13 +20,13 @@ BEG_VFS_NAMESPACE
 DTP TT UTP::Array( const std::initializer_list<T> &values ) : Array( FromSizeAndIterator(), values.size(), values.begin() ) {
 }
 
-DTP UTP::Array( FromSizesAndItemValue, auto &&sizes, auto &&item_value ) {
-    using Func = FuncInfo<CtString<"construct_Array_FromSizesAndItemValue">,CtStringList<"inc_file:vfs/impl/Array/construct_Array_FromSizesAndItemValue.h">,CtIntList<0>>;
+DTP UTP::Array( FromShapeAndItemValue, auto &&sizes, auto &&item_value ) {
+    using Func = FuncInfo<CtString<"construct_Array_FromShapeAndItemValue">,CtStringList<"inc_file:vfs/impl/Array/construct_Array_FromShapeAndItemValue.h">,CtIntList<0>>;
     vfs_call<void>( Func(), *this, FORWARD( sizes ), FORWARD( item_value ) );
 }
 
-DTP UTP::Array( FromSizesAndIterator, auto &&sizes, auto &&iterator ) {
-    using Func = FuncInfo<CtString<"construct_Array_FromSizesAndIterator">,CtStringList<"inc_file:vfs/impl/Array/construct_Array_FromSizesAndIterator.h">,CtIntList<0>>;
+DTP UTP::Array( FromShapeAndIterator, auto &&sizes, auto &&iterator ) {
+    using Func = FuncInfo<CtString<"construct_Array_FromShapeAndIterator">,CtStringList<"inc_file:vfs/impl/Array/construct_Array_FromShapeAndIterator.h">,CtIntList<0>>;
     vfs_call<void>( Func(), *this, FORWARD( sizes ), FORWARD( iterator ) );
 }
 

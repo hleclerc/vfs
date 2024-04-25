@@ -13,8 +13,9 @@ class EnsureCtKnown : public VfsWrapper {
 public:
     using       Key                          = VfsGenericKey<Value>;
 
+    static void get_compilation_flags        ( CompilationFlags &cn ) { cn.add_inc_file( "vfs/vfs_system/ensure_ct_known.h" ); }
     static void for_each_template_arg        ( auto &&f ) { f( CtString<struct_name>() ); f( CtType<Value>() ); }
-    static auto template_type_name           () { return "EnsureCtKnown"; }
+    static auto template_type_name           () { return "VFS_NAMESPACE::EnsureCtKnown"; }
 
     void        wrapper_get_compilation_flags( CompilationFlags &cg ) const { }
     Str         wrapper_cast_type            () const { return va_string( "$0<$1>", struct_name, key.value ); }

@@ -325,3 +325,5 @@ Question: à quoi correspond exactement StorageType ? En particulier, est-ce que
   => on pourrait dire que StorageType renvoie une copie, pas nécessairement modifiable. On pourrait avoir MutableStorageType<...> ou éventuellement un flag pour dire qu'on veut du mutable.
 
 
+Rq: lorsqu'on crée un tableau avec FromShape..., il faut s'assurer que le vecteur qui donne la forme soit de taille connue
+  

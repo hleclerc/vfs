@@ -9,7 +9,7 @@ TT auto construct_Array_FromSizeAndIterator( T &wrapper, auto &&size, auto &&ite
     using Item = STORAGE_TYPE_OF( *iterator );
     using Res = ArrayImpl<T,Item,Sizes,Sizes>;
 
-    new ( &wrapper ) Res( FromSizesAndIterator(), tie( size ), FORWARD( iterator ) );
+    new ( &wrapper ) Res( FromShapeAndIterator(), tie( size ), FORWARD( iterator ) );
 }
 
 END_VFS_NAMESPACE

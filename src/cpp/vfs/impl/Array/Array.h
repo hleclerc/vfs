@@ -18,8 +18,8 @@ public:
     TT                       Array               ( const std::initializer_list<std::initializer_list<T>> &values );
     TT                       Array               ( const std::initializer_list<T> &values );
 
-    /**/                     Array               ( FromSizesAndItemValue, auto &&sizes, auto &&item_value );
-    /**/                     Array               ( FromSizesAndIterator, auto &&sizes, auto &&iterator );
+    /**/                     Array               ( FromShapeAndItemValue, auto &&sizes, auto &&item_value );
+    /**/                     Array               ( FromShapeAndIterator, auto &&sizes, auto &&iterator );
     /**/                     Array               ( FromSizeAndIterator, auto &&size, auto &&iterator );
 
     Sizes                    sizes               () const;

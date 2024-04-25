@@ -23,9 +23,9 @@ public:
     /**/                  ArrayImpl            ( FromReservationSize, auto &&sizes, auto &&capa, auto &&strides );
     /**/                  ArrayImpl            ( FromReservationSize, auto &&sizes, auto &&capa );
     /**/                  ArrayImpl            ( FromReservationSize, auto &&sizes );
-    /**/                  ArrayImpl            ( FromSizesAndItemValue, auto &&sizes, auto &&item );
-    /**/                  ArrayImpl            ( FromSizesAndIterator, auto &&sizes, auto iterator );
-    /**/                  ArrayImpl            ( FromSizesAndValues, auto &&sizes, auto &&...values );
+    /**/                  ArrayImpl            ( FromShapeAndItemValue, auto &&sizes, auto &&item );
+    /**/                  ArrayImpl            ( FromShapeAndIterator, auto &&sizes, auto iterator );
+    /**/                  ArrayImpl            ( FromShapeAndValues, auto &&sizes, auto &&...values );
     /**/                  ArrayImpl            ( FromAttributes, auto &&strides, auto &&sizes, auto &&capa, char *data );
     /**/                  ArrayImpl            ( const ArrayImpl &that ) = delete;
     /**/                  ArrayImpl            ( ArrayImpl &&that );
