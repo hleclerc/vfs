@@ -8,79 +8,20 @@ BEG_VFS_NAMESPACE
 #define DTP template<class Wrapper,class Item,class Capa,class Sizes,class Strides,int alignment_in_bytes,bool need_row_alignment,bool owned>
 #define UTP ArrayImpl<Wrapper,Item,Capa,Sizes,Strides,alignment_in_bytes,need_row_alignment,owned>
 
-DTP UTP::ArrayImpl( FromReservationSize, auto &&sizes, auto &&capa, auto &&strides ) : strides( FromTupleValues(), FORWARD( strides ) ), sizes( FromTupleValues(), FORWARD( sizes ) ), capa( FromTupleValues(), FORWARD( capa ) ) {
-    auto nb = capa.apply( [&]( auto ...c ) -> PI {
-        const bool nu = ( ( c == 0 ) || ... );
-        if ( nu )
-            return 0;
-        return strides.apply( [&]( auto ...s ) {
-            return ( ( ( c - 1 ) * s ) + ... ) + sizeof( Item );
-        } );
-    } );
-    data = reinterpret_cast<char *>( malloc( nb ) );
-}
-
-DTP UTP::ArrayImpl( FromReservationSize, auto &&sizes, auto &&capa ) : ArrayImpl( FromReservationSize(), FORWARD( sizes ), FORWARD( capa ), tight_strides( capa ) ) {
-}
-
-DTP UTP::ArrayImpl( FromReservationSize, auto &&sizes ) : ArrayImpl( FromReservationSize(), sizes, sizes ) {
-}
-
-DTP UTP::ArrayImpl( FromShapeAndItemValue, auto &&sizes, auto &&item ) : ArrayImpl( FromReservationSize(), sizes ) {
-    static_assert( owned == true );
-
-    for_each_indices( [&]( auto ...indices ) {
-        new ( data + offset( indices... ) ) Item( item );
-    } );
-}
-
-DTP UTP::ArrayImpl( FromShapeAndIterator, auto &&sizes, auto iterator ) : ArrayImpl( FromReservationSize(), sizes ) {
-    static_assert( owned == true );
-
-    for_each_indices( [&]( auto ...indices ) {
-        new ( data + offset( indices... ) ) Item( *( iterator++ ) );
-    } );
-}
-
-DTP UTP::ArrayImpl( FromShapeAndValues, auto &&sizes, auto&& ...values ) : ArrayImpl( FromReservationSize(), sizes ) {
-    static_assert( owned == true );
-
-    auto set_item = [&]( const auto &value ) { new ( data ) Item( value ); };
-    ( set_item( values ), ... );
-}
-
-DTP UTP::ArrayImpl( FromAttributes, auto &&strides, auto &&sizes, auto &&capa, char *data ) : strides( FORWARD( strides ) ), sizes( FORWARD( sizes ) ), capa( FORWARD( capa ) ), data( data ) {
-}
-
-DTP UTP::ArrayImpl( ArrayImpl &&that ) {
-    strides = std::move( that.strides );
-    sizes = std::move( that.sizes );
-    capa = std::move( that.capa );
-    data = std::exchange( that.data, nullptr );
-}
-
-DTP UTP::~ArrayImpl() {
-    if ( owned && data )
-        free( data );
-}
-
-DTP auto UTP::offset( auto &&...indices ) const {
-    return strides.apply( [&]( auto ...stride_values ) {
-        return ( ( stride_values * indices ) + ... );
-    } );
+DTP UTP::ArrayImpl( auto&&...args ) : VfsTdImpl( FORWARD( args )... ) {
 }
 
 DTP auto UTP::operator[]( PI index ) const {
     if constexpr ( Capa::size >= 2 )
-        return ArrayImpl<Wrapper,Item,typename Capa::Next,typename Sizes::Next,typename Strides::Next,alignment_in_bytes,need_row_alignment,false>{ 
+        return ArrayImpl<Wrapper,Item,typename Capa::Next,typename Sizes::Next,typename Strides::Next,alignment_in_bytes,need_row_alignment,/*owned*/false>{
             FromAttributes(),
-            strides.tail,
-            sizes.tail,
-            capa.tail,
-            data + strides.head * index
+            content().strides.tail,
+            content().sizes.tail,
+            content().capa.tail,
+            content().data + content().strides.head * index
         };
     else
-        return *reinterpret_cast<const Item *>( data + strides.head * index );
+        return *reinterpret_cast<const Item *>( content().data + content().strides.head * index );
 }
 
 DTP void UTP::set( PI index, auto &&value ) {
@@ -107,19 +48,6 @@ DTP void UTP::for_each_template_arg( auto &&f ) {
 
 DTP auto UTP::template_type_name() {
     return "ArrayImpl";
-}
-
-// DTP void UTP::for_each_item( const auto &func ) {
-//     func( *data );
-// }
-
-DTP auto UTP::tight_strides( const auto &capa ) {
-    return capa.reversed_tie().prefix_scan_with_index( [&]( auto prod, auto capa_value, auto index ) {
-        if constexpr ( index == 0 && Sizes::size > 1 && need_row_alignment && alignment_in_bytes )
-            return ceil( prod * capa_value, alignment_in_bytes );
-        else
-            return prod * capa_value;
-    }, CtInt<sizeof(Item)>(), CtInt<0>(), CtInt<1>() );
 }
 
 DTP auto UTP::reserve_for( auto &&wanted_capa, auto &&func_on_new_array ) {
@@ -177,10 +105,6 @@ DTP auto UTP::reserve_for( auto &&wanted_capa, auto &&func_on_new_array ) {
     //     capa,
     //     data + strides.head * index
     // };
-}
-
-DTP void UTP::for_each_indices( auto &&func ) const {
-    for_each_values_in_md_range( FORWARD( func ), sizes );
 }
 
 DTP void UTP::push_back( auto &&value ) {

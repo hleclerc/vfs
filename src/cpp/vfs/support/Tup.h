@@ -121,7 +121,9 @@ auto tuple_cat( auto &&a ) { return a; }
 TA auto *display( auto &ds, const Tup<A...> &value ) { return value.apply( [&]( const auto &...args ) { return ds.array( { display( ds, args )... } ); } ); }
 
 // -----------------------------------------------------------------------------------------------------------------------------
-template<class... Items> struct StorageTypeFor<Tup<Items...>> { using value = Tup<typename StorageTypeFor<Items>::value...>; };
+TA struct StorageTypeFor<Tup<A...>> { using value = Tup<typename StorageTypeFor<A>::value...>; };
 
+TA auto ensure_tup( const Tup<A...> &tup ) { return tup; }
+TA auto ensure_tup( Tup<A...> &&tup ) { return std::move( tup ); }
 
 END_VFS_NAMESPACE

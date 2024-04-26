@@ -22,7 +22,7 @@ DTP TT UTP::Array( const std::initializer_list<T> &values ) : Array( FromSizeAnd
 
 DTP UTP::Array( FromShapeAndItemValue, auto &&sizes, auto &&item_value ) {
     using Func = FuncInfo<CtString<"construct_Array_FromShapeAndItemValue">,CtStringList<"inc_file:vfs/impl/Array/construct_Array_FromShapeAndItemValue.h">,CtIntList<0>>;
-    vfs_call<void>( Func(), *this, FORWARD( sizes ), FORWARD( item_value ) );
+    vfs_call<void>( Func(), *this, ensure_tup( FORWARD( sizes ) ), FORWARD( item_value ) );
 }
 
 DTP UTP::Array( FromShapeAndIterator, auto &&sizes, auto &&iterator ) {

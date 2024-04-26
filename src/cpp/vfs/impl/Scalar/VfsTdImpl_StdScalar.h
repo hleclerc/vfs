@@ -6,8 +6,10 @@ BEG_VFS_NAMESPACE
 
 ///
 template<class Scalar,class ScalarType>
-struct VfsTdImpl_StdScalar : VfsTdImpl<Scalar,VfsTdImpl_StdScalar<Scalar,ScalarType>>, WithDefaultOperators {
-    /**/              VfsTdImpl_StdScalar  ( auto &&...ctor_args ) : data( FORWARD( ctor_args )... ) {}
+struct VfsTdImpl_StdScalar : VfsTdImpl<Scalar,VfsTdImpl_StdScalar<Scalar,ScalarType>,ScalarType>, WithDefaultOperators {
+    using             Parent               = VfsTdImpl<Scalar,VfsTdImpl_StdScalar<Scalar,ScalarType>,ScalarType>;
+
+    /**/              VfsTdImpl_StdScalar  ( auto &&...ctor_args ) : Parent( FORWARD( ctor_args )... ) {}
 
     TT void           operator=            ( const VfsTdImpl_StdScalar<Scalar,T> &that ) { if constexpr ( requires { data = that.data; } ) data = that; else { data.~ScalarType(); new ( this ) Scalar( FromTypeAndCtorArguments(), CtType<VfsTdImpl_StdScalar<Scalar,T>>(), that.data ); } }
     void              set                  ( auto &&that ) { if constexpr ( requires { data = that; } ) data = that; else { data.~ScalarType(); new ( this ) Scalar( FORWARD( that ) ); } }
@@ -19,8 +21,6 @@ struct VfsTdImpl_StdScalar : VfsTdImpl<Scalar,VfsTdImpl_StdScalar<Scalar,ScalarT
     const ScalarType& get_lvalue           () const { return data; }
     ScalarType&&      get_rvalue           () { return std::move( data ); }
     DisplayItem*      display              ( Displayer &ds ) const { return VFS_NAMESPACE::display( ds, data ); }
-
-    ScalarType        data;
 };
 
 

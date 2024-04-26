@@ -328,3 +328,7 @@ Question: à quoi correspond exactement StorageType ? En particulier, est-ce que
 Rq: lorsqu'on crée un tableau avec FromShape..., il faut s'assurer que le vecteur qui donne la forme soit de taille connue
   Pour faire simple, on pourrait imaginer de faire un vfs_call_dink dans le construct_Array_FromShapeAndItemValue ou le traiter "à la main"
   
+On pourrait faire un reassign( func_on_new_value, ctor_value ) comme méthode générique des TD avec peut être une fonction pour gérer les cas lvalue ().
+
+
+

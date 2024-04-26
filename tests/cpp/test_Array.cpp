@@ -11,7 +11,8 @@
 
 TEST_CASE( "Rt dim array", "" ) {
     using Volume = Array<Scalar>;
-    Volume v( FromShapeAndItemValue(), Vector{ 2, 2, 2 }, CtInt<0>() );
+    //Volume v( FromShapeAndItemValue(), tup( 2, 2, 2 ), CtInt<0>() );
+    Volume v{ 1, 2, 4 };
     P( v );
     // for( size_t i = 0; i < 4; i++ )
     //     v << i;
