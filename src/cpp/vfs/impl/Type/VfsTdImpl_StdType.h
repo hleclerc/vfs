@@ -1,12 +1,13 @@
 #pragma once
 
 #include "../../vfs_system/VfsTdImpl.h"
+#include "../../support/Void.h"
 
 BEG_VFS_NAMESPACE
 
 ///
 template<class Wrapper,class Type>
-struct VfsTdImpl_StdType : VfsTdImpl<Wrapper,VfsTdImpl_StdType<Wrapper,Type>>, CtType<Type> {
+struct VfsTdImpl_StdType : VfsTdImpl<Wrapper,VfsTdImpl_StdType<Wrapper,Type>,Void>, CtType<Type> {
     /**/           VfsTdImpl_StdType    ( CtType<Type> ) {}
 
     //TT void      operator=            ( const VfsTdImpl_StdInt<Int,T> &that ) { if constexpr ( requires { data = that.data; } ) data = that; else { data.~IntType(); new ( this ) Int( FromTypeAndCtorArguments(), CtType<VfsTdImpl_StdInt<Int,T>>(), that.data ); } }

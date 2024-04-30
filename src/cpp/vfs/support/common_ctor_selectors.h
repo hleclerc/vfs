@@ -40,6 +40,8 @@ DECL_VOID_STRUCT_STD( FromIterator                   ); ///<
 DECL_VOID_STRUCT_STD( FromValue                      );
 DECL_VOID_STRUCT_STD( FromSize                       );
 
+DECL_VOID_STRUCT_STD( NoConstruction                 );
+
 #undef DECL_VOID_STRUCT_STD
 
 END_VFS_NAMESPACE

@@ -1,6 +1,7 @@
 // 0 -> int like; 1 -> rationnal; 2 -> floating point
 #pragma once
 
+#include "PrimitiveCtInt.h"
 #include "TypeConfig.h"
 
 BEG_VFS_NAMESPACE

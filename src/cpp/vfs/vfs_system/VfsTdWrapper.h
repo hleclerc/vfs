@@ -3,6 +3,7 @@
 #include "../support/operators/ceil.h" // IWYU pragma: export
 #include "../vfs_system/VfsFunc.h" // IWYU pragma: export
 #include "../support/construct.h" // IWYU pragma: export
+#include "../support/VoidFunc.h" // IWYU pragma: export
 #include "VfsTdImplFor.h" // IWYU pragma: export
 #include "VfsTdKey.h"
 
@@ -25,14 +26,16 @@ public:
 // macros ------------------------------------------------------------------------------------------------------------------------------
 #define STD_METHODS_FOR_VFS_TD_WRAPPER__BASE( NAME, INCLUDE_PATH ) public: \
     /**/                   NAME                      ( FromTypeAndCtorArguments, auto &&type, auto &&...args ) { VFS_CALL_DINK( construct, void, CtStringList<>(), CtIntList<0>(), *this, FORWARD( type ), FORWARD( args )... ); } \
+    /**/                   NAME                      ( FromTypeAndCtorArguments, auto &&type, auto &&arg ) { VFS_CALL_DINK( construct, void, CtStringList<>(), CtIntList<0>(), *this, FORWARD( type ), FORWARD( arg ) ); } \
+    /**/                   NAME                      ( NoConstruction ) {} \
     /**/                   NAME                      ( auto &&...args ) requires requires { (typename VfsTdImplFor<NAME,decltype(args)...>::value *)nullptr; } : NAME( FromTypeAndCtorArguments(), CtType<typename VFS_NAMESPACE::VfsTdImplFor<NAME,decltype(args)...>::value>(), FORWARD( args )... ) {} \
     /**/                  ~NAME                      () { vfs_call( FuncInfo<CtString<"VFS_NAMESPACE::destroy">,CtStringList<"inc_file:vfs/support/destroy.h">>(), *this ); } \
     \
-    NAME&                  operator=                 ( auto &&that ) { vfs_call<void>( FuncInfo<CtString<"reassign">,CtStringList<"inc_file:vfs/support/reassign.h">>(), *this, FORWARD( that ) ); return *this; } \
+    NAME&                  operator=                 ( auto &&that ) { vfs_call<void>( FuncInfo<CtString<"reassign_pmt__method">>(), *this, VoidFunc(), FORWARD( that ) ); return *this; } \
     \
     template<class Res> static Res __wrapper_call    ( auto func_name, auto &&...args ) { return vfs_call<Res>( FuncInfo<DECAYED_TYPE_OF(func_name)>(), FORWARD( args )... ); } \
     \
-    Type                   impl_type                 () const;\
+    Type                   impl_type                 () const { Type res{ NoConstruction{} }; vfs_call<void>( FuncInfo<CtString<"impl_type">,CtStringList<"inc_file:vfs/vfs_system/impl_type.h">,CtIntList<0>>(), res, *this ); return res; } \
     \
     static void            get_compilation_flags     ( auto &cn ) { cn.add_inc_file( INCLUDE_PATH "/" #NAME ".h" ); } \
     DisplayItem*           display                   ( auto &ds ) const { return vfs_call<DisplayItem *>( FuncInfo<CtString<"display">>(), ds, *this ); } \
