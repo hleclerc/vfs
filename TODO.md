@@ -330,5 +330,9 @@ Rq: lorsqu'on crée un tableau avec FromShape..., il faut s'assurer que le vecte
   
 On pourrait faire un reassign( func_on_new_value, ctor_value ) comme méthode générique des TD avec peut être une fonction pour gérer les cas lvalue ().
 
-
-
+Fonctionnement des operateurs
+=============================
+* on aimerait bien que les self_op renvoient un CtInt<> pour dire si c'est possible ou s'il faut changer le type
+* s'il faut changer le type, on fait un add et on stocke la nouvelle valeur pour le cas à 1 valeur
+* on pourra faire un decltype pour créer un tableau du bon type
+* pour les ops simples (pas self), on pourrait appeler operator... directement

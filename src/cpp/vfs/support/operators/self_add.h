@@ -6,8 +6,8 @@
 BEG_VFS_NAMESPACE
 
 struct Functor_self_add {
-    static auto template_type_name() { return "VFS_NAMESPACE::Functor_self_add"; }
-    auto        operator()        ( auto &a, auto &&b ) const { return self_add( a, FORWARD( b ) ); }
+    static auto type_name() { return "VFS_NAMESPACE::Functor_self_add"; }
+    auto operator()( auto &a, auto &&b ) const { return self_add( a, FORWARD( b ) ); }
 };
 
 constexpr auto self_add( auto &a, auto &&b ) {
@@ -17,7 +17,7 @@ constexpr auto self_add( auto &a, auto &&b ) {
     } else
 
     // default behavior
-    DEFAULT_BIN_SELF_OPERATOR_CODE_SIGN( self_add, +=, + )
+    DEFAULT_BIN_SELF_OPERATOR_CODE_SIGN( self_add, + )
 
     // // Str concatenation
     // if constexpr( requires{ StrView( a ); StrView( b ); } ) {

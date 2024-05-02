@@ -71,7 +71,7 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
     } else \
 
 // sign means operator like +, *, ... which have to be place between the operands
-#define DEFAULT_BIN_SELF_OPERATOR_CODE_SIGN( NAME, SELF_SIGN, SIGN ) \
+#define DEFAULT_BIN_SELF_OPERATOR_CODE_SIGN( NAME, SIGN ) \
     /* methods */ \
     if constexpr( requires { a.NAME( FORWARD( b ) ); } ) { \
         return a.NAME( FORWARD( b ) ); \
