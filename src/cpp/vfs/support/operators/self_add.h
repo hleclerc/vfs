@@ -5,14 +5,15 @@
 
 BEG_VFS_NAMESPACE
 
-// struct Functor_add {
-//     auto operator()( auto &&a, auto &&b ) const { return FORWARD( a ) + FORWARD( b ); }
-// };
+struct Functor_self_add {
+    static auto template_type_name() { return "VFS_NAMESPACE::Functor_self_add"; }
+    auto        operator()        ( auto &a, auto &&b ) const { return self_add( a, FORWARD( b ) ); }
+};
 
-constexpr void self_add( auto &a, auto &&b ) {
+constexpr auto self_add( auto &a, auto &&b ) {
     // ... + 0
     if constexpr( IsAlwaysZero<DECAYED_TYPE_OF( b )>::value ) {
-        return;
+        return PrimitiveCtInt<1>();
     } else
 
     // default behavior
@@ -31,6 +32,7 @@ constexpr void self_add( auto &a, auto &&b ) {
     // } else
 
     STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "found no way to call self add" );
+    return PrimitiveCtInt<0>();
 }
 
 END_VFS_NAMESPACE

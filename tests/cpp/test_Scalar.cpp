@@ -3,14 +3,9 @@
 
 TEST_CASE( "Scalar", "" ) {
     Scalar b = 17;
+    b += 1.5;
+
     P( b );
-    P( b.impl_type() );
-    b = 16;
-    P( b );
-    P( b.impl_type() );
-    b = 15.5;
-    P( b );
-    P( b.impl_type() );
 }
 
 // TEST_CASE( "Scalar from pointer", "" ) {

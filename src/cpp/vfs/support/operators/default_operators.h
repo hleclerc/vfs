@@ -5,6 +5,7 @@
 
 #include "../STATIC_ASSERT_IN_IF_CONSTEXPR.h" // IWYU pragma: export
 #include "../CtString.h" // IWYU pragma: export
+#include "../VoidFunc.h" // IWYU pragma: export
 #include "../CtType.h" // IWYU pragma: export
 #include "../get.h" // IWYU pragma: export
 #include "../set.h" // IWYU pragma: export
@@ -52,7 +53,7 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
         using Wta = VfsWrapperTypeFor<DECAYED_TYPE_OF( a )>::value; \
         using Wtb = VfsWrapperTypeFor<DECAYED_TYPE_OF( b )>::value; \
         using Res = VfsTypePromoteWrapper<#NAME,Wta,Wtb>::value; \
-        return a.template __wrapper_call<Res>( CtString<#NAME>(), a, b ); \
+        return a.template __wrapper_call<Res>( CtString<#NAME "_pmt__method">(), a, b ); \
     } else \
     \
     /* get( ... ) */ \
@@ -69,17 +70,15 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
         return make_array_from_binary_operations( Functor_##NAME(), FORWARD( a ), FORWARD( b ) ); \
     } else \
 
-//
+// sign means operator like +, *, ... which have to be place between the operands
 #define DEFAULT_BIN_SELF_OPERATOR_CODE_SIGN( NAME, SELF_SIGN, SIGN ) \
     /* methods */ \
     if constexpr( requires { a.NAME( FORWARD( b ) ); } ) { \
-        a.NAME( FORWARD( b ) ); \
-        return; \
+        return a.NAME( FORWARD( b ) ); \
     } else \
     \
     if constexpr( requires { b.r##NAME( FORWARD( a ) ); } ) { \
-        b.r##NAME( FORWARD( a ) ); \
-        return; \
+        return b.r##NAME( FORWARD( a ) ); \
     } else \
     \
     /* ct value */ \
@@ -93,7 +92,7 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
         using Wta = VfsWrapperTypeFor<DECAYED_TYPE_OF( a )>::value; \
         using Wtb = VfsWrapperTypeFor<DECAYED_TYPE_OF( b )>::value; \
         using Res = VfsTypePromoteWrapper<#NAME,Wta,Wtb>::value; \
-        a.template __wrapper_call<void>( CtString<#NAME>(), a, b ); \
+        a.template __wrapper_call<void>( CtString<"self_op_pmt__method">(), a, VoidFunc(), Functor_##NAME(), b ); \
         return; \
     } else \
     \

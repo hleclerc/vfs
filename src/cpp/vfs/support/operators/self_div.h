@@ -5,6 +5,11 @@
 
 BEG_VFS_NAMESPACE
 
+struct Functor_self_div {
+    static auto template_type_name() { return "VFS_NAMESPACE::Functor_self_div"; }
+    void operator()( auto &a, auto &&b ) const { a /= FORWARD( b ); }
+};
+
 constexpr void self_div( auto &a, auto &&b ) {
     // default behavior
     DEFAULT_BIN_SELF_OPERATOR_CODE_SIGN( self_div, /=, / )

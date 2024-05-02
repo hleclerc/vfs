@@ -5,6 +5,11 @@
 
 BEG_VFS_NAMESPACE
 
+struct Functor_self_sub {
+    static auto template_type_name() { return "VFS_NAMESPACE::Functor_self_sub"; }
+    void operator()( auto &a, auto &&b ) const { a -= FORWARD( b ); }
+};
+
 constexpr void self_sub( auto &a, auto &&b ) {
     // ... - 0
     if constexpr( IsAlwaysZero<DECAYED_TYPE_OF( b )>::value ) {

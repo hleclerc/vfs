@@ -5,6 +5,11 @@
 
 BEG_VFS_NAMESPACE
 
+struct Functor_self_mul {
+    static auto template_type_name() { return "VFS_NAMESPACE::Functor_self_mul"; }
+    void operator()( auto &a, auto &&b ) const { a *= FORWARD( b ); }
+};
+
 constexpr void self_mul( auto &a, auto &&b ) {
 
     // default behavior
