@@ -47,23 +47,17 @@ DTP auto UTP::self_op_pmt( auto &&cb, auto &&functor, auto &&that ) {
         return on_wrapped_value( FORWARD( that ), [&]( auto &&value ) { return self_op_pmt( FORWARD( cb ), FORWARD( functor ), FORWARD( value ) ); } );
     else
 
-    // // call op
-    // if constexpr ( requires { reassign( this->wrapped_value(), FORWARD( that ) ); } ) {
-    //     if ( reassign( this->wrapped_value(), FORWARD( that ) ) )
-    //         return cb( *this );
-    //     else {
-    //         using St = STORAGE_TYPE_OF( that );
-    //         return cb( *(new ( this ) Impl::template WithData<St>::value( FORWARD( that ) ) ) );
-    //     }
-    // }
+    // if impossible to do without changing the type
+    if constexpr ( std::is_same_v<decltype( functor( this->wrapped_value(), FORWARD( that ) ) ),PrimitiveCtInt<0>> ) {
+        using St = STORAGE_TYPE_OF( functor.op( this->wrapped_value(), FORWARD( that ) ) );
+        return cb( *(new ( this ) Impl::template WithData<St>::value( functor.op( this->wrapped_value(), FORWARD( that ) ) ) ) );
+    } else
 
-    // // else, try operator=
-    // else {
-    //     functor( this->wrapped_value(), FORWARD( that ) );
-    //     return cb( *this );
-    // }
-    functor( this->wrapped_value(), FORWARD( that ) );
-    return cb( *this );
+    //
+    {
+        functor( this->wrapped_value(), FORWARD( that ) );
+        return cb( *this );
+    }
 }
 
 #undef DTP

@@ -7,6 +7,7 @@ BEG_VFS_NAMESPACE
 
 struct Functor_self_sub {
     static auto type_name() { return "VFS_NAMESPACE::Functor_self_sub"; }
+    auto op( auto &&a, auto &&b ) const { return FORWARD( a ) - FORWARD( b ); }
     auto operator()( auto &a, auto &&b ) const { return self_sub( a, FORWARD( b ) ); }
 };
 
@@ -19,8 +20,7 @@ constexpr auto self_sub( auto &a, auto &&b ) {
     // default behavior
     DEFAULT_BIN_SELF_OPERATOR_CODE_SIGN( self_sub, -=, - )
 
-    STATIC_ASSERT_IN_IF_CONSTEXPR( 0, "found no way to call self sub" );
-    return PrimitiveCtInt<0>();
+    STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( PrimitiveCtInt<0>(), 0, "found no way to call self sub" );
 }
 
 END_VFS_NAMESPACE

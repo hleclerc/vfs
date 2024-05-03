@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scalar_class.h"
+#include "ScalarClass.h"
 #include "CtInt.h"
 
 BEG_VFS_NAMESPACE

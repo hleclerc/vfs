@@ -2,7 +2,7 @@
 
 #include "nb_bits_mantissa.h"
 #include "scalar_type_for.h"
-#include "scalar_class.h"
+#include "ScalarClass.h"
 #include "has_sign_bit.h"
 #include "CtString.h"
 

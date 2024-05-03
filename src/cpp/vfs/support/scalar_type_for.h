@@ -11,7 +11,7 @@ constexpr auto scalar_type_for( PrimitiveCtInt<0> _virtual, PrimitiveCtInt<scala
     if constexpr ( scalar_class == 2 ) {
         if      constexpr ( nb_bits_mantissa <= 25 ) return CtType<FP32>();
         else if constexpr ( nb_bits_mantissa <= 52 ) return CtType<FP64>();
-        else STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( CtType<FP32>(), "..." );
+        else STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( CtType<FP32>(), 0, "..." );
     } else
 
     // integer
@@ -21,19 +21,19 @@ constexpr auto scalar_type_for( PrimitiveCtInt<0> _virtual, PrimitiveCtInt<scala
             else if constexpr ( nb_bits_mantissa <= 16 ) return CtType<SI16>();
             else if constexpr ( nb_bits_mantissa <= 32 ) return CtType<SI32>();
             else if constexpr ( nb_bits_mantissa <= 64 ) return CtType<SI64>();
-            else STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( CtType<SI32>(), "..." );
+            else STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( CtType<SI32>(), 0, "..." );
         } else {
             // TODO: correct rules for signed integers
             if      constexpr ( nb_bits_mantissa <= 8  ) return CtType<PI8 >();
             else if constexpr ( nb_bits_mantissa <= 16 ) return CtType<PI16>();
             else if constexpr ( nb_bits_mantissa <= 32 ) return CtType<PI32>();
             else if constexpr ( nb_bits_mantissa <= 64 ) return CtType<PI64>();
-            else STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( CtType<PI32>(), "..." );
+            else STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( CtType<PI32>(), 0, "..." );
         }
     } else
 
     // default
-    STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( CtType<SI32>(), "don't know how to make scalar_type_for" );
+    STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( CtType<SI32>(), 0, "don't know how to make scalar_type_for" );
 }
 
 END_VFS_NAMESPACE

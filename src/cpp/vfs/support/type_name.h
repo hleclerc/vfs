@@ -72,7 +72,7 @@ TT Str type_name( CtType<T> ) {
         }
         return res;
     } else
-        STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( "", "found no way to get type_name" );
+        STATIC_ASSERT_WITH_RETURN_IN_IF_CONSTEXPR( "", 0, "found no way to get type_name" );
 }
 
 //
