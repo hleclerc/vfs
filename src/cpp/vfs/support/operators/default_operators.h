@@ -4,6 +4,7 @@
 #include "make_array_from_unary_operations.h" // IWYU pragma: export
 
 #include "../STATIC_ASSERT_IN_IF_CONSTEXPR.h" // IWYU pragma: export
+#include "../on_wrapped_value.h" // IWYU pragma: export
 #include "../ScalarClass.h" // IWYU pragma: export
 #include "../CtString.h" // IWYU pragma: export
 #include "../VoidFunc.h" // IWYU pragma: export
@@ -54,22 +55,28 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
         using Wta = VfsWrapperTypeFor<DECAYED_TYPE_OF( a )>::value; \
         using Wtb = VfsWrapperTypeFor<DECAYED_TYPE_OF( b )>::value; \
         using Res = VfsTypePromoteWrapper<#NAME,Wta,Wtb>::value; \
-        return a.template __wrapper_call<Res>( CtString<#NAME "_pmt__method">(), a, b ); \
+        return a.template __wrapper_call<Res>( CtString<#NAME>(), a, b ); \
     } else \
     \
-    /* get( ... ) */ \
-    if constexpr( requires { get( FORWARD( a ) ); } ) { \
-        return get( FORWARD( a ) ) SIGN FORWARD( b ); \
+    /* on_wrapped_value( ... ) */ \
+    if constexpr( requires { on_wrapped_value( FORWARD( a ), [](auto) {} ); } ) { \
+         return on_wrapped_value( FORWARD( a ), [&]( auto &&a ) { return FORWARD( a ) SIGN FORWARD( b ); } ); \
     } else \
     \
-    if constexpr( requires { get( FORWARD( b ) ); } ) { \
-        return FORWARD( a ) SIGN get( FORWARD( b ) ); \
+    if constexpr( requires { on_wrapped_value( FORWARD( b ), [](auto) {} ); } ) { \
+        return on_wrapped_value( FORWARD( b ), [&]( auto &&b ) { return FORWARD( a ) SIGN FORWARD( b ); } ); \
     } else \
     \
     /* arrays */ \
     if constexpr( TensorOrder<DECAYED_TYPE_OF( a )>::value || TensorOrder<DECAYED_TYPE_OF( b )>::value ) { \
         return make_array_from_binary_operations( Functor_##NAME(), FORWARD( a ), FORWARD( b ) ); \
     } else \
+    \
+    /* scalar_class (a way to avoid recursion... TODO: find something more general and less fragile) */ \
+    if constexpr( requires { ScalarClass<DECAYED_TYPE_OF( a )>::value; ScalarClass<DECAYED_TYPE_OF( b )>::value; } ) { \
+        return FORWARD( a ) SIGN FORWARD( b ); \
+    } else \
+    \
 
 // sign means operator like +, *, ... which have to be place between the operands
 #define DEFAULT_BIN_SELF_OPERATOR_CODE_SIGN( NAME, SELF_SIGN, SIGN ) \
