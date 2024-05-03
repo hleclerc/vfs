@@ -1,9 +1,7 @@
 #pragma once
 
-#include "../../support/WithDefaultOperators.h"
 #include "VfsTdImpl_StdScalar.h"
-#include "../../Type.h"
-// #include "Type.h"
+#include "../../Int.h"
 
 BEG_VFS_NAMESPACE
 
@@ -18,7 +16,12 @@ TT requires std::is_scalar_v<T> struct VfsTdImplFor<Scalar,T> { using value = Vf
 template<> struct VfsTdImplFor<Scalar> { using value = VfsTdImpl_StdScalar<Scalar,CtInt<0>>; };
 
 //
-TT requires ( std::is_scalar_v<T> && ! std::is_integral_v<T> ) struct VfsWrapperTypeFor<T> { using value = Scalar; };
+TT requires ( std::is_scalar_v<T> && ! std::is_integral_v<T> )
+struct VfsWrapperTypeFor<T> { using value = Scalar; };
+
+//
+template<CtStringValue name> struct VfsTypePromoteWrapper<name,Scalar,Int> { using value = Scalar; };
+template<CtStringValue name> struct VfsTypePromoteWrapper<name,Int,Scalar> { using value = Scalar; };
 
 // // -------------------------------------------------------------------------------------------
 // // type info

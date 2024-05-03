@@ -12,7 +12,7 @@
 #include "../get.h" // IWYU pragma: export
 #include "../set.h" // IWYU pragma: export
 
-#include "../../vfs_system/TypePromoteWrapper.h" // IWYU pragma: export
+#include "../../vfs_system/VfsTypePromoteWrapper.h" // IWYU pragma: export
 #include "../../vfs_system/WrapperTypeFor.h" // IWYU pragma: export
 
 #include <string_view> // IWYU pragma: export

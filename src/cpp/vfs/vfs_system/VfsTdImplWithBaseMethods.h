@@ -9,6 +9,7 @@ template<class Wrapper,class Impl,class Data>
 struct VfsTdImplWithBaseMethods : VfsTdImpl<Wrapper,Impl,Data> {
     /**/         VfsTdImplWithBaseMethods( auto &&...args );
 
+    explicit     operator Data           () const { return this->wrapped_value(); }
     auto         reassign_pmt            ( auto &&cb, auto &&that ); ///< pmt = potentially modifiable type
     auto         self_op_pmt             ( auto &&cb, auto &&functor, auto &&that ); ///< pmt = potentially modifiable type
 

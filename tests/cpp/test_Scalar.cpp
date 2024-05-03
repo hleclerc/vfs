@@ -3,9 +3,10 @@
 
 TEST_CASE( "Scalar", "" ) {
     Scalar b = 17;
-    // b += 1.5;
+    b += 1.5;
 
-    P( b + 5.5 );
+    P( b );
+    P( b + 5 );
 }
 
 // TEST_CASE( "Scalar from pointer", "" ) {

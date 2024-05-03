@@ -9,8 +9,6 @@ struct Functor_add {
     auto operator()( auto &&a, auto &&b ) const { return FORWARD( a ) + FORWARD( b ); }
 };
 
-// auto operator_add( auto &&a, auto &&b ) { return FORWARD( a ) + FORWARD( b ); }
-
 constexpr auto add( auto &&a, auto &&b ) {
     // 0 + ..., ... + 0
     if constexpr( IsAlwaysZero<DECAYED_TYPE_OF( a )>::value ) {

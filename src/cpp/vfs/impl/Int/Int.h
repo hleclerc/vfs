@@ -16,10 +16,10 @@ public:
 TT requires std::is_integral_v<T> struct VfsTdImplFor<Int,T> { using value = VfsTdImpl_StdInt<Int,typename StorageTypeFor<T>::value>; };
 template<> struct VfsTdImplFor<Int> { using value = VfsTdImpl_StdInt<Int,CtInt<0>>; };
 
-//
-TT requires std::is_integral_v<T> struct VfsWrapperTypeFor<T> { using value = Int; };
-
 // // -------------------------------------------------------------------------------------------
+TT requires ( std::is_integral_v<T> )
+struct VfsWrapperTypeFor<T> { using value = Int; };
+
 // // type info
 // constexpr inline auto nb_bits_mantissa( CtType<Scalar> ) { return PrimitiveCtInt<1000000>(); }
 // constexpr inline auto scalar_class    ( CtType<Scalar> ) { return PrimitiveCtInt<2>(); }
