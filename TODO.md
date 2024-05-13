@@ -336,3 +336,39 @@ Fonctionnement des operateurs
 * s'il faut changer le type, on fait un add et on stocke la nouvelle valeur pour le cas à 1 valeur
 * on pourra faire un decltype pour créer un tableau du bon type
 * pour les ops simples (pas self), on pourrait appeler operator... directement
+
+Types de fonctions
+==================
+
+On pourrait dire que certaines fonctions enregistrées sont capables de travailler sur le Impl qui est un format spécifique et d'autres uniquement sur l'objet wrappé.
+
+L'idée c'est d'enregistrer les fonctions en spécifiant le langage et les capacités : est-ce que par exemple l'implémentation est capable de prendre le type, etc...
+
+Rq: en principe, on devrait se contenter du nom et des numéros des arguments de sortie lors des appels
+  C'est lors de la sélection de la fonction qu'on regarde s'il faut envoyer l'objet wrappé avec ou sans le type.
+  Ça serait cool par exemple de donner 
+    * des règles générales, 
+      * les self_xxx font un test de type 
+          Si on veut exploiter ...
+      * par défaut, on balance les objets wrappés
+    * des fichiers à lire en plus 
+      => on pourrait parser ces fichiers pour voir si les fonctions acceptent des refs avec types (*ref pour accéder à la valeur, etc...)
+    * éventuellement, lors d'un appel de fonction, on peut spécifier des fichiers ou un langage prioritaire
+
+On aimerait donner plus d'infos pour la génération de code. 
+  Actuellement, c'est le compilateur qui fait la sélection mais il faudrait qu'on soit capables de la faire au moment de la génération de code, ne serait-ce que pour choisir le langage cible.
+  Rq: si c'est en metil il faudrait permetter des wildcard dans les noms de fonction.
+    def self_∗ avec le caractère unicode 2217 (ctrl+shift+u)
+      Rq: à ce compte là, on pourrait passer systématiquement par metil, en permettant de passer à un autre langage depuis metil.
+    On pourrait par exemple faire un 
+
+Rq: dans metil, les fonctions sont dans des espaces. Du coup, depuis le C++, l'idée serait plutôt de d'abord chercher la fonction dans un espace de nom donné puis de faire un call avec les arguments et éventuellement des paramètres (sélection de pertinence, de langage, etc...)
+
+Depuis vfs, si on veut des appels rapides, il faudrait quand même passer par des CtString avec éventuellement des paramètres 
+
+Display
+=======
+
+On aimerait bien avoir un outil de log qui permette de faire des investigations a posteriori. Par exemple, on envoie le nom complet des fichiers d'où sont faits les P(), on envoie le contenu des tableaux sans alignement...
+
+

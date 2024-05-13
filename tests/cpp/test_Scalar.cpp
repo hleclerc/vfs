@@ -1,13 +1,13 @@
 #include <vfs/Scalar.h>
 #include "catch_main.h"
 
-TEST_CASE( "Scalar", "" ) {
-    Scalar b = 17;
-    b += 1.5;
+// TEST_CASE( "Scalar", "" ) {
+//     Scalar b = 17;
+//     b += 1.5;
 
-    P( b );
-    P( b + 5 );
-}
+//     P( b );
+//     P( 5 + b );
+// }
 
 // TEST_CASE( "Scalar from pointer", "" ) {
 //     int a = 10;

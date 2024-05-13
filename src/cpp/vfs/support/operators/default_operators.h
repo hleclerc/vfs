@@ -51,11 +51,18 @@ Ti constexpr auto ct_value_wrapper_for(); // defined in CtInt.h
     } else \
 \
     /* wrapper */ \
-    if constexpr( std::is_base_of_v<VfsWrapper,DECAYED_TYPE_OF( a )> || std::is_base_of_v<VfsWrapper,DECAYED_TYPE_OF( b )> ) { \
+    if constexpr( std::is_base_of_v<VfsWrapper,DECAYED_TYPE_OF( a )> ) { \
         using Wta = VfsWrapperTypeFor<DECAYED_TYPE_OF( a )>::value; \
         using Wtb = VfsWrapperTypeFor<DECAYED_TYPE_OF( b )>::value; \
         using Res = VfsTypePromoteWrapper<#NAME,Wta,Wtb>::value; \
         return a.template __wrapper_call<Res>( CtString<#NAME>(), a, b ); \
+    } else \
+    \
+    if constexpr( std::is_base_of_v<VfsWrapper,DECAYED_TYPE_OF( b )> ) { \
+        using Wta = VfsWrapperTypeFor<DECAYED_TYPE_OF( a )>::value; \
+        using Wtb = VfsWrapperTypeFor<DECAYED_TYPE_OF( b )>::value; \
+        using Res = VfsTypePromoteWrapper<#NAME,Wta,Wtb>::value; \
+        return b.template __wrapper_call<Res>( CtString<#NAME>(), a, b ); \
     } else \
     \
     /* on_wrapped_value( ... ) */ \

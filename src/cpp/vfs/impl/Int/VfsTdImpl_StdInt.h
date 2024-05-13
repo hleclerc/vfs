@@ -12,7 +12,7 @@ struct VfsTdImpl_StdInt : VfsTdImplWithBaseMethods<IntWrapper,VfsTdImpl_StdInt<I
 
     /**/              VfsTdImpl_StdInt     ( auto &&...ctor_args ) : Vti( FORWARD( ctor_args )... ) {}
 
-    static void       get_compilation_flags( CompilationFlags &cf ) { cf.add_inc_file( "vfs/impl/Scalar/VfsTdImpl_StdInt.h" ); }
+    static void       get_compilation_flags( CompilationFlags &cf ) { cf.add_inc_file( "vfs/impl/Int/VfsTdImpl_StdInt.h" ); }
     static void       for_each_template_arg( auto &&f ) { f( CtType<IntWrapper>() ); f( CtType<IntType>() ); }
     static auto       template_type_name   () { return "VFS_NAMESPACE::VfsTdImpl_StdInt"; }
 };
