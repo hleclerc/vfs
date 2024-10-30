@@ -17,7 +17,7 @@ class ActorSystem:
         # self.actors = []
 
         self.threads = []
-        for _ in range( os.cpu_count() ):
+        for _ in range( 1 ): # os.cpu_count()
             th = Thread( target = self._worker, daemon = True )
             self.threads.append( th )
             th.start()
