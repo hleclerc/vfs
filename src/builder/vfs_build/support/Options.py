@@ -118,7 +118,7 @@ class Options:
         with load_lock:
             # base directory
             libname = repository[ repository.rfind( '/' ) + 1 : -4 ]
-            lib_dir = self.build_dir( "ext", libname )
+            lib_dir = Path( self.build_dir( "ext", libname ) )
             os.makedirs( lib_dir, exist_ok = True )
 
             # load the sources        
